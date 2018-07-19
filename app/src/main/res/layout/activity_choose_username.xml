@@ -11,6 +11,13 @@
 
     <!-- Login progress -->
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/shapes_background" />
+
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -45,9 +52,10 @@
                     android:hint="@string/prompt_firstname"
                     android:inputType="textPersonName"
                     android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
                     android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText"
-                    android:singleLine="true" />
+                    android:theme="@style/AppTheme.WhiteEditText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -65,9 +73,10 @@
                     android:hint="@string/prompt_lastname"
                     android:inputType="textPersonName"
                     android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
                     android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText"
-                    android:singleLine="true" />
+                    android:theme="@style/AppTheme.WhiteEditText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -85,11 +94,11 @@
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
-                    android:theme="@style/AppTheme.WhiteEditText"
-                    android:inputType="textPassword"
                     android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
                     android:textColorHint="@color/colorWhite"
-                    android:singleLine="true" />
+                    android:theme="@style/AppTheme.WhiteEditText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -109,4 +118,5 @@
         android:theme="@style/AppTheme.PrimaryButton"
         app:layout_anchor="@+id/login_form"
         app:layout_anchorGravity="bottom|center" />
+
 </android.support.design.widget.CoordinatorLayout>

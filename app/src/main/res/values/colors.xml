@@ -12,4 +12,8 @@
     <color name="colorDarkGray">#333333</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+    <color name="darkTextColor">#373340</color>
+    <color name="lightTextColor">#ABAAB0</color>
+    <color name="receivedGreen">#2cc55e</color>
+    <color name="sentRed">#E93A3F</color>
 </resources>

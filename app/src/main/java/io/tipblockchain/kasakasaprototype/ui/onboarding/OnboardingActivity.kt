@@ -1,12 +1,15 @@
 package io.tipblockchain.kasakasaprototype.ui.onboarding
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
@@ -20,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding.view.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.widget.Button
+import io.tipblockchain.kasakasaprototype.ui.mainapp.MainTabActivity
 import io.tipblockchain.kasakasaprototype.ui.newaccount.ChooseUsernameActivity
 import kotlin.math.log
 
@@ -41,6 +45,7 @@ class OnboardingActivity : AppCompatActivity() {
     internal var pageDescriptions = arrayOf(String())
     internal var viewPager: ViewPager? = null
     internal var createButton: Button? = null
+    internal var sharedPrefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +79,14 @@ class OnboardingActivity : AppCompatActivity() {
                 print("page selected $position")
             }
         })
+
+        sharedPrefs = applicationContext.getSharedPreferences(getString(R.string.default_prefs_file), 0)
+        val setupComplete: Boolean = sharedPrefs!!.getBoolean(getString(R.string.prefs_setup_complete), false)
+        if (setupComplete) {
+            val intent = Intent(this, MainTabActivity::class.java)
+
+            startActivity(intent)
+        }
 
         createButton?.setOnClickListener {
             this.startAccountCreation()
