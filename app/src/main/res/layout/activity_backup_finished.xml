@@ -67,11 +67,11 @@ android:minHeight="159dp"
         android:layout_height="4dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorPink"
-        app:layout_constraintBottom_toTopOf="@+id/okayBtn"
+        app:layout_constraintBottom_toTopOf="@+id/confirmBtn"
         tools:layout_editor_absoluteX="8dp" />
 
     <Button
-        android:id="@+id/okayBtn"
+        android:id="@+id/confirmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="52dp"

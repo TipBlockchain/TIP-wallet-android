@@ -14,12 +14,8 @@ class TransactionConfirmedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_confirmed)
+        confirmBtn.setOnClickListener { navigateToMainApp() }
 
-    }
-
-    override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View {
-        return super.onCreateView(name, context, attrs)
-        okayBtn.setOnClickListener { navigateToMainApp() }
     }
 
     fun navigateToMainApp() {

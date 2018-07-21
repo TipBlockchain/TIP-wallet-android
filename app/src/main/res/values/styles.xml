@@ -62,6 +62,9 @@
         <item name="android:fontFamily">@font/advent_pro_light</item>
         <item name="android:textSize">22sp</item>
     </style>
+    <style name="AppTheme.WhiteColorAccent">
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
 
     <style name="placeholderName2">mike_styles184</style>
 </resources>

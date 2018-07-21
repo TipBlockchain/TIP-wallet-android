@@ -25,6 +25,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.widget.Button
 import io.tipblockchain.kasakasaprototype.ui.mainapp.MainTabActivity
 import io.tipblockchain.kasakasaprototype.ui.newaccount.ChooseUsernameActivity
+import io.tipblockchain.kasakasaprototype.ui.newaccount.EnterPhoneNumberActivity
 import kotlin.math.log
 
 
@@ -115,7 +116,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     fun startAccountCreation() {
-        val intent = Intent(this, ChooseUsernameActivity::class.java)
+        val intent = Intent(this, EnterPhoneNumberActivity::class.java)
         intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }

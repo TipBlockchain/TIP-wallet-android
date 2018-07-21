@@ -27,7 +27,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/usernameTv"
+                android:id="@+id/fistnameTv"
                 style="@style/AppTheme.TextViewRowTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

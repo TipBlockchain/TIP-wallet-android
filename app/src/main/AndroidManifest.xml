@@ -71,14 +71,15 @@
         <activity
             android:name=".ui.mainapp.SendTransferActivity"
             android:label="@string/send_payment" />
-
         <activity
             android:name=".ui.mainapp.ConfirmTransferActivity"
             android:label="@string/title_activity_confirm_payment"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".ui.mainapp.MainActivity" />
-        <activity android:name=".ui.mainapp.TransactionConfirmedActivity"></activity>
+        <activity android:name=".ui.mainapp.TransactionConfirmedActivity" />
+        <activity
+            android:name=".ui.newaccount.EnterPhoneNumberActivity"
+            android:label="@string/title_activity_enter_phone_number"></activity>
     </application>
 
 </manifest>

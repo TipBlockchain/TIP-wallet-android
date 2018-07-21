@@ -37,7 +37,7 @@
         android:layout_height="270dp"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/okayBtn"
+        app:layout_constraintBottom_toTopOf="@+id/confirmBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentIv">
@@ -167,7 +167,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <Button
-        android:id="@+id/okayBtn"
+        android:id="@+id/confirmBtn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginBottom="50dp"

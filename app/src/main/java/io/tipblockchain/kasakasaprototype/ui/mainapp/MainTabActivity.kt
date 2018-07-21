@@ -1,14 +1,11 @@
 package io.tipblockchain.kasakasaprototype.ui.mainapp
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_main_tab.*
 
 import io.tipblockchain.kasakasaprototype.R
 import io.tipblockchain.kasakasaprototype.ui.settings.MyAccountFragment
+import io.tipblockchain.kasakasaprototype.ui.settings.MyAccountPreferenceFragment
 
 class MainTabActivity : AppCompatActivity() {
 
@@ -72,6 +70,7 @@ class MainTabActivity : AppCompatActivity() {
 //        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
 //        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
         mSectionsPagerAdapter?.replaceFragment(ContactFragment.newInstance(1))
+        supportActionBar?.setTitle(R.string.title_contacts)
 
     }
 

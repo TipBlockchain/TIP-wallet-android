@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/sentIv" />
 
     <Button
-        android:id="@+id/okayBtn"
+        android:id="@+id/confirmBtn"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginBottom="50dp"

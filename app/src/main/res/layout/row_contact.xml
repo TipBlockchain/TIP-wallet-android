@@ -33,7 +33,7 @@
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
-            android:id="@+id/usernameTv"
+            android:id="@+id/fistnameTv"
             style="@style/AppTheme.TextViewRowSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

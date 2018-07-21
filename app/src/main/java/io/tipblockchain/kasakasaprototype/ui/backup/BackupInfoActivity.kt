@@ -13,7 +13,7 @@ class BackupInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_backup_info)
 
-        okayBtn.setOnClickListener {
+        confirmBtn.setOnClickListener {
             goToMainBackup()
         }
     }

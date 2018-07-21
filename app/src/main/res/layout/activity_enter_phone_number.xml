@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:fitsSystemWindows="true"
-    tools:context=".ui.newaccount.ChooseUsernameActivity">
+    tools:context=".ui.newaccount.EnterPhoneNumberActivity">
 
     <!-- Login progress -->
 
@@ -41,6 +41,11 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -53,11 +58,10 @@
                     android:id="@+id/fistnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_firstname"
+                    android:hint="@string/prompt_select_country"
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:nextFocusDown="@id/lastnameTv"
-                    android:nextFocusForward="@id/lastnameTv"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textColorHint="@color/colorWhite"
@@ -73,21 +77,36 @@
                 android:textColorHint="@color/colorVeryLightGray"
                 android:theme="@style/AppTheme.WhiteColorAccent">
 
-                <AutoCompleteTextView
+                <io.tipblockchain.kasakasaprototype.widgets.PrefixEditText
                     android:id="@+id/lastnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_lastname"
-                    android:inputType="textPersonName"
+                    android:hint="@string/prompt_enter_phone"
+                    android:inputType="phone"
                     android:maxLines="1"
                     android:nextFocusDown="@id/usernameTv"
-                    android:nextFocusForward="@id/usernameTv"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textColorHint="@color/colorWhite"
                     android:theme="@style/AppTheme.WhiteEditText" />
 
             </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/verifyPhoneBtn"
+                style="@style/AppTheme.SecondaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/verify_phone"
+                android:textStyle="bold"
+                android:theme="@style/AppTheme.PrimaryButton"
+                app:layout_anchor="@+id/login_form"
+                app:layout_anchorGravity="bottom|center" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -100,13 +119,13 @@
                     android:id="@+id/usernameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_username"
+                    android:hint="@string/prompt_enter_verification"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
+                    android:inputType="number"
                     android:maxLines="1"
                     android:nextFocusDown="@id/nextBtn"
-                    android:nextFocusForward="@id/nextBtn"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textColorHint="@color/colorWhite"

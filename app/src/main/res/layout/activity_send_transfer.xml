@@ -42,10 +42,11 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="20dp"
                 android:textColorHint="@color/colorVeryLightGray"
+                android:theme="@style/AppTheme.WhiteColorAccent"
                 android:layout_weight="0.33">
 
                 <AutoCompleteTextView
-                    android:id="@+id/firstname"
+                    android:id="@+id/fistnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_recepient"
@@ -53,7 +54,9 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
+                    android:textColorHighlight="@color/colorWhite"
                     android:textColorHint="@color/colorWhite"
+                    android:textColorLink="@color/colorWhite"
                     android:theme="@style/AppTheme.WhiteEditText" />
 
             </android.support.design.widget.TextInputLayout>
@@ -63,10 +66,11 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="20dp"
                 android:textColorHint="@color/colorVeryLightGray"
+                android:theme="@style/AppTheme.WhiteColorAccent"
                 android:layout_weight="0.33">
 
                 <AutoCompleteTextView
-                    android:id="@+id/lastname"
+                    android:id="@+id/lastnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_amount"
@@ -74,6 +78,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
                     android:textColorHint="@color/colorWhite"
                     android:theme="@style/AppTheme.WhiteEditText" />
 
@@ -83,10 +88,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.33"
+                android:theme="@style/AppTheme.WhiteColorAccent"
                 android:textColorHint="@color/colorVeryLightGray">
 
                 <EditText
-                    android:id="@+id/username"
+                    android:id="@+id/usernameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_message"
@@ -97,6 +103,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
                     android:textColorHint="@color/colorWhite"
                     android:theme="@style/AppTheme.WhiteEditText" />
 

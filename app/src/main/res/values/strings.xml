@@ -8,7 +8,7 @@
     <string name="p2p_instant_messaging">Peer-to-peer Instant Messaging</string>
     <string name="smart_addresses">Smart Addresses</string>
     <string name="discovery_on_blockchain">Discovery on the blockchain.</string>
-    <string name="send_money_to_friends">Send money to friends and family using their username.</string>
+    <string name="send_money_to_friends">Send money to friends and family using their username or phone number.</string>
     <string name="information_is_indexed">Information on our network is searchable so users and business can find each other by searching. Discover new ways to interact using blockchain technology.</string>
     <string name="chat_with_friends">Chat securely with your friends and family and transfer cryptocurrency over instant messaging.</string>
     <string name="todo">TODO</string>
@@ -151,4 +151,11 @@
     <string name="prompt_recepient">Recepient</string>
     <string name="okay">Okay</string>
     <string name="transaction_sent">Transaction Sent</string>
+    <string name="buyTip">Buy TIP</string>
+    <string name="placeholder_username_jane">jane_smith99</string>
+    <string name="title_activity_enter_phone_number">Enter your phone number</string>
+    <string name="prompt_select_country">Select your country</string>
+    <string name="prompt_enter_phone">Enter your phone number</string>
+    <string name="verify_phone">Verify your number</string>
+    <string name="prompt_enter_verification">Enter your phone verification code</string>
 </resources>

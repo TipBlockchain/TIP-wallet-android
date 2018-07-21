@@ -62,7 +62,7 @@ class MyTransactionRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mUsernameView: TextView = mView.usernameTv
+        val mUsernameView: TextView = mView.fistnameTv
         var mAmountView: TextView = mView.amountTv
         val mMessageTv: TextView = mView.messageTv
         val mTimeTv: TextView = mView.timeTv

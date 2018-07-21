@@ -1,12 +1,8 @@
 package io.tipblockchain.kasakasaprototype.ui.settings
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.preference.PreferenceFragmentCompat
 
 import io.tipblockchain.kasakasaprototype.R
 
@@ -15,38 +11,42 @@ import com.google.android.gms.plus.PlusOneButton
 /**
  * A fragment with a Google +1 button.
  * Activities that contain this fragment must implement the
- * [MyAccountFragment.OnFragmentInteractionListener] interface
+ * [MyAccountPreferenceFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [MyAccountFragment.newInstance] factory method to
+ * Use the [MyAccountPreferenceFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MyAccountFragment : Fragment() {
+class MyAccountPreferenceFragment : PreferenceFragmentCompat() {
     // The URL to +1.  Must be a valid URL.
     private val PLUS_ONE_URL = "http://developer.android.com"
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
+    private var mPlusOneButton: PlusOneButton? = null
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments.getString(ARG_PARAM1)
-            mParam2 = arguments.getString(ARG_PARAM2)
-        }
+    override fun onCreatePreferences(bundle: Bundle?, s: String?) {
+        // Load the Preferences from the XML file
+        addPreferencesFromResource(R.xml.pref_general)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater!!.inflate(R.layout.fragment_my_account, container, false)
-
-        return view
-    }
+//    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+//                              savedInstanceState: Bundle?): View? {
+//        // Inflate the layout for this fragment
+//        val view = inflater!!.inflate(R.layout.fragment_my_account, container, false)
+//
+//        //Find the +1 button
+//        mPlusOneButton = view.findViewById<View>(R.id.plus_one_button) as PlusOneButton
+//
+//        return view
+//    }
 
     override fun onResume() {
         super.onResume()
+
+        // Refresh the state of the +1 button each time the activity receives focus.
+        mPlusOneButton!!.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,11 +90,11 @@ class MyAccountFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment MyAccountFragment.
+         * @return A new instance of fragment MyAccountPreferenceFragment.
          */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): MyAccountFragment {
-            val fragment = MyAccountFragment()
+        fun newInstance(param1: String, param2: String): MyAccountPreferenceFragment {
+            val fragment = MyAccountPreferenceFragment()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)
             args.putString(ARG_PARAM2, param2)

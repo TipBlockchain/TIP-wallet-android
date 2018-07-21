@@ -54,7 +54,7 @@ class SendTransferActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<
             return true
         }
         if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-            Snackbar.make(username, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(usernameTv, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok,
                             { requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_READ_CONTACTS) })
         } else {
@@ -196,7 +196,7 @@ class SendTransferActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<
                 goToChoosePassword()
             } else {
 //                username.error = getString(R.string.error_username_unavailable)
-                username.requestFocus()
+                usernameTv.requestFocus()
             }
         }
 

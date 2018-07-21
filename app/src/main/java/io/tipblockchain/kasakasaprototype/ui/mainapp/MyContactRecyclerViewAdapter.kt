@@ -59,7 +59,7 @@ class MyContactRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.usernameTv
+        val mIdView: TextView = mView.fistnameTv
         val mContentView: TextView = mView.messageTv
         val mAvatarImageView: ImageView = mView.avatarImageView
 

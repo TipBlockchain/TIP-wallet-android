@@ -21,26 +21,26 @@ import android.view.View
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
-
-import kotlinx.android.synthetic.main.activity_choose_username.*
 import io.tipblockchain.kasakasaprototype.R
+
+import kotlinx.android.synthetic.main.activity_enter_phone_number.*
 
 /**
  * A login screen that offers login via email/password.
  */
-class ChooseUsernameActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+class EnterPhoneNumberActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
     private var mAuthTask: UserLoginTask? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_choose_username)
+        setContentView(R.layout.activity_enter_phone_number)
         // Set up the login form.
         populateAutoComplete()
 
-        nextBtn.setOnClickListener { attemptLogin() }
+        lastnameTv.prefix = "+(233)"
+
+        nextBtn.setOnClickListener { navigateToChooseUsername() }
+
     }
 
     private fun populateAutoComplete() {
@@ -80,6 +80,11 @@ class ChooseUsernameActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
     }
 
+    fun navigateToChooseUsername() {
+        val intent = Intent(this, ChooseUsernameActivity::class.java)
+        intent.putExtra("keyIdentifier", "value")
+        startActivity(intent)
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
