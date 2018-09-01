@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.tipblockchain.kasakasaprototype">
+    package="io.tipblockchain.kasakasa">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -50,10 +51,12 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".ui.newaccount.ChooseUsernameActivity"
-            android:label="@string/title_activity_choose_username" />
+            android:label="@string/title_activity_choose_username"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".ui.newaccount.ChoosePasswordActivity"
-            android:label="@string/title_activity_choose_password" />
+            android:label="@string/title_activity_choose_password"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <!-- <activity -->
         <!-- android:name=".ui.mainapp.MainTabActivity" -->
         <!-- android:label="@string/title_activity_main_tab" /> -->
@@ -75,11 +78,17 @@
             android:name=".ui.mainapp.ConfirmTransferActivity"
             android:label="@string/title_activity_confirm_payment"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.mainapp.MainActivity" />
         <activity android:name=".ui.mainapp.TransactionConfirmedActivity" />
         <activity
             android:name=".ui.newaccount.EnterPhoneNumberActivity"
-            android:label="@string/title_activity_enter_phone_number"></activity>
+            android:label="@string/title_activity_enter_phone_number" />
+        <activity
+            android:name=".ui.newaccount.RecoveryPhraseActivity"
+            android:label="@string/title_activity_recovery_phrase"/>
+        <activity
+            android:name=".ui.newaccount.VerifyRecoveryPhraseActivity"
+            android:label="@string/title_activity_verify_recovery_phrase"
+            />
     </application>
 
 </manifest>

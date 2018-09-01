@@ -77,7 +77,7 @@
                 android:textColorHint="@color/colorVeryLightGray"
                 android:theme="@style/AppTheme.WhiteColorAccent">
 
-                <io.tipblockchain.kasakasaprototype.widgets.PrefixEditText
+                <io.tipblockchain.kasakasa.widgets.PrefixEditText
                     android:id="@+id/lastnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

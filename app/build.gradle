@@ -14,6 +14,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -21,24 +22,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions 'version'
+
+    productFlavors {
+        live {
+            dimension 'version'
+        }
+        dev {
+            dimension 'version'
+            versionNameSuffix '-dev'
+        }
+    }
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:preference-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.android.support:support-annotations:26.1.0'
+    implementation 'com.android.support:support-annotations:27.1.1'
     implementation 'com.android.support:support-compat:26.1.0'
     implementation 'com.android.support:support-core-ui:26.1.0'
     implementation 'com.github.heetch:Android-country-picker:1.0.6'
     implementation('com.romandanylyk:pageindicatorview:1.0.1') {
         exclude group: "com.android.support"
     }
+    implementation 'com.google.android:flexbox:1.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-
+    implementation 'org.web3j:core:3.3.1-android'
+    implementation 'org.bitcoinj:bitcoinj-core:0.14.7'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'

@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="background_content_desc">background</string>
-    <string name="welcome_to_tip">Welcome To TIP</string>
+    <string name="welcome_to_tip">Welcome to TIP</string>
     <string name="search_and_discovery">Search and Discovery</string>
     <string name="p2p_instant_messaging">Peer-to-peer Instant Messaging</string>
     <string name="smart_addresses">Smart Addresses</string>
@@ -158,4 +158,12 @@
     <string name="prompt_enter_phone">Enter your phone number</string>
     <string name="verify_phone">Verify your number</string>
     <string name="prompt_enter_verification">Enter your phone verification code</string>
+    <string name="save_password">Save Password</string>
+    <string name="title_activity_recovery_phrase">RecoveryPhraseActivity</string>
+    <string name="title_activity_verify_recovery_phrase">VerifyRecoveryPhraseActivity</string>
+    <string name="verify_recovery_phrase">Verify Recovery Phrase</string>
+    <string name="written_recovery_phrase">I have written down my recovery phrase</string>
+    <string name="this_is_recover">This is your recovery phrase</string>
+    <string name="recovery_warning">Write down your recovery phrase somewhere safe. If you lose this phrase you will lose access to your account.</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
 </resources>

@@ -62,9 +62,25 @@
         <item name="android:fontFamily">@font/advent_pro_light</item>
         <item name="android:textSize">22sp</item>
     </style>
+
+    <style name="AppTheme.TextViewLightNormal" parent="">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="AppTheme.TextViewDarkNormal" parent="">
+        <item name="android:textColor">@color/colorDarkGray</item>
+        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
     <style name="AppTheme.WhiteColorAccent">
         <item name="colorAccent">@color/colorWhite</item>
     </style>
 
+    <style name="AppTheme.TextBox">
+        <item name="android:padding">10dp</item>
+        <item name="android:colorBackground">@color/colorLightGray</item>
+        <item name="android:textAppearance">@style/AppTheme.TextViewDarkNormal</item>
+    </style>
     <style name="placeholderName2">mike_styles184</style>
 </resources>
