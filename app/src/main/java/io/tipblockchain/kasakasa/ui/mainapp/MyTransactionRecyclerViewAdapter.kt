@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.data.Contact
-import io.tipblockchain.kasakasa.data.Transaction
+import io.tipblockchain.kasakasa.db.entity.User
+import io.tipblockchain.kasakasa.db.entity.Transaction
 
 
 import io.tipblockchain.kasakasa.ui.mainapp.WalletFragment.OnListFragmentInteractionListener
@@ -46,12 +46,12 @@ class MyTransactionRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transaction = mValues[position]
 
-        val otherUser: Contact = transaction.from
-        holder.mUsernameView.text = otherUser.alias
+        val otherUser: User = transaction.from
+        holder.mUsernameView.text = otherUser.username
         holder.mMessageTv.text = transaction.message
-        holder.mAmountView.text = "${transaction.amount} TIP"
+        holder.mAmountView.text = "${transaction.value} TIP"
         holder.mTimeTv.text = transaction.time.toString()
-        Picasso.get().load(otherUser.avatarUrl).into(holder.mAvartarIv)
+        Picasso.get().load(otherUser.pictureUrl).into(holder.mAvartarIv)
 
         with(holder.mView) {
             tag = transaction

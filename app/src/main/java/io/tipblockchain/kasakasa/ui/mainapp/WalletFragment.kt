@@ -13,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.data.Transaction
+import io.tipblockchain.kasakasa.db.entity.Transaction
 
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.TransactionsContentManager
 import kotlinx.android.synthetic.main.fragment_wallet.*
@@ -44,7 +44,7 @@ class WalletFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         transactionList.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
@@ -61,12 +61,12 @@ class WalletFragment : Fragment() {
             Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${transactionList}")
         }
 
-        sendBtn.setOnClickListener { view ->
-            Snackbar.make(view, "Send Payment", Snackbar.LENGTH_LONG)
+        sendBtn.setOnClickListener { v ->
+            Snackbar.make(v, "Send Payment", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        receiveBtn.setOnClickListener { view ->
-            Snackbar.make(view, "Receive payment", Snackbar.LENGTH_LONG)
+        receiveBtn.setOnClickListener { v ->
+            Snackbar.make(v, "Receive payment", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 

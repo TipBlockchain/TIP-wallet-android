@@ -46,6 +46,10 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="AppTheme.TextViewSeedPhrase" parent="">
+        <item name="android:textColor">@color/darkTextColor</item>
+        <item name="android:textSize">32sp</item>
+    </style>
     <style name="AppTheme.TextViewRowSubtitle" parent="">
         <item name="android:textColor">@color/lightTextColor</item>
         <item name="android:textSize">16sp</item>

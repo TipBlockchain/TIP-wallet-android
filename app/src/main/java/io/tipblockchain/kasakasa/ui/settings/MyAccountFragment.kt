@@ -10,8 +10,6 @@ import android.view.ViewGroup
 
 import io.tipblockchain.kasakasa.R
 
-import com.google.android.gms.plus.PlusOneButton
-
 /**
  * A fragment with a Google +1 button.
  * Activities that contain this fragment must implement the
@@ -32,15 +30,15 @@ class MyAccountFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mParam1 = arguments.getString(ARG_PARAM1)
-            mParam2 = arguments.getString(ARG_PARAM2)
+            mParam1 = arguments!!.getString(ARG_PARAM1)
+            mParam2 = arguments!!.getString(ARG_PARAM2)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater!!.inflate(R.layout.fragment_my_account, container, false)
+        val view = inflater.inflate(R.layout.fragment_my_account, container, false)
 
         return view
     }

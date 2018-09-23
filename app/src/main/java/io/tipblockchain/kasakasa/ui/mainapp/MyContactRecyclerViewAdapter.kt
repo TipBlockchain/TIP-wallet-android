@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.data.Contact
+import io.tipblockchain.kasakasa.db.entity.User
 
 
 import io.tipblockchain.kasakasa.ui.mainapp.ContactFragment.OnListFragmentInteractionListener
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.row_contact.view.*
  */
 class MyContactRecyclerViewAdapter(
         private val context: Context,
-        private val mValues: List<Contact>,
+        private val mValues: List<User>,
         private val mListener: OnListFragmentInteractionListener?)
     : RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder>() {
 
@@ -31,7 +31,7 @@ class MyContactRecyclerViewAdapter(
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Contact
+            val item = v.tag as User
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
             mListener?.onListFragmentInteraction(item)
@@ -46,9 +46,9 @@ class MyContactRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mIdView.text = item.alias
+        holder.mIdView.text = item.username
         holder.mContentView.text = item.name
-        Picasso.get().load(item.avatarUrl).into(holder.mAvatarImageView)
+        Picasso.get().load(item.pictureUrl).into(holder.mAvatarImageView)
 
         with(holder.mView) {
             tag = item

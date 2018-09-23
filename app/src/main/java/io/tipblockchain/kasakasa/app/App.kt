@@ -25,6 +25,5 @@ class App : Application() {
 
         // Use ApplicationContext.
         // example: SharedPreferences etc...
-        val context: Context = App.applicationContext()
     }
 }

@@ -6,8 +6,6 @@ import android.support.v7.preference.PreferenceFragmentCompat
 
 import io.tipblockchain.kasakasa.R
 
-import com.google.android.gms.plus.PlusOneButton
-
 /**
  * A fragment with a Google +1 button.
  * Activities that contain this fragment must implement the
@@ -22,7 +20,6 @@ class MyAccountPreferenceFragment : PreferenceFragmentCompat() {
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-    private var mPlusOneButton: PlusOneButton? = null
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -46,7 +43,6 @@ class MyAccountPreferenceFragment : PreferenceFragmentCompat() {
         super.onResume()
 
         // Refresh the state of the +1 button each time the activity receives focus.
-        mPlusOneButton!!.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

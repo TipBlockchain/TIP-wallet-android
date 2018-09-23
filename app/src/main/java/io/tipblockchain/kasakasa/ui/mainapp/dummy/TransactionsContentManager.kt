@@ -1,12 +1,8 @@
 package io.tipblockchain.kasakasa.ui.mainapp.dummy
 
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.data.Contact
-import io.tipblockchain.kasakasa.data.Transaction
+import io.tipblockchain.kasakasa.db.entity.User
+import io.tipblockchain.kasakasa.db.entity.Transaction
+import java.math.BigInteger
 import java.util.*
 
 /**
@@ -34,10 +30,10 @@ object TransactionsContentManager {
     }
 
     private fun createTransactions() {
-        val contacts: Array<Contact> = ContactsContentManager.ITEMS.toTypedArray()
+        val users: Array<User> = ContactsContentManager.ITEMS.toTypedArray()
         var transactions: Array<Transaction> = arrayOf(
-                Transaction(id = "1", hash = "0x123", from = contacts[5], to = contacts[11], amount = 1220.70f, time = Date(),  message = "Pizza and drinks"),
-                Transaction(id = "2", hash = "0x124", from = contacts[9], to = contacts[4], amount = 100.00f, time = Date(),  message = "Bingo")
+                Transaction(id = "1", hash = "0x123", from = users[5], to = users[11], currency = "TIP", value = BigInteger("122070"), time = Date(), message = "Pizza and drinks"),
+                Transaction(id = "2", hash = "0x124", from = users[9], to = users[4], currency = "TIP", value = BigInteger("48202"), time = Date(), message = "Bingo")
 
         )
 

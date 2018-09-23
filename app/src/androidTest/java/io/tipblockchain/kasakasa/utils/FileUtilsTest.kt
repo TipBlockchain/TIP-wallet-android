@@ -1,5 +1,6 @@
 package io.tipblockchain.kasakasa.utils
 
+import android.util.Log
 import io.tipblockchain.kasakasa.app.App
 import org.junit.After
 import org.junit.Assert
@@ -7,7 +8,7 @@ import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
-import java.io.File
+import java.io.*
 import java.util.*
 
 class FileUtilsTest {
@@ -56,7 +57,7 @@ class FileUtilsTest {
     fun createFile() {
         val filename = "testfile ${Date().time}"
         val filesDir = fileUtils.filesDir()
-        val newFile = fileUtils.createFile(filename, filesDir)
+        val newFile = fileUtils.createFile(filesDir, filename)
 
         println("File created: $newFile")
 
@@ -66,5 +67,28 @@ class FileUtilsTest {
 
     @Test
     fun deleteFile() {
+    }
+
+    @Test
+    fun testGetWordList() {
+        val inputStream = App.applicationContext().assets.open("en-mnemonic-word-list.txt")
+        val wordList = readAllLines(inputStream)
+        Assert.assertNotNull(wordList)
+    }
+
+    @Throws(IOException::class)
+    fun readAllLines(inputStream: InputStream): List<String> {
+        val br = BufferedReader(InputStreamReader(inputStream))
+        val data = ArrayList<String>()
+        var line: String? = null
+
+        do {
+            line = br.readLine()
+            if (line != null) {
+                data.add(line!!)
+            }
+        } while (line != null)
+
+        return data
     }
 }

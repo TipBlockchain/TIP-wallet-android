@@ -47,19 +47,13 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity
             android:name=".ui.newaccount.ChooseUsernameActivity"
             android:label="@string/title_activity_choose_username"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".ui.newaccount.ChoosePasswordActivity"
+            android:name=".ui.onboarding.password.ChoosePasswordActivity"
             android:label="@string/title_activity_choose_password"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <!-- <activity -->
-        <!-- android:name=".ui.mainapp.MainTabActivity" -->
-        <!-- android:label="@string/title_activity_main_tab" /> -->
         <activity
             android:name=".ui.backup.BackupInfoActivity"
             android:label="@string/title_activity_backup_info"
@@ -83,7 +77,7 @@
             android:name=".ui.newaccount.EnterPhoneNumberActivity"
             android:label="@string/title_activity_enter_phone_number" />
         <activity
-            android:name=".ui.newaccount.RecoveryPhraseActivity"
+            android:name=".ui.onboarding.recovery.RecoveryPhraseActivity"
             android:label="@string/title_activity_recovery_phrase"/>
         <activity
             android:name=".ui.newaccount.VerifyRecoveryPhraseActivity"

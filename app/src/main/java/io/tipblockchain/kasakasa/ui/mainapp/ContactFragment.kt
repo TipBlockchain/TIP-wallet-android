@@ -1,7 +1,6 @@
 package io.tipblockchain.kasakasa.ui.mainapp
 
 import android.app.Dialog
-import android.app.ProgressDialog.show
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.data.Contact
+import io.tipblockchain.kasakasa.db.entity.User
 
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.ContactsContentManager
 import android.support.v7.widget.DividerItemDecoration
@@ -22,7 +21,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import io.tipblockchain.kasakasa.ui.newaccount.ChoosePasswordActivity
+import io.tipblockchain.kasakasa.app.App
 
 
 /**
@@ -73,7 +72,7 @@ class ContactFragment : Fragment() {
 //        }
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         list.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
@@ -98,11 +97,11 @@ class ContactFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: Contact)
+        fun onListFragmentInteraction(item: User)
     }
 
     inner class InteractionListener: OnListFragmentInteractionListener {
-        override fun  onListFragmentInteraction(item: Contact) {
+        override fun  onListFragmentInteraction(item: User) {
             Log.e("error", "List fragent interraction for ${item}")
             val newFragment = TransactionOptionsDialogFragment()
             newFragment.show(fragmentManager, "missiles")
@@ -131,9 +130,9 @@ class TransactionOptionsDialogFragment: DialogFragment() {
     val contactFragment: ContactFragment? = null
 
     override  fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity!!)
         builder.setTitle(R.string.prompt_send_or_request)
-                .setItems(R.array.transaction_options, DialogInterface.OnClickListener { dialog, which ->
+                .setItems(R.array.transaction_options, DialogInterface.OnClickListener { _, which ->
                     // The 'which' argument contains the index position
                     // of the selected item
                     if (which == 0) {

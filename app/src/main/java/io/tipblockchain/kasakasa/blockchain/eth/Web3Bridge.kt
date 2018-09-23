@@ -21,16 +21,26 @@ import org.bitcoinj.crypto.HDUtils
 import org.bitcoinj.crypto.ChildNumber
 import org.bitcoinj.wallet.DeterministicKeyChain
 import org.bitcoinj.wallet.DeterministicSeed
-import org.web3j.crypto.*
 import java.io.File
+import java.security.SecureRandom
 import java.util.*
+
+import io.tipblockchain.kasakasa.crypto.*
+import org.web3j.crypto.Keys
+import org.web3j.crypto.Bip39Wallet
+import org.web3j.crypto.Wallet
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.CipherException
 
 
 class Web3Bridge {
 
     init {
 //        loadTipSmartContract()
+
     }
+
+    private val secureRandom = SecureRandom()
     private var web3: Web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/SSWOxqisHlJoSVWYy09p "))
     private var tipToken: TipToken? = null
 
@@ -117,6 +127,14 @@ class Web3Bridge {
         val credentials = loadCredentialsWithPassword("password", walletFile)
         val receipt = Transfer.sendFunds(web3, credentials, to, BigDecimal(value), Convert.Unit.ETHER).send()
         return receipt
+    }
+
+    fun generateMnemonic(): String {
+        val initialEntropy = ByteArray(16)
+        secureRandom.nextBytes(initialEntropy)
+
+        val mnemonic = MnemonicUtils.generateMnemonic(initialEntropy)
+        return mnemonic
     }
 
     fun sendTipTransaction(to: String, value: BigInteger) {

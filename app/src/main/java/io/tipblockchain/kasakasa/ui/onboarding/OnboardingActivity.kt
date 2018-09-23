@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.ui.onboarding
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
@@ -23,11 +21,7 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding.view.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.widget.Button
-import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
-import io.tipblockchain.kasakasa.ui.newaccount.ChoosePasswordActivity
-import io.tipblockchain.kasakasa.ui.newaccount.ChooseUsernameActivity
-import io.tipblockchain.kasakasa.ui.newaccount.EnterPhoneNumberActivity
-import kotlin.math.log
+import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
 
 
 class OnboardingActivity : AppCompatActivity() {
@@ -73,7 +67,7 @@ class OnboardingActivity : AppCompatActivity() {
 
             override fun onPageSelected(position: Int) {
                 // Check if this is the page you want.
-                if (position == viewPager!!.adapter.count - 1) {
+                if (position == viewPager!!.adapter!!.count - 1) {
                     createButton?.visibility = View.VISIBLE
                 } else {
                     createButton?.visibility = View.INVISIBLE
@@ -150,7 +144,7 @@ class OnboardingActivity : AppCompatActivity() {
                                   savedInstanceState: Bundle?): View? {
             val activity = activity
             val rootView = inflater.inflate(R.layout.fragment_onboarding, container, false)
-            var index = arguments.getInt(ARG_SECTION_NUMBER) - 1
+            var index = arguments!!.getInt(ARG_SECTION_NUMBER) - 1
             if (activity is OnboardingActivity) {
                 rootView.sectionTitleView.text = activity.pageTitles[index] //getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
                 rootView.sectionDescriptionView.text = activity.pageDescriptions[index]

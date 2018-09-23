@@ -24,6 +24,14 @@ object WalletManager {
     }
 
     fun defaultWalletWrapper(): WalletWrapper? {
-        return if (wallets != null && wallets.count() > 0) wallets.first() else null
+        return if (wallets.count() > 0) wallets.first() else null
+    }
+
+    private fun saveWallets() {
+
+    }
+
+    private fun loadWallets() {
+
     }
 }

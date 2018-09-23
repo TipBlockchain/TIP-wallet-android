@@ -166,4 +166,7 @@
     <string name="this_is_recover">This is your recovery phrase</string>
     <string name="recovery_warning">Write down your recovery phrase somewhere safe. If you lose this phrase you will lose access to your account.</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="recovery_phrase_copied">Recovery phrase copied.</string>
+    <string name="placeholder_seed_phrase">one two three four five six seven eight nine ten eleven twelve</string>
+    <string name="recovery_phrase_must_be_copied">The recovery phrase must be backed up to proceed.</string>
 </resources>

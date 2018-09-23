@@ -33,7 +33,7 @@ class Web3BridgeTest {
 
     @Test
     fun createBIP39Wallet() {
-        val wallet = Web3Bridge.createBIP39Wallet("password", Date().toString())
+        val wallet = Web3Bridge().createBip39Wallet("password")
         println("WalletWrapper = ${wallet.mnemonic}")
     }
 
