@@ -25,11 +25,9 @@ class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityRecoveryPhraseBinding = DataBindingUtil.setContentView(this, R.layout.activity_recovery_phrase)
-
+        password = intent.getStringExtra("password")
         viewModel = getViewModel()
         binding.viewModel = viewModel
-
-//        setSupportActionBar(toolbar)
 
         verifyBtn.setOnClickListener {
             this.verifyRecoveryPhraseTapped()
@@ -43,23 +41,7 @@ class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
             this.checkTheBox(isChecked)
         }
 
-        viewModel.getNewRecoveryPhrase(password)
-    }
-
-    private fun getViewModel() = ViewModelProviders.of(this).get(RecoveryPhraseViewModel::class.java)
-
-    fun showNotBackedUpError() {
-        showMessage(getString(R.string.recovery_phrase_must_be_copied))
-    }
-
-    fun showMessage(message: String) {
-        var fromView: View = findViewById(R.id.constraintLayout)
-        Snackbar.make(fromView, message, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-    }
-
-    fun navigateToVerifyRecovery() {
-        startActivity(Intent(this, MainTabActivity::class.java))
+        viewModel.createNewWallet(password)
     }
 
     override fun copyPhraseToClipboard() {
@@ -70,7 +52,7 @@ class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
         this.showMessage(getString(R.string.recovery_phrase_copied))
     }
 
-    override  fun checkTheBox(isChecked: Boolean) {
+    override fun checkTheBox(isChecked: Boolean) {
         Log.i("GIT", "isChecked = $isChecked")
         viewModel.isBackedUp = isChecked
     }
@@ -82,5 +64,21 @@ class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
             showNotBackedUpError()
         }
     }
+
+    private fun showNotBackedUpError() {
+        showMessage(getString(R.string.recovery_phrase_must_be_copied))
+    }
+
+    private fun showMessage(message: String) {
+        var fromView: View = findViewById(R.id.constraintLayout)
+        Snackbar.make(fromView, message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+    }
+
+    private fun navigateToVerifyRecovery() {
+        startActivity(Intent(this, MainTabActivity::class.java))
+    }
+
+    private fun getViewModel() = ViewModelProviders.of(this).get(RecoveryPhraseViewModel::class.java)
 }
 
