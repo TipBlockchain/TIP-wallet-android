@@ -1,7 +1,6 @@
 package io.tipblockchain.kasakasa.db
 
 import android.support.test.InstrumentationRegistry
-import io.tipblockchain.kasakasa.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.db.dao.TransactionDao
 import io.tipblockchain.kasakasa.db.dao.UserDao
 import io.tipblockchain.kasakasa.db.dao.WalletDao
