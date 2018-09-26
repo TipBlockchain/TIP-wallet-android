@@ -4,8 +4,10 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
+import android.util.Log
 import io.tipblockchain.kasakasa.db.dao.TransactionDao
 import io.tipblockchain.kasakasa.db.dao.UserDao
 import io.tipblockchain.kasakasa.db.dao.WalletDao
@@ -15,6 +17,7 @@ import io.tipblockchain.kasakasa.db.entity.Wallet
 
 
 @Database(entities = arrayOf(Transaction::class, User::class, Wallet::class), version = 1)
+@TypeConverters(Converters::class)
 abstract class TipRoomDatabase: RoomDatabase() {
 
     abstract fun transactionDao(): TransactionDao
