@@ -3,9 +3,11 @@ package io.tipblockchain.kasakasa.db.repository
 import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
+import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.db.entity.Wallet
 import io.tipblockchain.kasakasa.db.dao.WalletDao
+import io.tipblockchain.kasakasa.utils.FileUtils
 
 class WalletRepository {
     private var dao: WalletDao
@@ -25,6 +27,24 @@ class WalletRepository {
 
     fun primaryWallet(): LiveData<Wallet>? {
         return primaryWallet
+    }
+
+    fun insert(wallet: Wallet) {
+        insertAsyncTask(dao).execute(wallet)
+    }
+
+    fun newWalletWithPassword(password: String): NewWallet? {
+        val web3Bridge = Web3Bridge()
+        val bip39Wallet = web3Bridge.createBip39Wallet(password)
+        val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
+        if (walletFile != null && walletFile.exists()) {
+            val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
+            val wallet = Wallet(credentials.address, walletFile.absolutePath)
+            this.insert(wallet)
+            return NewWallet(bip39Wallet.mnemonic, wallet)
+        }
+
+        return null
     }
 
     companion object {
@@ -47,3 +67,5 @@ class WalletRepository {
         }
     }
 }
+
+data class NewWallet(val mnemonic: String, val wallet: Wallet){}
