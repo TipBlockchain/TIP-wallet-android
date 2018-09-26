@@ -46,12 +46,13 @@ class MyTransactionRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transaction = mValues[position]
 
-        val otherUser: User = transaction.from
-        holder.mUsernameView.text = otherUser.username
+        val fromName = transaction.from
+//        val otherUser: User = transaction.from
+        holder.mUsernameView.text = fromName
         holder.mMessageTv.text = transaction.message
         holder.mAmountView.text = "${transaction.value} TIP"
         holder.mTimeTv.text = transaction.time.toString()
-        Picasso.get().load(otherUser.pictureUrl).into(holder.mAvartarIv)
+//        Picasso.get().load(otherUser.pictureUrl).into(holder.mAvartarIv)
 
         with(holder.mView) {
             tag = transaction
