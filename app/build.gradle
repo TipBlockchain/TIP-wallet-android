@@ -97,5 +97,5 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
     // java 8
-     implementation "android.arch.lifecycle:common-java8:$archLifecycleVersion"
+    implementation "android.arch.lifecycle:common-java8:$archLifecycleVersion"
 }

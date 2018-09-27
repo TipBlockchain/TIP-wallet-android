@@ -78,11 +78,14 @@
             android:label="@string/title_activity_enter_phone_number" />
         <activity
             android:name=".ui.onboarding.recovery.RecoveryPhraseActivity"
-            android:label="@string/title_activity_recovery_phrase"/>
+            android:label="@string/title_activity_recovery_phrase" />
         <activity
             android:name=".ui.newaccount.VerifyRecoveryPhraseActivity"
-            android:label="@string/title_activity_verify_recovery_phrase"
-            />
+            android:label="@string/title_activity_verify_recovery_phrase" />
+        <activity
+            android:name=".ui.onboarding.profile.OnboardingUserProfileActivity"
+            android:label="@string/title_activity_onboarding_user_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
