@@ -87,13 +87,13 @@ class EnterPhoneNumberActivity : AppCompatActivity() {
         // the progress spinner.
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        login_form.visibility = if (show) View.GONE else View.VISIBLE
-        login_form.animate()
+        form.visibility = if (show) View.GONE else View.VISIBLE
+        form.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                        form.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 

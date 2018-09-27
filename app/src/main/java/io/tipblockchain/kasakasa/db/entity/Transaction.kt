@@ -12,8 +12,8 @@ import javax.annotation.Nonnull
 class Transaction(
         @PrimaryKey @Nonnull @ColumnInfo(name = "id") val id: String,
         @ColumnInfo(name = "hash") val hash: String,
-        @ColumnInfo (name = "from") val from: User,
-        @ColumnInfo (name = "to") val to: User,
+        @ColumnInfo (name = "from") val from: String,
+        @ColumnInfo (name = "to") val to: String,
         @ColumnInfo (name = "currency") val currency: String,
         @ColumnInfo (name = "value") val value: BigInteger,
         @ColumnInfo (name = "time") val time: Date,

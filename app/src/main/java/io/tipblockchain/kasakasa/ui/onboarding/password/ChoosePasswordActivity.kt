@@ -33,7 +33,7 @@ class ChoosePasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivityChoosePasswordBinding = DataBindingUtil.setContentView(this, R.layout.activity_choose_password)
 
-        // Set up the login form.
+        // Set up the password form.
         passwordTv.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 checkkPassword()
@@ -86,12 +86,11 @@ class ChoosePasswordActivity : AppCompatActivity() {
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
+            // There was an error; don't proceed and focus the first
             // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // Show a progress spinner, and proceed to next screen
             showProgress(true)
             goToAccountBackup()
         }
@@ -107,13 +106,13 @@ class ChoosePasswordActivity : AppCompatActivity() {
         // the progress spinner.
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        login_form.visibility = if (show) View.GONE else View.VISIBLE
-        login_form.animate()
+        password_form.visibility = if (show) View.GONE else View.VISIBLE
+        password_form.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                        password_form.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
@@ -130,7 +129,7 @@ class ChoosePasswordActivity : AppCompatActivity() {
 
     fun goToAccountBackup() {
         val intent = Intent(this, RecoveryPhraseActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
+        intent.putExtra("password", viewModel.password)
         startActivity(intent)
     }
 }

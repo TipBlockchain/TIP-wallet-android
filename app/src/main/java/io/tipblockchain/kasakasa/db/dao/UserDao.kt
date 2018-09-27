@@ -20,7 +20,7 @@ interface UserDao {
     fun findAllUsers(): LiveData<List<User>>
 
     @Query("SELECT * FROM users WHERE id in (:ids)")
-    fun findUsers(ids: List<String>)
+    fun findUsers(ids: List<String>): LiveData<List<User>>
 
     @Query("SELECT * FROM users WHERE isContact = 'true' ORDER BY lastMessage DESC")
     fun findContacts(): LiveData<List<User>>
@@ -29,7 +29,7 @@ interface UserDao {
     fun findUserByUsername(username: String): LiveData<User>
 
     @Update
-    fun updateUser(id: String, newUser: User)
+    fun updateUser(userToUpdate: User)
 
     @Delete
     fun deleteUser(user: User)

@@ -1,16 +1,22 @@
 package io.tipblockchain.kasakasa.ui.onboarding.recovery
 
-import android.arch.lifecycle.ViewModel
-import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
+import io.tipblockchain.kasakasa.db.repository.WalletRepository
 
-class RecoveryPhraseViewModel: ViewModel() {
+class RecoveryPhraseViewModel: AndroidViewModel {
     var recoveryPhrase: String? = null
     var isBackedUp: Boolean = false
 
-    fun getNewRecoveryPhrase(password: String)    {
-        val web3Bridge = Web3Bridge()
-        val wallet = web3Bridge.createBip39Wallet(password)
+    private var walletRepository: WalletRepository
 
-        recoveryPhrase = wallet.mnemonic
+    constructor(application: Application): super(application) {
+        walletRepository = WalletRepository(application)
+    }
+
+    fun createNewWallet(password: String)    {
+        val newWallet = walletRepository.newWalletWithPassword(password)
+
+        recoveryPhrase = newWallet?.mnemonic
     }
 }

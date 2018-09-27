@@ -5,17 +5,18 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
+import java.io.File
 import java.math.BigInteger
 import java.util.*
 
 @Entity(tableName = "wallets", indices = [Index("currency")])
 data class Wallet (
         @PrimaryKey @NonNull @ColumnInfo(name = "address") var address: String,
-        @ColumnInfo(name = "filePath") val filePath: String,
-        @ColumnInfo(name = "created") val created: Date,
-        @ColumnInfo(name = "balance") val balance: BigInteger,
-        @ColumnInfo(name = "currency") val currency: String,
-        @ColumnInfo(name = "isPrimary") val isPrimary: Boolean,
-        @ColumnInfo(name = "lastSynced") val lastSynced: Date
+        @ColumnInfo(name = "filePath") val filePath: String?,
+        @ColumnInfo(name = "created") val created: Date = Date(),
+        @ColumnInfo(name = "balance") val balance: BigInteger = BigInteger.ZERO,
+        @ColumnInfo(name = "currency") val currency: String = "TIP",
+        @ColumnInfo(name = "isPrimary") val isPrimary: Boolean = true,
+        @ColumnInfo(name = "lastSynced") val lastSynced: Date = Date()
         ){
 }

@@ -31,6 +31,9 @@ import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Wallet
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.CipherException
+import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.protocol.core.Request
+import org.web3j.protocol.core.methods.response.EthGetBalance
 
 
 class Web3Bridge {
@@ -139,5 +142,9 @@ class Web3Bridge {
 
     fun sendTipTransaction(to: String, value: BigInteger) {
         tipToken!!.transfer(to, value)
+    }
+
+    fun getBalance(address: String): Request<*, EthGetBalance>? {
+        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST)
     }
 }
