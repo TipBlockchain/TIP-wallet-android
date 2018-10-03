@@ -105,6 +105,8 @@
     <string name="error_passwords_dont_match">The passwords do not match</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_username_unavailable">This username is not available</string>
+    <string name="error_username_empty">Your usernane can not be empty</string>
+    <string name="error_firstname_empty">Your firstname can not be empty</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."

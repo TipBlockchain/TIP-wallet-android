@@ -12,7 +12,10 @@ import kotlinx.android.synthetic.main.content_onboarding_user_profile.*
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.provider.MediaStore
+import android.text.TextUtils
+import android.view.View
 import io.tipblockchain.kasakasa.databinding.ActivityOnboardingUserProfileBinding
+import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 
 
 class OnboardingUserProfileActivity : AppCompatActivity(), OnboardignUserProfileView {
@@ -87,16 +90,41 @@ class OnboardingUserProfileActivity : AppCompatActivity(), OnboardignUserProfile
     }
 
     override fun nextButtonClicked() {
-        this.saveViewModel()
-        if (viewModel.canProceed()) {
-            this.navigateToNextScreen()
-        }
+        this.checkValues()
     }
 
     private fun navigateToNextScreen() {
-
+        val intent = Intent(this, MainTabActivity::class.java)
+        startActivity(intent)
     }
 
     private fun getViewModel() = ViewModelProviders.of(this).get(OnboardingUserProfileViewModel::class.java)
+
+    private fun checkValues() {
+        saveViewModel()
+        firstnameTv.error = null
+        lastnameTv.error = null
+        usernameTv.error = null
+
+        var focusView: View? = null
+        var cancel: Boolean = false
+
+        if (TextUtils.isEmpty(viewModel.firstname)) {
+            focusView = firstnameTv
+            firstnameTv.error = getString(R.string.error_firstname_empty)
+            cancel = true
+        } else if (TextUtils.isEmpty(viewModel.username)) {
+            focusView = usernameTv
+            usernameTv.error = getString(R.string.error_username_empty)
+            cancel = true
+        }
+
+        if (cancel) {
+            focusView?.requestFocus()
+        } else {
+            this.navigateToNextScreen()
+        }
+
+    }
 
 }
