@@ -1,4 +1,4 @@
 package io.tipblockchain.kasakasa.networking
 
-class NetworkingManager {
+interface TipApi {
 }
