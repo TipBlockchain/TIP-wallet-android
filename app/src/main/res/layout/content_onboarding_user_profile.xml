@@ -43,7 +43,7 @@
             android:layout_marginBottom="20dp">
 
             <LinearLayout
-                android:id="@+id/email_login_form"
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -51,29 +51,49 @@
                 android:orientation="vertical">
 
                 <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="20dp">
 
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/profileImageView"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/user_profile_placeholder"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/female_30_round" />
+                        app:riv_border_color="@color/colorWhite"
+                        app:riv_border_width="2dp"
+                        app:riv_corner_radius="80dp"
+                        app:riv_mutate_background="true" />
+
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/cameraImageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:srcCompat="@android:drawable/ic_menu_camera" />
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/firstnameTvLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="0.33"
                     android:textColorHint="@color/colorVeryLightGray"
-                    android:theme="@style/AppTheme.WhiteColorAccent">
+                    android:theme="@style/AppTheme.WhiteColorAccent"
+                    app:errorTextAppearance="@style/error_appearance">
 
-                    <AutoCompleteTextView
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/firstnameTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -86,11 +106,12 @@
                         android:text="@{viewModel.firstname}"
                         android:textColor="@android:color/white"
                         android:textColorHint="@color/colorWhite"
-                        android:theme="@style/AppTheme.WhiteEditText" />
+                        android:theme="@style/AppTheme.WhiteEditText"/>
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/lastnameTvLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginBottom="20dp"
@@ -98,7 +119,7 @@
                     android:textColorHint="@color/colorVeryLightGray"
                     android:theme="@style/AppTheme.WhiteColorAccent">
 
-                    <AutoCompleteTextView
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/lastnameTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -116,13 +137,14 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/usernameTvLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.33"
                     android:textColorHint="@color/colorVeryLightGray"
                     android:theme="@style/AppTheme.WhiteColorAccent">
 
-                    <EditText
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/usernameTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

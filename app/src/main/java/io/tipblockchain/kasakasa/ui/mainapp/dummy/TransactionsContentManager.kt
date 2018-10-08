@@ -1,7 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.dummy
 
-import io.tipblockchain.kasakasa.db.entity.User
-import io.tipblockchain.kasakasa.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import java.math.BigInteger
 import java.util.*
 

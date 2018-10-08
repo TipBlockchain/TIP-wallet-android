@@ -152,6 +152,7 @@
     <string name="prompt_amount">Amount</string>
     <string name="prompt_recepient">Recepient</string>
     <string name="okay">Okay</string>
+    <string name="cancel">Cancel</string>
     <string name="transaction_sent">Transaction Sent</string>
     <string name="buyTip">Buy TIP</string>
     <string name="placeholder_username_jane">jane_smith99</string>
@@ -172,4 +173,6 @@
     <string name="placeholder_seed_phrase">one two three four five six seven eight nine ten eleven twelve</string>
     <string name="recovery_phrase_must_be_copied">The recovery phrase must be backed up to proceed.</string>
     <string name="title_activity_onboarding_user_profile">OnboardingUserProfileActivity</string>
+    <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
+    <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture.</string>
 </resources>

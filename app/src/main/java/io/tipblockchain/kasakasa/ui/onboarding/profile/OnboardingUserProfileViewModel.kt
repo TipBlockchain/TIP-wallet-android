@@ -21,6 +21,10 @@ class OnboardingUserProfileViewModel: AndroidViewModel {
         return username != null && firstname != null && lastname != null
     }
 
+    fun signupUser() {
+
+    }
+
     override fun toString(): String {
         return "{username: $username, firstname: $firstname, lastname: $lastname, photo: $profilePhoto}"
     }

@@ -1,6 +1,6 @@
 package io.tipblockchain.kasakasa.networking
 
-class NetworkingManager {
+class NetworkController {
 
     fun getCountries() {
 
