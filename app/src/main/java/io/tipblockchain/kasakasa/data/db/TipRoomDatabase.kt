@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.db
+package io.tipblockchain.kasakasa.data.db
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
@@ -8,12 +8,12 @@ import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
-import io.tipblockchain.kasakasa.db.dao.TransactionDao
-import io.tipblockchain.kasakasa.db.dao.UserDao
-import io.tipblockchain.kasakasa.db.dao.WalletDao
-import io.tipblockchain.kasakasa.db.entity.Transaction
-import io.tipblockchain.kasakasa.db.entity.User
-import io.tipblockchain.kasakasa.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
+import io.tipblockchain.kasakasa.data.db.dao.UserDao
+import io.tipblockchain.kasakasa.data.db.dao.WalletDao
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 
 
 @Database(entities = arrayOf(Transaction::class, User::class, Wallet::class), version = 1)

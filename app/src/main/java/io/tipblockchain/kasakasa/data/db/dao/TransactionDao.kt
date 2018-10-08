@@ -1,10 +1,10 @@
-package io.tipblockchain.kasakasa.db.dao
+package io.tipblockchain.kasakasa.data.db.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import io.tipblockchain.kasakasa.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 
 @Dao
 interface TransactionDao {

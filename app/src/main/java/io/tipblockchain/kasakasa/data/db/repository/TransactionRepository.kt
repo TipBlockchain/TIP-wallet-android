@@ -1,11 +1,11 @@
-package io.tipblockchain.kasakasa.db.repository
+package io.tipblockchain.kasakasa.data.db.repository
 
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
-import io.tipblockchain.kasakasa.db.TipRoomDatabase
-import io.tipblockchain.kasakasa.db.entity.Transaction
-import io.tipblockchain.kasakasa.db.dao.TransactionDao
+import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
 
 class TransactionRepository {
 

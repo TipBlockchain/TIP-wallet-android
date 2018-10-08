@@ -1,11 +1,11 @@
-package io.tipblockchain.kasakasa.db.repository
+package io.tipblockchain.kasakasa.data.db.repository
 
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
-import io.tipblockchain.kasakasa.db.TipRoomDatabase
-import io.tipblockchain.kasakasa.db.entity.User
-import io.tipblockchain.kasakasa.db.dao.UserDao
+import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
+import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.dao.UserDao
 
 class UserRepository {
     private var dao: UserDao

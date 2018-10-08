@@ -1,10 +1,10 @@
-package io.tipblockchain.kasakasa.db
+package io.tipblockchain.kasakasa.data.db
 
 import android.support.test.InstrumentationRegistry
-import io.tipblockchain.kasakasa.db.dao.TransactionDao
-import io.tipblockchain.kasakasa.db.dao.UserDao
-import io.tipblockchain.kasakasa.db.dao.WalletDao
-import io.tipblockchain.kasakasa.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
+import io.tipblockchain.kasakasa.data.db.dao.UserDao
+import io.tipblockchain.kasakasa.data.db.dao.WalletDao
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

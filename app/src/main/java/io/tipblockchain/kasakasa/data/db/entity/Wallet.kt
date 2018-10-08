@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.db.entity
+package io.tipblockchain.kasakasa.data.db.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity

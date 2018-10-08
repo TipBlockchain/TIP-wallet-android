@@ -1,12 +1,12 @@
-package io.tipblockchain.kasakasa.db.repository
+package io.tipblockchain.kasakasa.data.db.repository
 
 import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
-import io.tipblockchain.kasakasa.db.TipRoomDatabase
-import io.tipblockchain.kasakasa.db.entity.Wallet
-import io.tipblockchain.kasakasa.db.dao.WalletDao
+import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.db.dao.WalletDao
 import io.tipblockchain.kasakasa.utils.FileUtils
 
 class WalletRepository {

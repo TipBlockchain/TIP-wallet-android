@@ -3,7 +3,7 @@ package io.tipblockchain.kasakasa.app
 import android.app.Application
 import android.content.Context
 import com.facebook.stetho.Stetho
-import io.tipblockchain.kasakasa.db.TipRoomDatabase
+import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 
 
 class App : Application() {

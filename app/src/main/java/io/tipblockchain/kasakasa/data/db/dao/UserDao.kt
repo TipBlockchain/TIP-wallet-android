@@ -1,8 +1,8 @@
-package io.tipblockchain.kasakasa.db.dao
+package io.tipblockchain.kasakasa.data.db.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import io.tipblockchain.kasakasa.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.User
 
 @Dao
 interface UserDao {

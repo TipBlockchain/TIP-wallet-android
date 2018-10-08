@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.db
+package io.tipblockchain.kasakasa.data.db
 
 import android.arch.persistence.room.TypeConverter
 import java.math.BigInteger
