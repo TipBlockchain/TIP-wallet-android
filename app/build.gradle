@@ -83,7 +83,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+
+
 
     // Testing
     testImplementation "junit:junit:4.12"
@@ -113,4 +115,7 @@ dependencies {
     implementation "com.squareup.picasso:picasso:2.71828"
     implementation "org.web3j:core:3.3.1-android"
     implementation "org.bitcoinj:bitcoinj-core:0.14.7"
+    implementation "com.karumi:dexter:5.0.0"
+    implementation "com.github.yalantis:ucrop:2.2.2"
+    implementation "com.makeramen:roundedimageview:2.3.0"
 }
