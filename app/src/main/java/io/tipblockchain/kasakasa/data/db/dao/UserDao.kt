@@ -22,7 +22,7 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE id in (:ids)")
     fun findUsers(ids: List<String>): LiveData<List<User>>
 
-    @Query("SELECT * FROM users WHERE isContact = 'true' ORDER BY lastMessage DESC")
+    @Query("SELECT * FROM users WHERE isContact = 1 ORDER BY lastMessage DESC")
     fun findContacts(): LiveData<List<User>>
 
     @Query("SELECT * FROM users WHERE username = :username")

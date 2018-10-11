@@ -10,8 +10,8 @@ interface WalletDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(wallet: Wallet)
 
-    @Query("SELECT * FROM wallets WHERE isPrimary = 'true' LIMIT 1")
-    fun findPrimaryWallet(): LiveData<Wallet>
+    @Query("SELECT * FROM wallets WHERE isPrimary = 1 LIMIT 1")
+    fun findPrimaryWallet(): LiveData<Wallet?>
 
     @Query("SELECT * FROM wallets WHERE address = :address LIMIT 1")
     fun findWallet(address: String): LiveData<Wallet>
