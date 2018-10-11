@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.ui.onboarding.profile
 
 import android.Manifest
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.databinding.DataBindingUtil
@@ -86,6 +87,11 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
                 showOkDialog(cropError?.localizedMessage ?: "An error occured")
             }
         }
+    }
+
+    override fun onDestroy() {
+        viewModel.destroy()
+        super.onDestroy()
     }
 
     private fun showImageCropper(uri:Uri) {
@@ -205,7 +211,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
     }
 
     override fun nextButtonClicked() {
-        Log.d(LOG_TAG, "next")
+        saveViewModel()
         this.checkValues()
     }
 
@@ -217,7 +223,6 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
     private fun getViewModel() = ViewModelProviders.of(this).get(OnboardingUserProfileViewModel::class.java)
 
     private fun checkValues() {
-        saveViewModel()
         firstnameTv.error = null
         lastnameTv.error = null
         usernameTv.error = null
@@ -238,7 +243,18 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            this.navigateToNextScreen()
+            this.createAccount()
         }
     }
+
+    fun createAccount() {
+        val primaryWalletDisposable = viewModel.getPrimaryWallet().observe(this, Observer { wallet ->
+           if (wallet  != null) {
+               viewModel.createAccount(wallet).also {  }
+           } else {
+               Log.d(LOG_TAG, "Wallet is null")
+           }
+        })
+    }
 }
+

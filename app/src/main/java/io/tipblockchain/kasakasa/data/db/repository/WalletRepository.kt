@@ -12,7 +12,7 @@ import io.tipblockchain.kasakasa.utils.FileUtils
 class WalletRepository {
     private var dao: WalletDao
     private var wallets: LiveData<List<Wallet>>
-    private var primaryWallet: LiveData<Wallet>
+    private var primaryWallet: LiveData<Wallet?>
 
     constructor(application: Application) {
         val db = TipRoomDatabase.getDatabase(application)
@@ -25,8 +25,12 @@ class WalletRepository {
         return wallets
     }
 
-    fun primaryWallet(): LiveData<Wallet>? {
-        return primaryWallet
+    fun primaryWallet(): LiveData<Wallet?> {
+        return dao.findPrimaryWallet()
+    }
+
+    fun walletForAddress(address: String): LiveData<Wallet>? {
+        return dao.findWallet( address)
     }
 
     fun insert(wallet: Wallet) {

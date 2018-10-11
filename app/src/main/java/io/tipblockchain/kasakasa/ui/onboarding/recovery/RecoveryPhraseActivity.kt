@@ -13,7 +13,7 @@ import android.util.Log
 import android.view.View
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.databinding.ActivityRecoveryPhraseBinding
-import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
+import io.tipblockchain.kasakasa.ui.onboarding.profile.OnboardingUserProfileActivity
 
 import kotlinx.android.synthetic.main.activity_recovery_phrase.*
 
@@ -76,7 +76,7 @@ class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
     }
 
     private fun navigateToVerifyRecovery() {
-        startActivity(Intent(this, MainTabActivity::class.java))
+        startActivity(Intent(this, OnboardingUserProfileActivity::class.java))
     }
 
     private fun getViewModel() = ViewModelProviders.of(this).get(RecoveryPhraseViewModel::class.java)
