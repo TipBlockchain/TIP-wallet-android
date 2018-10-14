@@ -51,20 +51,30 @@ class OnboardingUserProfileViewModel: AndroidViewModel {
 
 
     fun createAccount(wallet: Wallet): Disposable? {
+//        val placeholderAddress = "0xd5b5e5e66765642b4843e2272ff32fb2f81a4c26"
+        // TODO: switch back to users wallet
         val user = User("", firstname!!, username!!, wallet.address)
+//        val user = User("", firstname!!, username!!, placeholderAddress)
         createAccountDisposable = TipApiService().createUser(user)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .onErrorReturn { User.invalid() }
-                .subscribe {
-                    if (it.isValid() ) {
-                        User.current = it
-                        Log.d("ViewModel", "user is invalid: $it")
+//                .onErrorReturn { User.invalid() }
+                .subscribe ( {user ->
+                    Log.d("ViewModel", "User is $user")
+                    if (user.isValid() ) {
+                        UserRepository.currentUser = user
+                        Log.d("ViewModel", "user is invalid: $user")
                     } else {
                         // show error
-                        Log.d("ViewModel", "user is invalid: $it")
+                        Log.d("ViewModel", "user is invalid: $user")
                     }
-                }
+                }, {err ->
+                    Log.d("tag", "Error: $err")
+                }, {
+                    Log.d("tag", "complete")
+                    Log.d("tag", "complete")
+
+                })
         return createAccountDisposable
     }
 

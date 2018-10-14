@@ -29,7 +29,7 @@ class WalletRepository {
         return dao.findPrimaryWallet()
     }
 
-    fun walletForAddress(address: String): LiveData<Wallet>? {
+    fun walletForAddress(address: String): LiveData<Wallet?> {
         return dao.findWallet( address)
     }
 

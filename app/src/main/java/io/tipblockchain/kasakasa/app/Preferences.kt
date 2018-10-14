@@ -14,15 +14,31 @@ class Preferences (private var context: Context) {
 
         private val ONBOARDING_COMPLETE = "onboarding_complete"
         private val CURRENT_USER = "current_user"
+        private val PLACEHOLDER_VALUE = "playceholder_value"
 
 
         var onboardingComplete: Boolean
             get() = prefs.getBoolean(ONBOARDING_COMPLETE, false)
             set(value) = prefs.edit().putBoolean(ONBOARDING_COMPLETE, value).apply()
 
+        var placehoderValue: String
+            get() = prefs.getString(PLACEHOLDER_VALUE, "")
+            set(value) = prefs.edit().putString(PLACEHOLDER_VALUE, value).apply()
+
         var currentUser: String?
             get() = prefs.getString(CURRENT_USER, null)
-            set(value) = prefs.edit().putString(CURRENT_USER, value).apply()
+            set(value) {
+                if (value != null) {
+                    prefs.edit().putString(CURRENT_USER, value).apply()
+                } else {
+                    this.removeCurrentUser()
+                }
+
+            }
+
+        private fun removeCurrentUser() {
+            prefs.edit().remove(CURRENT_USER)
+        }
     }
 
 }

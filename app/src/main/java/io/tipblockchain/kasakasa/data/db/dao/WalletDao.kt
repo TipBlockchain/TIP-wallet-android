@@ -14,7 +14,7 @@ interface WalletDao {
     fun findPrimaryWallet(): LiveData<Wallet?>
 
     @Query("SELECT * FROM wallets WHERE address = :address LIMIT 1")
-    fun findWallet(address: String): LiveData<Wallet>
+    fun findWallet(address: String): LiveData<Wallet?>
 
     @Query("SELECT * FROM wallets")
     fun findAllWallets(): LiveData<List<Wallet>>
