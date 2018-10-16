@@ -3,11 +3,11 @@ package io.tipblockchain.kasakasa.app
 import android.content.Context
 import android.content.SharedPreferences
 
-class Preferences (private var context: Context) {
+class PreferenceHelper (private var context: Context) {
 
     companion object {
 
-        private var instance: Preferences = Preferences(App.applicationContext())
+        private var instance: PreferenceHelper = PreferenceHelper(App.applicationContext())
 
         private val PREFS_FILENAME = "io.tipblockchain.kasakasa.preferences"
         private var prefs: SharedPreferences = instance.context.getSharedPreferences(PREFS_FILENAME, 0)
@@ -21,7 +21,7 @@ class Preferences (private var context: Context) {
             get() = prefs.getBoolean(ONBOARDING_COMPLETE, false)
             set(value) = prefs.edit().putBoolean(ONBOARDING_COMPLETE, value).apply()
 
-        var placehoderValue: String
+        var placehoderValue: String?
             get() = prefs.getString(PLACEHOLDER_VALUE, "")
             set(value) = prefs.edit().putString(PLACEHOLDER_VALUE, value).apply()
 

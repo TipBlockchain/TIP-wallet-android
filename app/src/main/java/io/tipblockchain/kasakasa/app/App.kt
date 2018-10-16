@@ -15,7 +15,7 @@ class App : Application() {
 
     companion object {
         private var instance: App? = null
-        lateinit var preferences: Preferences
+        lateinit var preferenceHelper: PreferenceHelper
         private set
 
         fun applicationContext() : Context {
@@ -31,11 +31,11 @@ class App : Application() {
         super.onCreate()
 
         MultiDex.install(this)
-        preferences = Preferences(this)
+        preferenceHelper = PreferenceHelper(this)
 
         Stetho.initializeWithDefaults(this)
         TipRoomDatabase.getDatabase(instance!!.applicationContext)
-        Preferences.placehoderValue = "Some random value"
+        PreferenceHelper.placehoderValue = "Some random value"
 
         // Use ApplicationContext.
         // example: SharedPreferences etc...
