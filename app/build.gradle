@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "io.tipblockchain.kasakasaprototype"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -38,6 +38,11 @@ android {
             versionNameSuffix '-dev'
         }
     }
+    packagingOptions {
+        exclude 'lib/x86_64/darwin/libscrypt.dylib'
+        exclude 'lib/x86_64/freebsd/libscrypt.so'
+        exclude 'lib/x86_64/linux/libscrypt.so'
+    }
     buildToolsVersion "$rootProject.buildToolsVersion"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -62,14 +67,18 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
 
     // Support and google services
-    implementation "com.android.support:appcompat-v7:$rootProject.supportLibVersion"
+    implementation "com.android.support:support-compat:$rootProject.supportLibVersion"
+    implementation "com.android.support:support-core-utils:$rootProject.supportLibVersion"
+    implementation "com.android.support:support-core-ui:$rootProject.supportLibVersion"
+    implementation "com.android.support:support-media-compat:$rootProject.supportLibVersion"
+    implementation "com.android.support:support-fragment:$rootProject.supportLibVersion"
     implementation "com.android.support:design:$rootProject.supportLibVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibVersion"
+    implementation "com.android.support:gridlayout-v7:$rootProject.supportLibVersion"
     implementation "com.android.support:preference-v7:$rootProject.supportLibVersion"
     implementation "com.android.support.constraint:constraint-layout:1.1.3"
     implementation "com.android.support:support-annotations:$rootProject.supportLibVersion"
-    implementation "com.android.support:support-compat:$rootProject.supportLibVersion"
-    implementation "com.android.support:support-core-ui:$rootProject.supportLibVersion"
-    implementation "com.android.support:support-v4:$rootProject.supportLibVersion"
+//    implementation "com.android.support:support-v4:$rootProject.supportLibVersion"
     implementation "com.android.support:support-vector-drawable:$rootProject.supportLibVersion"
     implementation "com.android.support:recyclerview-v7:$rootProject.supportLibVersion"
     implementation "com.google.android.gms:play-services-plus:15.0.1"
