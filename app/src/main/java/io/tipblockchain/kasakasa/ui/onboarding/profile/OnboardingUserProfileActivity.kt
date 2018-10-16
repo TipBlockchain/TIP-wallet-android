@@ -16,7 +16,6 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -24,28 +23,21 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.yalantis.ucrop.UCrop
-import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
-import io.tipblockchain.kasakasa.data.responses.UsernameResponse
+import io.tipblockchain.kasakasa.app.App
+import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.databinding.ActivityOnboardingUserProfileBinding
 import io.tipblockchain.kasakasa.extensions.onTextChange
-import io.tipblockchain.kasakasa.networking.TipApiService
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
+import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
 import io.tipblockchain.kasakasa.utils.FileUtils
-import java.util.concurrent.TimeUnit
 
 
-class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView {
+class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View {
 
     private lateinit var viewModel: OnboardingUserProfileViewModel
-    private var checkUsernameDisposable: Disposable? = null
-    private var usernameDisposable: Disposable? = null
-    private var usernameSubject: PublishSubject<String>? = null
     private var permissionsGranted: Boolean = false
+    private var presenter: OnboardingUserProfile.Presenter? = null
 
     private enum class ActivityRequest(val code: Int) {
         CAMERA(111),
@@ -62,12 +54,38 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
         viewModel = getViewModel()
         binding.viewModel = viewModel
 
-        setupUsernameSubject()
-
+        this.setupPresenter()
         nextBtn.setOnClickListener { nextButtonClicked() }
-        usernameTv.onTextChange { checkUsernameDelayed(it) }
+        usernameTv.onTextChange { checkUsername(it) }
         cameraImageButton.setOnClickListener { checkPermissions() }
+    }
 
+    private fun setupPresenter() {
+        val walletRepository = WalletRepository(App.application())
+        presenter = OnboardingUserProfilePresenter()
+        presenter?.viewModel = viewModel
+        presenter?.attach(this)
+
+        walletRepository.primaryWallet().observe(this, Observer {wallet ->
+            if (wallet != null) {
+                presenter?.wallet = wallet
+            } else {
+                onWalletNotSetupError()
+            }
+        })
+    }
+
+    override fun onDestroy() {
+        viewModel.destroy()
+        presenter?.detach()
+        super.onDestroy()
+    }
+
+
+    private fun navigateToCreateWallet() {
+        val intent = Intent(this, ChoosePasswordActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or intent.flags
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageReturnedIntent: Intent?) {
@@ -84,14 +102,9 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
                 profileImageView.setImageURI(croppedImageUri)
             } else {
                 val cropError = UCrop.getError(imageReturnedIntent!!)
-                showOkDialog(cropError?.localizedMessage ?: "An error occured")
+                showOkDialog(cropError?.localizedMessage ?: getString(R.string.generic_error))
             }
         }
-    }
-
-    override fun onDestroy() {
-        viewModel.destroy()
-        super.onDestroy()
     }
 
     private fun showImageCropper(uri:Uri) {
@@ -103,19 +116,6 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
         options.setToolbarColor(this.getColorFromId(R.color.colorPink))
         options.setActiveWidgetColor(this.getColorFromId(R.color.colorAppPurple))
         UCrop.of(uri, destinationUri).withAspectRatio(1.0f, 1.0f).withMaxResultSize(500, 500).withOptions(options).start(this)
-    }
-
-    private fun setupUsernameSubject() {
-        usernameSubject = PublishSubject.create()
-        checkUsernameDisposable = usernameSubject!!.flatMap { TipApiService().checkUsername(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn { UsernameResponse(getString(R.string.error_username_unavailable), false) }
-                .subscribe {
-                    if (!it.isAvailable) {
-                        usernameTv.error = getString(R.string.error_username_unavailable)
-                    }
-                }
     }
 
     private fun checkPermissions() {
@@ -133,6 +133,8 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
                     override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                         if (report?.areAllPermissionsGranted() == true) {
                             showPictureDialog()
+                        } else if (report?.isAnyPermissionPermanentlyDenied ?: false) {
+                            showPermissionsDeniedDialog()
                         }
                     }
 
@@ -142,17 +144,15 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
                 }).check()
     }
 
-    fun showPermissionsDialog() {
-        this.showOkCancelDialog(getString(R.string.permission_request_camera_storage), DialogInterface.OnClickListener { _, which ->
-            when (which) {
-                DialogInterface.BUTTON_POSITIVE -> requestPermissions()
-                DialogInterface.BUTTON_NEGATIVE -> showPermissionsDeniedDialog()
-            }
-        })
-    }
-
     private fun showPermissionsDeniedDialog() {
         this.showOkDialog(getString(R.string.permission_camera_denied))
+        this.showOkCancelDialog(getString(R.string.permission_camera_denied), onClickListener = object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                when(which) {
+                    DialogInterface.BUTTON_POSITIVE ->  requestPermissions()
+                }
+            }
+        })
     }
 
     private fun showPictureDialog() {
@@ -178,13 +178,8 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
         startActivityForResult(pickPhotoIntent , ActivityRequest.GALLERY.code)
     }
 
-    private fun checkUsernameDelayed(username: String) {
-        usernameDisposable?.dispose()
-        // Wait 1.5 seconds after user types before making a request, so we don't make unnecessary requests
-        usernameDisposable = Completable.timer(1500, TimeUnit.MILLISECONDS, Schedulers.io())
-                .subscribe{
-                    usernameSubject?.onNext(username)
-                }
+    private fun checkUsername(username: String) {
+        presenter?.checkUsername(username)
     }
 
     private fun saveViewModel() {
@@ -192,32 +187,41 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
         viewModel.lastname = lastnameTv.text.toString()
         viewModel.username = usernameTv.text.toString()
         viewModel.profilePhoto = imageView.drawable as BitmapDrawable?
+        presenter?.viewModel = viewModel
     }
 
-    override fun usernameEntered() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun firstnameEtnered() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun lastnameEntered() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun profilePhotoSelected() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun nextButtonClicked() {
+    fun nextButtonClicked() {
         saveViewModel()
         this.checkValues()
     }
 
-    private fun navigateToNextScreen() {
-        val intent = Intent(this, MainTabActivity::class.java)
-        startActivity(intent)
+    override fun onGenericError(error: Throwable) {
+        showMessage(error.localizedMessage)
+    }
+
+    override fun onUsernameUnavailableError() {
+        usernameTv.error = getString(R.string.error_username_unavailable)
+        usernameTv.requestFocus()
+    }
+
+    override fun onInvalidUser() {
+        showMessage(getString(R.string.invalid_user))
+    }
+
+    override fun onWalletNotSetupError() {
+        showOkDialog(getString(R.string.error_no_primary_wallet), onClickListener = object: DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                navigateToCreateWallet()
+            }
+        })
+    }
+
+    override fun onAccountCreated() {
+        showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                navigateToMainApp()
+            }
+        })
     }
 
     private fun getViewModel() = ViewModelProviders.of(this).get(OnboardingUserProfileViewModel::class.java)
@@ -247,14 +251,13 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardignUserProfileView 
         }
     }
 
-    fun createAccount() {
-        val primaryWalletDisposable = viewModel.getPrimaryWallet().observe(this, Observer { wallet ->
-           if (wallet  != null) {
-               viewModel.createAccount(wallet).also {  }
-           } else {
-               Log.d(LOG_TAG, "Wallet is null")
-           }
-        })
+    private fun createAccount() {
+        presenter?.createAccount()
+    }
+
+    private fun navigateToMainApp() {
+        val intent = Intent(this, MainTabActivity::class.java)
+        startActivity(intent)
     }
 }
 

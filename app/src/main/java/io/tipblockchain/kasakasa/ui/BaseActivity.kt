@@ -5,9 +5,11 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.annotation.ColorRes
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import io.tipblockchain.kasakasa.R
 
 open class BaseActivity: AppCompatActivity() {
@@ -43,5 +45,15 @@ open class BaseActivity: AppCompatActivity() {
             true -> return this.resources.getColor(resId, this.theme)
             false -> return ContextCompat.getColor(this, resId)
         }
+    }
+
+    protected fun showMessage(message: String) {
+        var fromView: View = rootView()
+        Snackbar.make(fromView, message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+    }
+
+    private fun rootView(): View {
+        return window.decorView.findViewById(android.R.id.content)
     }
 }

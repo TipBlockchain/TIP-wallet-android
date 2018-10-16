@@ -1,6 +1,6 @@
 package io.tipblockchain.kasakasa.ui.onboarding.profile
 
-interface OnboardignUserProfileView {
+interface OnboardingUserProfileView {
     fun usernameEntered()
     fun firstnameEtnered()
     fun lastnameEntered()

@@ -1,6 +1,12 @@
 package io.tipblockchain.kasakasa.ui
 
-interface BasePresenter {
-    fun onResume()
-    fun onDestroy()
+interface BasePresenter<V: BaseView> {
+    var view: V?
+
+    fun attach(view: V) {
+        this.view = view
+    }
+    fun detach() {
+        this.view = null
+    }
 }

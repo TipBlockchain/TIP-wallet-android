@@ -1,7 +1,7 @@
 package io.tipblockchain.kasakasa.ui.onboarding
 
+import android.arch.lifecycle.Observer
 import android.content.Intent
-import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
@@ -20,11 +20,17 @@ import io.tipblockchain.kasakasa.R
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding.view.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
+import android.util.Log
 import android.widget.Button
+import io.tipblockchain.kasakasa.app.App
+import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.repository.UserRepository
+import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
+import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
 
 
-class OnboardingActivity : AppCompatActivity() {
+class OnboardingActivity : BaseActivity() {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -41,7 +47,6 @@ class OnboardingActivity : AppCompatActivity() {
     internal var pageDescriptions = arrayOf(String())
     internal var viewPager: ViewPager? = null
     internal var createButton: Button? = null
-    internal var sharedPrefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +81,6 @@ class OnboardingActivity : AppCompatActivity() {
             }
         })
 
-        sharedPrefs = applicationContext.getSharedPreferences(getString(R.string.default_prefs_file), 0)
-//        val setupComplete: Boolean = sharedPrefs!!.getBoolean(getString(R.string.prefs_setup_complete), false)
-//        if (setupComplete) {
-//            val intent = Intent(this, MainTabActivity::class.java)
-//
-//            startActivity(intent)
-//        }
-
         createButton?.setOnClickListener {
             this.startAccountCreation()
         }
@@ -114,7 +111,6 @@ class OnboardingActivity : AppCompatActivity() {
         intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }
-
 
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to

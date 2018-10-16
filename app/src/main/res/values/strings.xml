@@ -174,5 +174,9 @@
     <string name="recovery_phrase_must_be_copied">The recovery phrase must be backed up to proceed.</string>
     <string name="title_activity_onboarding_user_profile">OnboardingUserProfileActivity</string>
     <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
-    <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture.</string>
+    <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
+    <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>
+    <string name="congrats_account_created">Congrats!\nYou successfully created a TIP account.\nWelcome to TIP.</string>
+    <string name="generic_error">Sorry, the operation could not be completed due to an error.</string>
+    <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
 </resources>

@@ -13,11 +13,12 @@ import android.util.Log
 import android.view.View
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.databinding.ActivityRecoveryPhraseBinding
+import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.onboarding.profile.OnboardingUserProfileActivity
 
 import kotlinx.android.synthetic.main.activity_recovery_phrase.*
 
-class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
+class RecoveryPhraseActivity : BaseActivity(), RecoveryPhraseView {
 
     private var password :String = ""
     private lateinit var viewModel: RecoveryPhraseViewModel
@@ -69,11 +70,7 @@ class RecoveryPhraseActivity : AppCompatActivity(), RecoveryPhraseView {
         showMessage(getString(R.string.recovery_phrase_must_be_copied))
     }
 
-    private fun showMessage(message: String) {
-        var fromView: View = findViewById(R.id.constraintLayout)
-        Snackbar.make(fromView, message, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-    }
+
 
     private fun navigateToVerifyRecovery() {
         startActivity(Intent(this, OnboardingUserProfileActivity::class.java))

@@ -36,6 +36,13 @@ class ChoosePasswordActivity : AppCompatActivity() {
         // Set up the password form.
         passwordTv.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                confirmPasswordTv.requestFocus()
+                return@OnEditorActionListener true
+            }
+            false
+        })
+        confirmPasswordTv.setOnEditorActionListener( TextView.OnEditorActionListener{ _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_DONE) {
                 checkPassword()
                 return@OnEditorActionListener true
             }
@@ -56,6 +63,7 @@ class ChoosePasswordActivity : AppCompatActivity() {
      */
     private fun checkPassword() {
         // Reset errors.
+        showProgress(true)
         passwordTv.error = null
         confirmPasswordTv.error = null
 
@@ -88,10 +96,11 @@ class ChoosePasswordActivity : AppCompatActivity() {
         if (cancel) {
             // There was an error; don't proceed and focus the first
             // form field with an error.
+            showProgress(false)
             focusView?.requestFocus()
         } else {
             // Show a progress spinner, and proceed to next screen
-            showProgress(true)
+//            showProgress(true)
             goToAccountBackup()
         }
     }
