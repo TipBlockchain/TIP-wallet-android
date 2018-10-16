@@ -2,9 +2,7 @@ package io.tipblockchain.kasakasa.data.db.entity
 
 import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
-import io.tipblockchain.kasakasa.app.Preferences
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JSON
 import java.util.*
 import javax.annotation.Nonnull
 
