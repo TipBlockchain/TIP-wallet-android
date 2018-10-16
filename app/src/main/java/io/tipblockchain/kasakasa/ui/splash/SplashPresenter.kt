@@ -3,25 +3,26 @@ package io.tipblockchain.kasakasa.ui.splash
 import android.app.Application
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
-import io.tipblockchain.kasakasa.ui.BasePresenter
 
-class SplashPresenter: BasePresenter {
+class SplashPresenter: SplashScreenContract.Presenter {
+
     var walletRepository: WalletRepository
-    var view: SplashView? = null
+    var view: SplashScreenContract.View? = null
 
-    constructor(application: Application, view: SplashView) {
+    constructor(application: Application) {
         walletRepository = WalletRepository(application)
-        this.view = view
     }
 
-    override fun onResume() {
+    override fun attach(view: SplashScreenContract.View) {
+        this.view = view
         checkForUserAndWallet()
     }
 
-    override fun onDestroy() {
+    override fun detach() {
+        view = null
     }
 
-    private fun checkForUserAndWallet() {
+    override fun checkForUserAndWallet() {
         val currentUser = UserRepository.currentUser
         val primaryWallet = walletRepository.primaryWallet().value
 
