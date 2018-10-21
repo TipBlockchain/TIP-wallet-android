@@ -1,6 +1,6 @@
 package io.tipblockchain.kasakasa.ui.mainapp.dummy
 
-import io.tipblockchain.kasakasa.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.User
 import java.util.ArrayList
 import java.util.HashMap
 

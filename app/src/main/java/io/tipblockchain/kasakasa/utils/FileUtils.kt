@@ -44,6 +44,10 @@ class FileUtils {
         }
     }
 
+    fun imageFileWithName(filename: String): File? {
+        return File(App.applicationContext().cacheDir, filename)
+    }
+
     fun deleteFile(file: File) : Boolean {
         return file.delete()
     }

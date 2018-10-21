@@ -105,6 +105,8 @@
     <string name="error_passwords_dont_match">The passwords do not match</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_username_unavailable">This username is not available</string>
+    <string name="error_username_empty">Your usernane can not be empty</string>
+    <string name="error_firstname_empty">Your firstname can not be empty</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -150,6 +152,7 @@
     <string name="prompt_amount">Amount</string>
     <string name="prompt_recepient">Recepient</string>
     <string name="okay">Okay</string>
+    <string name="cancel">Cancel</string>
     <string name="transaction_sent">Transaction Sent</string>
     <string name="buyTip">Buy TIP</string>
     <string name="placeholder_username_jane">jane_smith99</string>
@@ -169,4 +172,11 @@
     <string name="recovery_phrase_copied">Recovery phrase copied.</string>
     <string name="placeholder_seed_phrase">one two three four five six seven eight nine ten eleven twelve</string>
     <string name="recovery_phrase_must_be_copied">The recovery phrase must be backed up to proceed.</string>
+    <string name="title_activity_onboarding_user_profile">OnboardingUserProfileActivity</string>
+    <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
+    <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
+    <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>
+    <string name="congrats_account_created">Congrats!\nYou successfully created a TIP account.\nWelcome to TIP.</string>
+    <string name="generic_error">Sorry, the operation could not be completed due to an error.</string>
+    <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
 </resources>

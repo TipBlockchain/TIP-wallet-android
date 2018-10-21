@@ -14,6 +14,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/gradient</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -50,6 +53,7 @@
         <item name="android:textColor">@color/darkTextColor</item>
         <item name="android:textSize">32sp</item>
     </style>
+
     <style name="AppTheme.TextViewRowSubtitle" parent="">
         <item name="android:textColor">@color/lightTextColor</item>
         <item name="android:textSize">16sp</item>
@@ -72,11 +76,13 @@
         <item name="android:fontFamily">@font/advent_pro_light</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="AppTheme.TextViewDarkNormal" parent="">
         <item name="android:textColor">@color/colorDarkGray</item>
         <item name="android:fontFamily">@font/advent_pro_light</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="AppTheme.WhiteColorAccent">
         <item name="colorAccent">@color/colorWhite</item>
     </style>
@@ -86,5 +92,11 @@
         <item name="android:colorBackground">@color/colorLightGray</item>
         <item name="android:textAppearance">@style/AppTheme.TextViewDarkNormal</item>
     </style>
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@color/colorPink</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="placeholderName2">mike_styles184</style>
 </resources>

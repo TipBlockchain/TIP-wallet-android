@@ -9,4 +9,7 @@
 .DS_Store
 /build
 /captures
+**/.idea
+**/gradelw
+**/gradle.bat
 .externalNativeBuild

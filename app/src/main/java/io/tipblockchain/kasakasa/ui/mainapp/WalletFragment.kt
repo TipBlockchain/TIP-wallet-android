@@ -13,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.TransactionsContentManager
 import kotlinx.android.synthetic.main.fragment_wallet.*

@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.db.entity.User
-import io.tipblockchain.kasakasa.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 
 
 import io.tipblockchain.kasakasa.ui.mainapp.WalletFragment.OnListFragmentInteractionListener

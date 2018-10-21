@@ -14,10 +14,21 @@ import android.view.View
 
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 import kotlinx.android.synthetic.main.activity_choose_username.*
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.networking.TipApiService
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
+import java.util.concurrent.TimeUnit
 
 /**
  * A login screen that offers login via email/password.
@@ -27,6 +38,10 @@ class ChooseUsernameActivity : AppCompatActivity() {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private var mAuthTask: UserLoginTask? = null
+    private var checkUsernameSubscription: Disposable? = null
+    private val LOG_TAG = ChooseUsernameActivity::class.java.name
+    private var usernameTask: Disposable? = null
+    private var taskHandler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +49,14 @@ class ChooseUsernameActivity : AppCompatActivity() {
         // Set up the login form.
         populateAutoComplete()
 
+        usernameTv.addTextChangedListener(checkUsernameText())
+
         nextBtn.setOnClickListener { attemptLogin() }
+    }
+
+    override fun onDestroy() {
+        this.cancelSubscription()
+        super.onDestroy()
     }
 
     private fun populateAutoComplete() {
@@ -44,6 +66,47 @@ class ChooseUsernameActivity : AppCompatActivity() {
 
     }
 
+    private fun checkUsername(username: String) {
+        cancelSubscription()
+        checkUsernameSubscription = TipApiService().checkUsername(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            Log.d(LOG_TAG, "Username response is $it")
+            if (!it.isAvailable) {
+                usernameTv.error = getString(R.string.error_username_unavailable)
+            }
+        }
+    }
+
+    private fun checkUsernameText(): TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d(LOG_TAG, "text is $s")
+                if (s.toString().length < 2) {
+                    return
+                }
+                val username: String = s.toString()
+                Log.d(LOG_TAG, "Text changed: $username")
+                usernameTask?.dispose()
+                usernameTask = Completable.timer(2, TimeUnit.SECONDS, Schedulers.io())
+                .subscribe{
+                    Log.d(LOG_TAG, "Inside username is $username")
+                    checkUsername(username)
+                }
+            }
+        }
+    }
+
+    private fun cancelSubscription() {
+        if (checkUsernameSubscription != null && !checkUsernameSubscription!!.isDisposed ) {
+            checkUsernameSubscription!!.dispose()
+            checkUsernameSubscription = null
+        }
+    }
     private fun mayRequestContacts(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true

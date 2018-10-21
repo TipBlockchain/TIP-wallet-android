@@ -39,6 +39,11 @@ class BackupAccountActivity : AppCompatActivity() {
         })
 
         nextBtn.setOnClickListener { attemptLogin() }
+        nextBtn.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(v: View?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
     }
 
     /**
