@@ -3,9 +3,13 @@ package io.tipblockchain.kasakasa.networking
 import android.util.Log
 import com.facebook.stetho.okhttp3.BuildConfig
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.google.gson.GsonBuilder
 import io.reactivex.Observable
+import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.responses.Authorization
+import io.tipblockchain.kasakasa.data.responses.SecureMessage
 import io.tipblockchain.kasakasa.data.responses.UsernameResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,7 +27,7 @@ class TipApiService {
     }
 
     companion object {
-        private val baseUrl: String = "https://bab0ebaf.ngrok.io"
+        private val baseUrl: String = "https://0ce95d86.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -38,10 +42,11 @@ class TipApiService {
                 okHttpClientBuilder.addInterceptor(StethoInterceptor())
 //            }
 
+            val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).create()
             retrofit = Retrofit.Builder()
                     .client(okHttpClientBuilder.build())
                     .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(rxAdapter)
                     .build()
         }
@@ -59,5 +64,25 @@ class TipApiService {
 
     fun createUser(user: User): Observable<User> {
         return tipApi.createAccount(user)
+    }
+
+    fun authorize(message: SecureMessage): Observable<Authorization> {
+        return tipApi.authorize(message)
+    }
+
+    fun getContacts(): Observable<List<User>> {
+        return tipApi.getContactList()
+    }
+
+    fun adContact(contact: User) {
+        return tipApi.addContact(contact)
+    }
+
+    fun addMultipleContacts(contacts: List<User>) {
+        return tipApi.addMultipleContacts(contacts)
+    }
+
+    fun deleteContact(contact: User) {
+        return tipApi.deleteContact(contact)
     }
 }

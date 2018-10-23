@@ -1,5 +1,6 @@
 package io.tipblockchain.kasakasa.ui.onboarding.profile
 
+import android.arch.lifecycle.Observer
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -8,11 +9,12 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.networking.TipApiService
 import java.util.concurrent.TimeUnit
 
-class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter {
+class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<Wallet?> {
 
     override var view: OnboardingUserProfile.View? = null
     override lateinit var viewModel: OnboardingUserProfileViewModel
@@ -51,7 +53,8 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter {
                 .subscribe ( {newUser ->
                     if (newUser.isValid() ) {
                         UserRepository.currentUser = newUser
-                        view?.onAccountCreated()
+//                        view?.onAccountCreated()
+                        getNewAuthorization()
                     } else {
                         view?.onInvalidUser()
                     }
@@ -61,6 +64,19 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter {
                 }, {
                     Log.d(LOG_TAG, "complete")
                 })
+    }
+
+    override fun onChanged(t: Wallet?) {
+        this.wallet = t
+        if (t == null) {
+            view?.onWalletNotSetupError()
+        }
+    }
+
+    private fun getNewAuthorization() {
+        AuthorizationRepository.getNewAuthorization { authorization, throwable ->
+            this.view?.onAuthorizationFetched(authorization, throwable)
+        }
     }
 
     private fun setupUsernameSubject() {

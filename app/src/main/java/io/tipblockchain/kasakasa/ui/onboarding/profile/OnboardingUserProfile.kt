@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.ui.onboarding.profile
 
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.responses.Authorization
 import io.tipblockchain.kasakasa.ui.BasePresenter
 import io.tipblockchain.kasakasa.ui.BaseView
 
@@ -20,5 +21,6 @@ interface OnboardingUserProfile {
         fun onInvalidUser()
         fun onUsernameUnavailableError()
         fun onAccountCreated()
+        fun onAuthorizationFetched(auth: Authorization?, error: Throwable?)
     }
 }

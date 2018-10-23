@@ -57,7 +57,7 @@ class UserRepository {
 
         private fun fetchCurrentUser(): User? {
             if (currentUser == null) {
-                synchronized(User::class.java) {
+                synchronized(UserRepository::class.java) {
                     val userJson = PreferenceHelper.currentUser
                     if (userJson != null) {
                         if (currentUser == null) {

@@ -25,6 +25,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.yalantis.ucrop.UCrop
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
+import io.tipblockchain.kasakasa.data.responses.Authorization
 import io.tipblockchain.kasakasa.databinding.ActivityOnboardingUserProfileBinding
 import io.tipblockchain.kasakasa.extensions.onTextChange
 import io.tipblockchain.kasakasa.ui.BaseActivity
@@ -195,6 +196,21 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         this.checkValues()
     }
 
+    override fun onAuthorizationFetched(auth: Authorization?, error: Throwable?) {
+        if (error != null) {
+            showOkDialog("Error creating your account", onClickListener = object: DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    finish()
+                }
+            })
+        } else {
+            showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    navigateToMainApp()
+                }
+            })
+        }
+    }
     override fun onGenericError(error: Throwable) {
         showMessage(error.localizedMessage)
     }
@@ -217,11 +233,11 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     override fun onAccountCreated() {
-        showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                navigateToMainApp()
-            }
-        })
+//        showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
+//            override fun onClick(dialog: DialogInterface?, which: Int) {
+//                navigateToMainApp()
+//            }
+//        })
     }
 
     private fun getViewModel() = ViewModelProviders.of(this).get(OnboardingUserProfileViewModel::class.java)
