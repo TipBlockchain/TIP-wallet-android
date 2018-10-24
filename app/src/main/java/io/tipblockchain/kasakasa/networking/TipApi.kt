@@ -1,5 +1,7 @@
 package io.tipblockchain.kasakasa.networking
 
+import android.arch.lifecycle.LiveData
+import com.android.example.github.api.ApiResponse
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
@@ -30,7 +32,7 @@ interface TipApi {
 
     // Contacts
     @GET(value = "/contacts")
-    fun getContactList(): Observable<List<User>>
+    fun getContactList(): LiveData<ApiResponse<List<User>>>
 
     @POST(value = "/contacts/multiple")
     fun addMultipleContacts(newContacts: List<User>)

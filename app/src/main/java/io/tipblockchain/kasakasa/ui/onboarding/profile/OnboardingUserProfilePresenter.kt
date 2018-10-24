@@ -23,6 +23,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
     private var usernameDisposable: Disposable? = null
     private var createAccountDisposable: Disposable? = null
     private var usernameSubject: PublishSubject<String>? = null
+    private var tipApiService = TipApiService.instance
 
     private val LOG_TAG = javaClass.canonicalName
 
@@ -47,7 +48,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
         }
 
         val user = User(id = "", name = viewModel.name, username = viewModel.username!!, address = wallet!!.address)
-        createAccountDisposable = TipApiService().createUser(user)
+        createAccountDisposable = tipApiService.createUser(user)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe ( {newUser ->
@@ -81,7 +82,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
 
     private fun setupUsernameSubject() {
         usernameSubject = PublishSubject.create()
-        checkUsernameDisposable = usernameSubject!!.flatMap { TipApiService().checkUsername(it) }
+        checkUsernameDisposable = usernameSubject!!.flatMap { tipApiService.checkUsername(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({

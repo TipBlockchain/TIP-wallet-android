@@ -41,7 +41,7 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
         presenter.attach(this)
 
         walletRepository.primaryWallet().observe(this, Observer {wallet ->
-            presenter?.walletFetched(wallet)
+            presenter.walletFetched(wallet)
         })
     }
 }

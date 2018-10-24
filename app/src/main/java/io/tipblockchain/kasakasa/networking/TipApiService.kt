@@ -1,6 +1,8 @@
 package io.tipblockchain.kasakasa.networking
 
+import android.arch.lifecycle.LiveData
 import android.util.Log
+import com.android.example.github.api.ApiResponse
 import com.facebook.stetho.okhttp3.BuildConfig
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
@@ -8,9 +10,11 @@ import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.responses.Authorization
 import io.tipblockchain.kasakasa.data.responses.SecureMessage
 import io.tipblockchain.kasakasa.data.responses.UsernameResponse
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
@@ -20,7 +24,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class TipApiService {
 
-    var tipApi: TipApi
+    private var tipApi: TipApi
+
+    private constructor() {}
 
     init {
         tipApi = retrofit.create(TipApi::class.java)
@@ -31,15 +37,26 @@ class TipApiService {
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
+        val instance: TipApiService = TipApiService()
+
         init {
             val okHttpClientBuilder = OkHttpClient()
                     .newBuilder()
+
+            val authHeaderInterceptor = Interceptor {chain ->
+                val builder = chain.request().newBuilder()
+                if (AuthorizationRepository.currentAuthorization != null) {
+                    builder.addHeader("Authorization", "Bearer ${AuthorizationRepository.currentAuthorization!!.token}")
+                }
+                chain.proceed(builder.build())
+            }
 
 //            if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor()
                 loggingInterceptor.level = Level.BODY
                 okHttpClientBuilder.addInterceptor(loggingInterceptor)
                 okHttpClientBuilder.addInterceptor(StethoInterceptor())
+                okHttpClientBuilder.addInterceptor(authHeaderInterceptor)
 //            }
 
             val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).create()
@@ -70,7 +87,7 @@ class TipApiService {
         return tipApi.authorize(message)
     }
 
-    fun getContacts(): Observable<List<User>> {
+    fun getContacts(): LiveData<ApiResponse<List<User>>> {
         return tipApi.getContactList()
     }
 

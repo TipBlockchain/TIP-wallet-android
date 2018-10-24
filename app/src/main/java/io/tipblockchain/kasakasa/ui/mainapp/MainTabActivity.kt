@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_main_tab.*
 
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.ui.settings.MyAccountFragment
-import io.tipblockchain.kasakasa.ui.settings.MyAccountPreferenceFragment
 
 class MainTabActivity : AppCompatActivity() {
 

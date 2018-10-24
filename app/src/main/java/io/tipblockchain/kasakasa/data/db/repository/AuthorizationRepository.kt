@@ -25,7 +25,7 @@ class AuthorizationRepository {
             val currentUser = UserRepository.currentUser
             if (currentUser != null) {
                 val secureMessage = SecureMessage(message = "", address = currentUser.address, username = currentUser.username, signature = "")
-                val observable = TipApiService().authorize(secureMessage)
+                val observable = TipApiService.instance.authorize(secureMessage)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe({auth ->
