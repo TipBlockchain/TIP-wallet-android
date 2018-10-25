@@ -12,7 +12,7 @@ import io.tipblockchain.kasakasa.ui.onboarding.OnboardingActivity
 
 class SplashActivity : BaseActivity(), SplashScreenContract.View {
 
-    lateinit var presenter: SplashPresenter
+    private lateinit var presenter: SplashPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

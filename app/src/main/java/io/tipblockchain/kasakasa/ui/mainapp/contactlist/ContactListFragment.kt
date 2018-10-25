@@ -17,14 +17,19 @@ import io.tipblockchain.kasakasa.ui.mainapp.TransactionOptionsDialogFragment
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.ContactsContentManager
 import kotlinx.android.synthetic.main.fragment_contact_list.*
 
-class ContactListFragment: Fragment() {
+class ContactListFragment: Fragment(), ContactList.View {
+
     private var columnCount = 1
 
     private var listener: OnListFragmentInteractionListener? = null
 
+    private lateinit var presenter: ContactListPresenter
+
+    private lateinit var mAdapter: ContactListRecyclerViewAdapter
+    private var mContacts: MutableSet<User> = mutableSetOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
@@ -41,7 +46,8 @@ class ContactListFragment: Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = ContactListRecyclerViewAdapter(context, ContactsContentManager.ITEMS, listener)
+                adapter = ContactListRecyclerViewAdapter(context, mContacts.toTypedArray().toList(), listener)
+                mAdapter = adapter!! as ContactListRecyclerViewAdapter
             }
         }
         return view
@@ -50,12 +56,9 @@ class ContactListFragment: Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
+        presenter = ContactListPresenter()
+        presenter.attach(this)
         listener = InteractionListener()
-//        if (context is OnListFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
-//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,6 +69,7 @@ class ContactListFragment: Fragment() {
 
     override fun onDetach() {
         super.onDetach()
+        presenter.detach()
         listener = null
     }
 
@@ -107,5 +111,33 @@ class ContactListFragment: Fragment() {
                         putInt(ARG_COLUMN_COUNT, columnCount)
                     }
                 }
+    }
+
+    override fun onContactsFetched(contacts: List<User>?) {
+        if (contacts  != null) {
+            mContacts.addAll(contacts)
+        }
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun onNoContacts() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onContactsLoadError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onContactsLoading() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onContactAdded(contact: User) {
+        mContacts.add(contact)
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun onContactRemoved() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.example.github.api.ApiResponse
 import com.facebook.stetho.okhttp3.BuildConfig
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.google.android.gms.common.api.Api
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.Converters
@@ -12,6 +13,7 @@ import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.responses.Authorization
+import io.tipblockchain.kasakasa.data.responses.ContactListResponse
 import io.tipblockchain.kasakasa.data.responses.SecureMessage
 import io.tipblockchain.kasakasa.data.responses.UsernameResponse
 import okhttp3.Interceptor
@@ -24,13 +26,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class TipApiService {
 
-    private var tipApi: TipApi
+    private lateinit var tipApi: TipApi
 
     private constructor() {}
 
-    init {
-        tipApi = retrofit.create(TipApi::class.java)
-    }
 
     companion object {
         private val baseUrl: String = "https://0ce95d86.ngrok.io"
@@ -66,6 +65,7 @@ class TipApiService {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(rxAdapter)
                     .build()
+            instance.tipApi = retrofit.create(TipApi::class.java)
         }
 
     }
@@ -91,15 +91,15 @@ class TipApiService {
         return tipApi.getContactList()
     }
 
-    fun adContact(contact: User) {
+    fun addContact(contact: User): Observable<ContactListResponse> {
         return tipApi.addContact(contact)
     }
 
-    fun addMultipleContacts(contacts: List<User>) {
+    fun addMultipleContacts(contacts: List<User>): Observable<ContactListResponse> {
         return tipApi.addMultipleContacts(contacts)
     }
 
-    fun deleteContact(contact: User) {
+    fun deleteContact(contact: User): Observable<ContactListResponse> {
         return tipApi.deleteContact(contact)
     }
 }

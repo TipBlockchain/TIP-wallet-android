@@ -7,19 +7,26 @@ import com.android.example.github.AppExecutors
 import com.android.example.github.api.ApiResponse
 import com.android.example.github.repository.NetworkBoundResource
 import com.android.example.github.vo.Resource
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.dao.UserDao
-import io.tipblockchain.kasakasa.networking.TipApi
+import io.tipblockchain.kasakasa.data.responses.ContactListResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
 import kotlinx.serialization.json.JSON
+
+typealias ContactsUpdated = (Boolean, Throwable?) -> Unit
 
 class UserRepository {
     private var dao: UserDao
     private var apiService: TipApiService
     private var allUsers: LiveData<List<User>>
     private val appExecutors = AppExecutors()
+
+    private var contactsFetched = false
 
     constructor(application: Application) {
         val db = TipRoomDatabase.getDatabase(application)
@@ -40,17 +47,16 @@ class UserRepository {
         return dao.findContacts()
     }
 
-    fun loadContacts():LiveData<Resource<List<User>>> {
+    fun loadContacts(): LiveData<Resource<List<User>>> {
         return object : NetworkBoundResource<List<User>, List<User>> (appExecutors) {
 
-            var fetchedSinceLaunch = false
 
             override fun saveCallResult(item: List<User>) {
                 dao.insertMany(item)
             }
 
             override fun shouldFetch(data: List<User>?): Boolean {
-                return !fetchedSinceLaunch || data == null
+                return !contactsFetched || data == null
             }
 
             override fun loadFromDb(): LiveData<List<User>> {
@@ -58,12 +64,29 @@ class UserRepository {
             }
 
             override fun createCall(): LiveData<ApiResponse<List<User>>> {
-                fetchedSinceLaunch = true
+                contactsFetched = true
                 return apiService.getContacts()
             }
         }.asLiveData()
     }
 
+    fun addContact(user: User, callback: ContactsUpdated) {
+        val observable = apiService.addContact(user).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe ({
+            it.let {
+                if (user.id in it.contacts) {
+                    user.isContact = true
+                    dao.insert(user)
+                }
+                callback(true, null)
+            }
+        }, {
+            callback(false, it)
+        })
+    }
+
+    fun addContacts(contacts: List<User>) {
+        apiService.addMultipleContacts(contacts)
+    }
     companion object {
 
         private class insertAsyncTask: AsyncTask<User, Int, Int> {

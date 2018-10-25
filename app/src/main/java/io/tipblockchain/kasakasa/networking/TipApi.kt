@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.responses.Authorization
+import io.tipblockchain.kasakasa.data.responses.ContactListResponse
 import io.tipblockchain.kasakasa.data.responses.SecureMessage
 import io.tipblockchain.kasakasa.data.responses.UsernameResponse
 import retrofit2.http.*
@@ -35,12 +36,12 @@ interface TipApi {
     fun getContactList(): LiveData<ApiResponse<List<User>>>
 
     @POST(value = "/contacts/multiple")
-    fun addMultipleContacts(newContacts: List<User>)
+    fun addMultipleContacts(newContacts: List<User>): Observable<ContactListResponse>
 
     @POST(value = "/contacts")
-    fun addContact(contact: User)
+    fun addContact(contact: User): Observable<ContactListResponse>
 
     @DELETE(value = "/contacts")
-    fun deleteContact(contact: User)
+    fun deleteContact(contact: User): Observable<ContactListResponse>
 
 }
