@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_onboarding_user_profile.*
 import kotlinx.android.synthetic.main.content_onboarding_user_profile.*
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.v7.app.AlertDialog
@@ -215,7 +216,12 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         showMessage(error.localizedMessage)
     }
 
+    override fun onUsernameAvailable() {
+        usernameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.checkmark_green, 0);
+    }
+
     override fun onUsernameUnavailableError() {
+        usernameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         usernameTv.error = getString(R.string.error_username_unavailable)
         usernameTv.requestFocus()
     }

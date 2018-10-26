@@ -19,6 +19,7 @@ interface OnboardingUserProfile {
         fun onWalletNotSetupError()
         fun onGenericError(error: Throwable)
         fun onInvalidUser()
+        fun onUsernameAvailable()
         fun onUsernameUnavailableError()
         fun onAccountCreated()
         fun onAuthorizationFetched(auth: Authorization?, error: Throwable?)

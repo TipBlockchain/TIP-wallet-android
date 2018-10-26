@@ -15,7 +15,9 @@ import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.dao.UserDao
 import io.tipblockchain.kasakasa.data.responses.ContactListResponse
+import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
+import io.tipblockchain.kasakasa.ui.mainapp.usersearch.UserSearch
 import kotlinx.serialization.json.JSON
 
 typealias ContactsUpdated = (Boolean, Throwable?) -> Unit
@@ -45,6 +47,10 @@ class UserRepository {
 
     fun getContactsFromDatabase(): LiveData<List<User>> {
         return dao.findContacts()
+    }
+
+    fun findUsersBySearch(term: String): Observable<UserSearchResponse> {
+        return apiService.searchByUsername(term)
     }
 
     fun loadContacts(): LiveData<Resource<List<User>>> {

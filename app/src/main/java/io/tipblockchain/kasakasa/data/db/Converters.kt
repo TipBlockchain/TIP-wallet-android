@@ -12,6 +12,7 @@ class Converters {
     companion object {
         val defaultDateFormat = "yyyy-MM-dd'T'hh:mm:ss.SSS'Z'"
     }
+
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return if (value == null) null else Date(value)

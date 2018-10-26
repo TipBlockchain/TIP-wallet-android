@@ -1,7 +1,10 @@
 package io.tipblockchain.kasakasa.ui.mainapp.contactlist
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
@@ -14,7 +17,7 @@ import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.ui.mainapp.TransactionOptionsDialogFragment
-import io.tipblockchain.kasakasa.ui.mainapp.dummy.ContactsContentManager
+import io.tipblockchain.kasakasa.ui.mainapp.usersearch.UserSearchActivity
 import kotlinx.android.synthetic.main.fragment_contact_list.*
 
 class ContactListFragment: Fragment(), ContactList.View {
@@ -50,6 +53,17 @@ class ContactListFragment: Fragment(), ContactList.View {
                 mAdapter = adapter!! as ContactListRecyclerViewAdapter
             }
         }
+        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            navigagteToUserSearch()
+        }
+
+        Log.d("*******XXXXXXXXXXXXXXX", "ContactListFragment created")
+
+//        Handler().postDelayed({
+//            navigagteToUserSearch()
+//        }, 3000)
+
         return view
     }
 
@@ -65,6 +79,7 @@ class ContactListFragment: Fragment(), ContactList.View {
         super.onViewCreated(view, savedInstanceState)
         list.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
+
     }
 
     override fun onDetach() {
@@ -139,5 +154,11 @@ class ContactListFragment: Fragment(), ContactList.View {
 
     override fun onContactRemoved() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun navigagteToUserSearch() {
+        val intent = Intent(activity, UserSearchActivity::class.java)
+        startActivity(intent)
+        Log.d("ContactList", "Starting search")
     }
 }

@@ -91,7 +91,9 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({
-                    if (!it.isAvailable) {
+                    if (it.isAvailable) {
+                        view?.onUsernameAvailable()
+                    } else {
                         view?.onUsernameUnavailableError()
                     }
                 }, {

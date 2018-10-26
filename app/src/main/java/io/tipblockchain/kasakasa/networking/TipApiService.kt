@@ -12,10 +12,7 @@ import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
-import io.tipblockchain.kasakasa.data.responses.Authorization
-import io.tipblockchain.kasakasa.data.responses.ContactListResponse
-import io.tipblockchain.kasakasa.data.responses.SecureMessage
-import io.tipblockchain.kasakasa.data.responses.UsernameResponse
+import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,7 +29,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://0ce95d86.ngrok.io"
+        private val baseUrl: String = "https://8aaa60a3.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -81,6 +78,10 @@ class TipApiService {
 
     fun createUser(user: User): Observable<User> {
         return tipApi.createAccount(user)
+    }
+
+    fun searchByUsername(username: String): Observable<UserSearchResponse> {
+        return tipApi.searchByUsername(username)
     }
 
     fun authorize(message: SecureMessage): Observable<Authorization> {
