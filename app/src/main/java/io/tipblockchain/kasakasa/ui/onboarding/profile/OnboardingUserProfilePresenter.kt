@@ -5,6 +5,7 @@ import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.tipblockchain.kasakasa.data.db.entity.User
@@ -19,7 +20,6 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
     override var view: OnboardingUserProfile.View? = null
     override lateinit var viewModel: OnboardingUserProfileViewModel
     override var wallet: Wallet? = null
-    private var checkUsernameDisposable: Disposable? = null
     private var usernameDisposable: Disposable? = null
     private var createAccountDisposable: Disposable? = null
     private var usernameSubject: PublishSubject<String>? = null
@@ -38,7 +38,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
     }
 
     override fun checkUsername(username: String) {
-        this.checkUsernameDelayed(username)
+        usernameSubject?.onNext(username)
     }
 
     override fun createAccount() {
@@ -54,7 +54,6 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
                 .subscribe ( {newUser ->
                     if (newUser.isValid() ) {
                         UserRepository.currentUser = newUser
-//                        view?.onAccountCreated()
                         getNewAuthorization()
                     } else {
                         view?.onInvalidUser()
@@ -82,35 +81,29 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
 
     private fun setupUsernameSubject() {
         usernameSubject = PublishSubject.create()
-        checkUsernameDisposable = usernameSubject!!.flatMap { tipApiService.checkUsername(it) }
+        usernameDisposable = usernameSubject!!
+                .debounce (1000, TimeUnit.MILLISECONDS)
+                .filter(Predicate {
+                    return@Predicate !it.isEmpty() && it.length >= 2
+                })
+                .distinctUntilChanged()
+                .flatMap { tipApiService.checkUsername(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({
                     if (!it.isAvailable) {
                         view?.onUsernameUnavailableError()
                     }
-                },
-                {
+                }, {
                     view?.onGenericError(it)
                 })
     }
 
-    private fun checkUsernameDelayed(username: String) {
-        usernameDisposable?.dispose()
-        // Wait 1.5 seconds after user types before making a request, so we don't make unnecessary requests
-        usernameDisposable = Completable.timer(1500, TimeUnit.MILLISECONDS, Schedulers.io())
-                .subscribe{
-                    usernameSubject?.onNext(username)
-                }
-    }
-
-    fun stopObserving() {
+    private fun stopObserving() {
         createAccountDisposable?.dispose()
-        checkUsernameDisposable?.dispose()
         usernameDisposable?.dispose()
 
         createAccountDisposable = null
-        checkUsernameDisposable = null
         usernameDisposable = null
     }
 }
