@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kasakasa Prototype</string>
+    <string name="app_name">Kasakasa</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="background_content_desc">background</string>

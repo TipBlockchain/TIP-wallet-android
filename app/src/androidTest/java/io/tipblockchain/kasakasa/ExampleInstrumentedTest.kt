@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("io.tipblockchain.kasakasaprototype", appContext.packageName)
+        assertEquals("io.tipblockchain.kasakasa", appContext.packageName)
     }
 }
