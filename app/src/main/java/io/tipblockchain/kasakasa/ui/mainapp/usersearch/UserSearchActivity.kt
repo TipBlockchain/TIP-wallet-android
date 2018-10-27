@@ -7,16 +7,24 @@ import android.view.MenuItem
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.ui.BaseActivity
+import kotlinx.android.synthetic.main.activity_user_search.*
 
 class UserSearchActivity : BaseActivity(), UserSearch.View {
 
     lateinit var presenter: UserSearchPresenter
+    lateinit var mAdapter: UserSearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_user_search)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
         presenter = UserSearchPresenter()
         presenter.attach(this)
-        setContentView(R.layout.activity_user_search)
+
+        recyclerView.setHasFixedSize(true)
+        mAdapter = UserSearchAdapter()
+        recyclerView.adapter = mAdapter
     }
 
     override fun onDestroy() {
@@ -50,6 +58,6 @@ class UserSearchActivity : BaseActivity(), UserSearch.View {
     }
 
     override fun refreshSearchList(users: List<User>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mAdapter.setResults(users)
     }
 }

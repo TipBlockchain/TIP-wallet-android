@@ -19,6 +19,14 @@ data class User(
         @ColumnInfo(name = "lastMessage") var lastMessage: Date? = null
     ) {
 
+    @Ignore @SerializedName("photos") var photos: UserPhotos? = null
+
+    @ColumnInfo(name = "smallPhoto") var smallPhotoUrl: String? = null
+    get() = photos?.small
+
+    @ColumnInfo(name = "originalPhoto") var originalPhotoUrl: String? = null
+    get() = photos?.original
+
     fun isValid(): Boolean {
         return !(this.username.isEmpty() || this.id.isEmpty() || this.address.isEmpty())
     }

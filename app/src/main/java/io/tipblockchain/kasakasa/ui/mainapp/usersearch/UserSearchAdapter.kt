@@ -1,6 +1,5 @@
-package io.tipblockchain.kasakasa.ui.mainapp
+package io.tipblockchain.kasakasa.ui.mainapp.usersearch
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,22 +9,11 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
-
-
-import io.tipblockchain.kasakasa.ui.mainapp.ContactFragment.OnListFragmentInteractionListener
-
 import kotlinx.android.synthetic.main.row_contact.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
-class MyContactRecyclerViewAdapter(
-        private val context: Context,
-        private val mValues: List<User>,
-        private val mListener: OnListFragmentInteractionListener?)
-    : RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder>() {
+class UserSearchAdapter: RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
+    private var mValues: List<User> = listOf()
+    private val placeholderImageUrl: String = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png"
 
     private val mOnClickListener: View.OnClickListener
 
@@ -34,8 +22,12 @@ class MyContactRecyclerViewAdapter(
             val item = v.tag as User
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
         }
+    }
+
+    fun setResults(users: List<User>): Unit {
+        mValues = users
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,7 +40,11 @@ class MyContactRecyclerViewAdapter(
         val item = mValues[position]
         holder.mIdView.text = item.username
         holder.mContentView.text = item.name
-        Picasso.get().load(item.pictureUrl).into(holder.mAvatarImageView)
+        if (item.originalPhotoUrl != null) {
+            Picasso.get().load(item.originalPhotoUrl!!).into(holder.mAvatarImageView)
+        } else {
+            Picasso.get().load(placeholderImageUrl).into(holder.mAvatarImageView)
+        }
 
         with(holder.mView) {
             tag = item

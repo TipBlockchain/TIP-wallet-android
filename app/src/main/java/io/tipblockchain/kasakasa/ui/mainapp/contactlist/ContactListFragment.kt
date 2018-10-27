@@ -58,12 +58,6 @@ class ContactListFragment: Fragment(), ContactList.View {
             navigagteToUserSearch()
         }
 
-        Log.d("*******XXXXXXXXXXXXXXX", "ContactListFragment created")
-
-//        Handler().postDelayed({
-//            navigagteToUserSearch()
-//        }, 3000)
-
         return view
     }
 

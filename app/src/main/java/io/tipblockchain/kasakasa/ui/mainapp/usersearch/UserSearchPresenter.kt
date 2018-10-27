@@ -45,7 +45,7 @@ class UserSearchPresenter: UserSearch.Presenter {
         disposable = searchSubject
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .filter(Predicate { it: String ->
-                    return@Predicate it.isNotEmpty() && it.length > 2
+                    return@Predicate it.isNotEmpty() && it.length >= 2
                 })
                 .distinctUntilChanged()
                 .switchMap { searchTerm ->

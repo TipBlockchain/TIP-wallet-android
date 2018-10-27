@@ -50,7 +50,7 @@ class ContactListRecyclerViewAdapter (
 
         inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
             val mIdView: TextView = mView.fistnameTv
-            val mContentView: TextView = mView.messageTv
+            val mContentView: TextView = mView.usernameTv
             val mAvatarImageView: ImageView = mView.avatarImageView
 
             override fun toString(): String {
