@@ -11,18 +11,14 @@ import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 import kotlinx.android.synthetic.main.row_contact.view.*
 
-class UserSearchAdapter: RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
+class UserSearchAdapter: RecyclerView.Adapter<UserSearchAdapter.ViewHolder> {
+
     private var mValues: List<User> = listOf()
     private val placeholderImageUrl: String = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png"
+    private var mOnClickListener: View.OnClickListener
 
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as User
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-        }
+    constructor(onClickListener: View.OnClickListener): super() {
+        mOnClickListener = onClickListener
     }
 
     fun setResults(users: List<User>): Unit {

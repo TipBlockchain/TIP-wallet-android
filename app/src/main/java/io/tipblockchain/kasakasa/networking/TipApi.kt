@@ -35,11 +35,11 @@ interface TipApi {
     @GET(value = "/contacts")
     fun getContactList(): LiveData<ApiResponse<List<User>>>
 
-    @POST(value = "/contacts/multiple")
-    fun addMultipleContacts(newContacts: List<User>): Observable<ContactListResponse>
-
     @POST(value = "/contacts")
-    fun addContact(contact: User): Observable<ContactListResponse>
+    fun addContact(@Body contact: ContactRequest): Observable<ContactListResponse>
+
+    @POST(value = "/contacts/multiple")
+    fun addContacts(@Body contactIds: ContactListRequest): Observable<ContactListResponse>
 
     @DELETE(value = "/contacts")
     fun deleteContact(contact: User): Observable<ContactListResponse>

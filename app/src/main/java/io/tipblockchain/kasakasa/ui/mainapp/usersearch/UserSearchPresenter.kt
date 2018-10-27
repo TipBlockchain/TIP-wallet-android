@@ -35,7 +35,13 @@ class UserSearchPresenter: UserSearch.Presenter {
     }
 
     override fun addToContacts(user: User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        userRepository?.addContact(user) {added, err ->
+            if (added) {
+                view?.onContactAdded(user)
+            } else if (err != null) {
+                view?.onContactAddError(err)
+            }
+        }
     }
 
     override var view: UserSearch.View? = null
@@ -56,7 +62,7 @@ class UserSearchPresenter: UserSearch.Presenter {
                     val users = response.users
                     view?.refreshSearchList(users)
                 }, {err ->
-
+                    view?.onSearchSetupError(err)
                 })
     }
 }

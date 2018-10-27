@@ -90,6 +90,9 @@
         <activity android:name=".ui.mainapp.usersearch.UserSearchActivity"
             android:theme="@style/AppTheme.ActionBar"
             android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mainapp.MainTabActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

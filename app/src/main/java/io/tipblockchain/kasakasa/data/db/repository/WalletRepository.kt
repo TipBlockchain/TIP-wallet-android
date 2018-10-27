@@ -63,7 +63,11 @@ class WalletRepository {
             override fun doInBackground(vararg p0: Wallet?): Int {
                 val wallet = p0.first()
                 if (wallet is Wallet) {
-                    mAsyncTaskDao!!.insert(wallet)
+                    try {
+                        mAsyncTaskDao!!.insert(wallet)
+                    } catch (e: Throwable) {
+                        return -1
+                    }
                     return 0
                 }
                 return -1

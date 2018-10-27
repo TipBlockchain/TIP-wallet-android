@@ -19,6 +19,7 @@ import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
 import io.tipblockchain.kasakasa.ui.mainapp.usersearch.UserSearch
 import kotlinx.serialization.json.JSON
+import java.lang.Exception
 
 typealias ContactsUpdated = (Boolean, Throwable?) -> Unit
 
@@ -81,7 +82,7 @@ class UserRepository {
             it.let {
                 if (user.id in it.contacts) {
                     user.isContact = true
-                    dao.insert(user)
+                    insert(user)
                 }
                 callback(true, null)
             }
@@ -91,7 +92,7 @@ class UserRepository {
     }
 
     fun addContacts(contacts: List<User>) {
-        apiService.addMultipleContacts(contacts)
+        apiService.addContacts(contacts)
     }
     companion object {
 
@@ -106,10 +107,13 @@ class UserRepository {
             override fun doInBackground(vararg p0: User?): Int {
                 val user = p0.first()
                 if (user is User) {
-                    mAsynctaskDao.insert(user)
-                    return 0
+                    try {
+                        mAsynctaskDao.insert(user)
+                    } catch (e: Exception) {
+                        return -1
+                    }
                 }
-                return -1
+                return 0
             }
         }
 

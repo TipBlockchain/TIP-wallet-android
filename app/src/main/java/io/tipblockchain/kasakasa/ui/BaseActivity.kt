@@ -21,8 +21,9 @@ open class BaseActivity: AppCompatActivity() {
         this.LOG_TAG = this.javaClass.name
     }
 
-    protected fun showOkCancelDialog(message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
+    protected fun showOkCancelDialog(title: String? = null, message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
         AlertDialog.Builder(this)
+                .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.okay), onClickListener)
                 .setNegativeButton(getString(R.string.cancel), onClickListener)

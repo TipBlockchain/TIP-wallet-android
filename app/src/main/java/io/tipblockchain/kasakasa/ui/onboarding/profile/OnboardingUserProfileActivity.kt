@@ -147,8 +147,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     private fun showPermissionsDeniedDialog() {
-        this.showOkDialog(getString(R.string.permission_camera_denied))
-        this.showOkCancelDialog(getString(R.string.permission_camera_denied), onClickListener = object : DialogInterface.OnClickListener {
+        this.showOkCancelDialog(getString(R.string.title_allow_camera_access), getString(R.string.permission_camera_denied), onClickListener = object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 when(which) {
                     DialogInterface.BUTTON_POSITIVE ->  requestPermissions()

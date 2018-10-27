@@ -6,7 +6,9 @@ import io.tipblockchain.kasakasa.ui.BaseView
 
 interface UserSearch {
     interface View: BaseView {
-        fun showError(message: String)
+        fun onContactAdded(contact: User)
+        fun onContactAddError(err: Throwable)
+        fun onSearchSetupError(err: Throwable)
         fun refreshSearchList(users: List<User>)
     }
 
