@@ -1,11 +1,8 @@
 package io.tipblockchain.kasakasa.networking
 
-import android.arch.lifecycle.LiveData
 import android.util.Log
 import com.android.example.github.api.ApiResponse
-import com.facebook.stetho.okhttp3.BuildConfig
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.google.android.gms.common.api.Api
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.Converters
@@ -29,7 +26,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://0b41fd01.ngrok.io"
+        private val baseUrl: String = "https://928c0d4b.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -88,7 +85,7 @@ class TipApiService {
         return tipApi.authorize(message)
     }
 
-    fun getContacts(): LiveData<ApiResponse<List<User>>> {
+    fun getContacts(): Observable<ApiResponse<List<User>>> {
         return tipApi.getContactList()
     }
 
@@ -103,7 +100,7 @@ class TipApiService {
         return tipApi.addContacts(request)
     }
 
-    fun deleteContact(contact: User): Observable<ContactListResponse> {
+    fun removeContact(contact: User): Observable<ContactListResponse> {
         return tipApi.deleteContact(contact)
     }
 }

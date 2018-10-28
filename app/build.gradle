@@ -110,6 +110,7 @@ dependencies {
 
     // Lifecycle components
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
+    implementation "android.arch.lifecycle:reactivestreams:1.1.1"
     kapt "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 

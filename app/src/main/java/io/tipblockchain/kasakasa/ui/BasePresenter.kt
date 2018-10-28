@@ -6,6 +6,7 @@ interface BasePresenter<V: BaseView> {
     fun attach(view: V) {
         this.view = view
     }
+
     fun detach() {
         this.view = null
     }

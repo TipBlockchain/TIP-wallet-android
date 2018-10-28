@@ -3,6 +3,7 @@ package io.tipblockchain.kasakasa.data.db.repository
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
+import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
@@ -12,7 +13,7 @@ class TransactionRepository {
     private var dao: TransactionDao
     private var allTransactions: LiveData<List<Transaction>>
 
-    constructor(context: Context) {
+    private constructor(context: Context) {
         val db = TipRoomDatabase.getDatabase(context)
         dao = db.transactionDao()
         allTransactions = dao.findAllTransactions()
@@ -23,6 +24,8 @@ class TransactionRepository {
     }
 
     companion object {
+
+        val instance = TransactionRepository(App.applicationContext())
 
         private class insertAsyncTask: AsyncTask<Transaction, Int, Int> {
 

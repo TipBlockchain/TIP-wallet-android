@@ -14,14 +14,13 @@ import kotlinx.android.synthetic.main.row_contact.view.*
 class UserSearchAdapter: RecyclerView.Adapter<UserSearchAdapter.ViewHolder> {
 
     private var mValues: List<User> = listOf()
-    private val placeholderImageUrl: String = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png"
     private var mOnClickListener: View.OnClickListener
 
     constructor(onClickListener: View.OnClickListener): super() {
         mOnClickListener = onClickListener
     }
 
-    fun setResults(users: List<User>): Unit {
+    fun setResults(users: List<User>) {
         mValues = users
         notifyDataSetChanged()
     }
@@ -39,7 +38,7 @@ class UserSearchAdapter: RecyclerView.Adapter<UserSearchAdapter.ViewHolder> {
         if (item.originalPhotoUrl != null) {
             Picasso.get().load(item.originalPhotoUrl!!).into(holder.mAvatarImageView)
         } else {
-            Picasso.get().load(placeholderImageUrl).into(holder.mAvatarImageView)
+            Picasso.get().load(R.drawable.avatar_placeholder_small).into(holder.mAvatarImageView)
         }
 
         with(holder.mView) {

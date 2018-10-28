@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.ui.splash
 
-import android.app.Application
 import android.util.Log
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
@@ -9,14 +8,10 @@ import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 
 class SplashPresenter: SplashScreenContract.Presenter {
 
-    var walletRepository: WalletRepository
+    val walletRepository = WalletRepository.instance
     override var view: SplashScreenContract.View? = null
     private var currentUser: User? = null
     val LOG_TAG = javaClass.canonicalName
-
-    constructor(application: Application) {
-        walletRepository = WalletRepository(application)
-    }
 
     override fun attach(view: SplashScreenContract.View) {
         this.view = view

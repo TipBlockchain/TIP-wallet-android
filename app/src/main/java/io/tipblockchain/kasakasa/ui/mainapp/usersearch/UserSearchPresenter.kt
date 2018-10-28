@@ -16,13 +16,12 @@ import java.util.concurrent.TimeUnit
 class UserSearchPresenter: UserSearch.Presenter {
 
     lateinit var searchSubject: PublishSubject<String>
-    private var userRepository: UserRepository? = null
+    private var userRepository: UserRepository = UserRepository.instance
     private var disposable: Disposable? = null
 
     override fun attach(view: UserSearch.View) {
         super.attach(view)
         setupSearchSubject()
-        userRepository = UserRepository(App.application())
     }
 
     override fun detach() {
@@ -35,7 +34,7 @@ class UserSearchPresenter: UserSearch.Presenter {
     }
 
     override fun addToContacts(user: User) {
-        userRepository?.addContact(user) {added, err ->
+        userRepository.addContact(user) {added, err ->
             if (added) {
                 view?.onContactAdded(user)
             } else if (err != null) {
@@ -55,7 +54,7 @@ class UserSearchPresenter: UserSearch.Presenter {
                 })
                 .distinctUntilChanged()
                 .switchMap { searchTerm ->
-                    userRepository!!.findUsersBySearch(searchTerm)
+                    userRepository.findUsersBySearch(searchTerm)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                 }.subscribe ({response ->

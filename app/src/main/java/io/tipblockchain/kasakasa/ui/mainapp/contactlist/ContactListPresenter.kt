@@ -1,19 +1,14 @@
 package io.tipblockchain.kasakasa.ui.mainapp.contactlist
 
-import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.Observer
 import com.android.example.github.vo.Resource
 import com.android.example.github.vo.Status
-import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 class ContactListPresenter: ContactList.Presenter {
-    var userRepository: UserRepository
 
-    constructor() {
-        userRepository = UserRepository(App.application())
-    }
+    var userRepository: UserRepository = UserRepository.instance
 
     override fun fetchContactList() {
         userRepository.loadContacts().observe(view!!, Observer<Resource<List<User>>> {
@@ -21,15 +16,16 @@ class ContactListPresenter: ContactList.Presenter {
                 when (resource?.status) {
 
                     Status.SUCCESS ->{
-                        view!!.onContactsFetched(resource.data)
+                        view?.onContactsFetched(resource.data)
                     }
                     Status.LOADING -> {
-                        view!!.onContactsLoading()
+                        view?.onContactsLoading()
                     }
 
                     Status.ERROR -> {
-                        view!!.onContactsLoadError()
+                        view?.onContactsLoadError(Error(""))
                     }
+                    else -> view?.onNoContacts()
                 }
             }
         })
@@ -38,13 +34,25 @@ class ContactListPresenter: ContactList.Presenter {
     override fun addContact(contact: User) {
         userRepository.addContact(contact) {updated, error ->
             if (updated && error == null) {
-                view!!.onContactAdded(contact)
+                view?.onContactAdded(contact)
+            } else if (error != null) {
+                view?.onContactAddError(error)
             }
         }
     }
+
     override fun addContacts(contacts: List<User>) {
         userRepository.addContacts(contacts)
     }
 
+    override fun removeContact(contact: User) {
+       userRepository.removeContact(contact) {updated, error ->
+           if (updated && error == null) {
+               view?.onContactRemoved(contact)
+           } else if (error != null) {
+               view?.onContactRemoveError(error)
+           }
+       }
+    }
     override var view: ContactList.View? = null
 }

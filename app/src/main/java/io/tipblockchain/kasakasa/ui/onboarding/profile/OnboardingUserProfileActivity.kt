@@ -40,6 +40,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     private lateinit var viewModel: OnboardingUserProfileViewModel
     private var permissionsGranted: Boolean = false
     private var presenter: OnboardingUserProfile.Presenter? = null
+    private val walletRepository = WalletRepository.instance
 
     private enum class ActivityRequest(val code: Int) {
         CAMERA(111),
@@ -63,7 +64,6 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     private fun setupPresenter() {
-        val walletRepository = WalletRepository(App.application())
         presenter = OnboardingUserProfilePresenter()
         presenter?.viewModel = viewModel
         presenter?.attach(this)

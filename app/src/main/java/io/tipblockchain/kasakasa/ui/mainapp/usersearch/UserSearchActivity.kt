@@ -1,7 +1,9 @@
 package io.tipblockchain.kasakasa.ui.mainapp.usersearch
 
 import android.content.DialogInterface
+import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
@@ -86,19 +88,29 @@ class UserSearchActivity : BaseActivity(), UserSearch.View {
         recyclerView.setHasFixedSize(true)
         mAdapter = UserSearchAdapter(mOnClickListener)
         recyclerView.adapter = mAdapter
+        val attrs = intArrayOf(android.R.attr.listDivider)
+
+        val a = this.obtainStyledAttributes(attrs)
+        val divider = a.getDrawable(0)
+        val inset = resources.getDimensionPixelSize(R.dimen.list_divider_small_margin)
+
+        val insetDivider = InsetDrawable(divider, inset, 0, inset, 0)
+        a.recycle()
+
+        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        itemDecoration.setDrawable(insetDivider)
+        recyclerView.addItemDecoration(itemDecoration)
     }
 
     private fun showAddToContactsDialog(user: User) {
         this.showOkCancelDialog(title = getString(R.string.title_add_to_contacts),
                 message = getString(R.string.confirm_add_to_contacts, user.username),
                 onClickListener = DialogInterface.OnClickListener {_, which ->
-//                    fun onClick(dialog: DialogInterface?, which: Int) {
-                        when (which) {
-                            DialogInterface.BUTTON_POSITIVE -> {
-                                addToContacts(user)
-                            }
+                    when (which) {
+                        DialogInterface.BUTTON_POSITIVE -> {
+                            addToContacts(user)
                         }
-//                    }
+                    }
         })
     }
 

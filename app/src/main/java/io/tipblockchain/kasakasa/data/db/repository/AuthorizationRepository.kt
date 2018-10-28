@@ -12,6 +12,7 @@ import kotlinx.serialization.json.JSON
 class AuthorizationRepository {
 
     companion object {
+        val instance = AuthorizationRepository()
         var currentAuthorization: Authorization? = fetchCurrentAuthorization()
             set(value) {
                 field = value

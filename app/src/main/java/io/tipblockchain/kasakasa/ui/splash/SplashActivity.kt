@@ -36,8 +36,8 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
     }
 
     private fun setupPresenter() {
-        val walletRepository = WalletRepository(App.application())
-        presenter = SplashPresenter(this.application)
+        val walletRepository = WalletRepository.instance
+        presenter = SplashPresenter()
         presenter.attach(this)
 
         walletRepository.primaryWallet().observe(this, Observer {wallet ->

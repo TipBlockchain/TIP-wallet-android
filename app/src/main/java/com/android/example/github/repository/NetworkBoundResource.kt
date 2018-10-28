@@ -26,6 +26,8 @@ import com.android.example.github.api.ApiErrorResponse
 import com.android.example.github.api.ApiResponse
 import com.android.example.github.api.ApiSuccessResponse
 import com.android.example.github.vo.Resource
+import io.reactivex.Observable
+import javax.xml.transform.Result
 
 /**
  * A generic class that can provide a resource backed by both the sqlite database and the network.
@@ -109,6 +111,8 @@ abstract class NetworkBoundResource<ResultType, RequestType>
 
     fun asLiveData() = result as LiveData<Resource<ResultType>>
 
+    fun asObservable(): Observable<Resource<ResultType>> = Observable.just(result.value)
+
     @WorkerThread
     protected open fun processResponse(response: ApiSuccessResponse<RequestType>) = response.body
 
@@ -121,6 +125,6 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     @MainThread
     protected abstract fun loadFromDb(): LiveData<ResultType>
 
-    @MainThread
+    @WorkerThread
     protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
 }

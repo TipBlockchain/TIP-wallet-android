@@ -12,10 +12,10 @@ import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 import kotlinx.android.synthetic.main.row_contact.view.*
 
-class ContactListRecyclerViewAdapter (
-    private val context: Context,
-    private val mValues: List<User>,
-    private val mListener: ContactListFragment.OnListFragmentInteractionListener?) : RecyclerView.Adapter<ContactListRecyclerViewAdapter.ViewHolder>() {
+class ContactListAdapter (
+    private var context: Context,
+    private var mValues: MutableList<User>,
+    private var mListener: ContactListFragment.OnListFragmentInteractionListener?) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
 
         private val mOnClickListener: View.OnClickListener
 
@@ -38,11 +38,33 @@ class ContactListRecyclerViewAdapter (
             val item = mValues[position]
             holder.mIdView.text = item.username
             holder.mContentView.text = item.name
-            Picasso.get().load(item.pictureUrl).into(holder.mAvatarImageView)
+            if (item.originalPhotoUrl != null) {
+                Picasso.get().load(item.originalPhotoUrl).into(holder.mAvatarImageView)
+            } else {
+                Picasso.get().load(R.drawable.avatar_placeholder_small).into(holder.mAvatarImageView)
+            }
 
             with(holder.mView) {
                 tag = item
                 setOnClickListener(mOnClickListener)
+            }
+        }
+
+        fun setResults(contacts: MutableList<User>) {
+            mValues = contacts
+            notifyDataSetChanged()
+        }
+
+        fun addContact(contact: User) {
+            mValues.add(contact)
+            notifyItemInserted(mValues.size -1)
+        }
+
+        fun removeContact(contact: User) {
+            var index = mValues.indexOf(contact)
+            if (index >= 0) {
+                mValues.remove(contact)
+                notifyItemRemoved(index)
             }
         }
 

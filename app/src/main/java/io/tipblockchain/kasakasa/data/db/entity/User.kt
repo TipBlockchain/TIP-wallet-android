@@ -20,12 +20,22 @@ data class User(
     ) {
 
     @Ignore @SerializedName("photos") var photos: UserPhotos? = null
+    set(value) {
+        originalPhotoUrl = value?.original
+        smallPhotoUrl = value?.small
+    }
 
-    @ColumnInfo(name = "smallPhoto") var smallPhotoUrl: String? = null
-    get() = photos?.small
+    @ColumnInfo(name = "smallPhoto")
+    var smallPhotoUrl: String? = null
+        get() = photos?.small ?: field
 
-    @ColumnInfo(name = "originalPhoto") var originalPhotoUrl: String? = null
-    get() = photos?.original
+    @ColumnInfo(name = "originalPhoto")
+    var originalPhotoUrl: String? = null
+        get() = photos?.original ?: field
+
+    @ColumnInfo(name = "mediumPhoto")
+    var mediumPhotoUrl: String? = null
+        get() = photos?.medium ?: field
 
     fun isValid(): Boolean {
         return !(this.username.isEmpty() || this.id.isEmpty() || this.address.isEmpty())

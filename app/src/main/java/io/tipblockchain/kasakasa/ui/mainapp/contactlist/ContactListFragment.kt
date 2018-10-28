@@ -1,24 +1,19 @@
 package io.tipblockchain.kasakasa.ui.mainapp.contactlist
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
-import io.tipblockchain.kasakasa.ui.mainapp.TransactionOptionsDialogFragment
 import io.tipblockchain.kasakasa.ui.mainapp.usersearch.UserSearchActivity
 import kotlinx.android.synthetic.main.fragment_contact_list.*
+import android.graphics.drawable.InsetDrawable
 
 class ContactListFragment: Fragment(), ContactList.View {
 
@@ -28,8 +23,9 @@ class ContactListFragment: Fragment(), ContactList.View {
 
     private lateinit var presenter: ContactListPresenter
 
-    private lateinit var mAdapter: ContactListRecyclerViewAdapter
-    private var mContacts: MutableSet<User> = mutableSetOf()
+    private lateinit var mAdapter: ContactListAdapter
+
+    private val LOG_TAG = this.javaClass.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,17 +38,6 @@ class ContactListFragment: Fragment(), ContactList.View {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_contact_list, container, false)
 
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter = ContactListRecyclerViewAdapter(context, mContacts.toTypedArray().toList(), listener)
-                mAdapter = adapter!! as ContactListRecyclerViewAdapter
-            }
-        }
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             navigagteToUserSearch()
@@ -61,24 +46,27 @@ class ContactListFragment: Fragment(), ContactList.View {
         return view
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onStart() {
+        super.onStart()
+        setupPresenter()
+    }
 
-        presenter = ContactListPresenter()
-        presenter.attach(this)
-        listener = InteractionListener()
+    override fun onStop() {
+        presenter.detach()
+        super.onStop()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        list.addItemDecoration(DividerItemDecoration(context,
-                DividerItemDecoration.VERTICAL))
+        listener = InteractionListener()
 
+        this.setupRecyclerView()
     }
 
     override fun onDetach() {
         super.onDetach()
         presenter.detach()
+
         listener = null
     }
 
@@ -94,15 +82,14 @@ class ContactListFragment: Fragment(), ContactList.View {
      * for more information.
      */
     interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onListFragmentInteraction(item: User)
     }
 
     inner class InteractionListener: OnListFragmentInteractionListener {
+
         override fun  onListFragmentInteraction(item: User) {
-            Log.e("error", "List fragent interraction for ${item}")
-            val newFragment = TransactionOptionsDialogFragment()
-            newFragment.show(fragmentManager, "missiles")
+            val dialogFragment = TransactionOptionsDialogFragment()
+            dialogFragment.show(fragmentManager, "transaction")
         }
     }
 
@@ -123,36 +110,75 @@ class ContactListFragment: Fragment(), ContactList.View {
     }
 
     override fun onContactsFetched(contacts: List<User>?) {
-        if (contacts  != null) {
-            mContacts.addAll(contacts)
+        Log.d(LOG_TAG, "Received contacts: ${contacts}")
+        hideSpinner()
+        if (contacts != null) {
+            mAdapter.setResults(contacts.toMutableList())
         }
-        mAdapter.notifyDataSetChanged()
     }
 
     override fun onNoContacts() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onContactsLoadError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        hideSpinner()
     }
 
     override fun onContactsLoading() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        showSpinner()
     }
 
     override fun onContactAdded(contact: User) {
-        mContacts.add(contact)
-        mAdapter.notifyDataSetChanged()
+        mAdapter.addContact(contact)
     }
 
-    override fun onContactRemoved() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onContactRemoved(contact: User) {
+        mAdapter.removeContact(contact)
+    }
+
+    override fun onContactAddError(error: Throwable) {
+    }
+
+    override fun onContactRemoveError(error: Throwable) {
+    }
+
+    override fun onContactsLoadError(error: Throwable) {
+        hideSpinner()
+    }
+
+    private fun showSpinner() {
+
+    }
+
+    private fun hideSpinner() {
+
     }
 
     private fun navigagteToUserSearch() {
         val intent = Intent(activity, UserSearchActivity::class.java)
         startActivity(intent)
         Log.d("ContactList", "Starting search")
+    }
+
+    private fun setupPresenter(){
+        presenter = ContactListPresenter()
+        presenter.attach(this)
+        presenter.fetchContactList()
+    }
+
+    private fun setupRecyclerView() {
+        mAdapter = ContactListAdapter(activity!!.baseContext, mutableListOf(), listener)
+        recyclerView.adapter = mAdapter
+
+        val attrs = intArrayOf(android.R.attr.listDivider)
+
+        val a = context!!.obtainStyledAttributes(attrs)
+        val divider = a.getDrawable(0)
+        val leftInset = resources.getDimensionPixelSize(R.dimen.list_divider_large_margin)
+        val rightInset = resources.getDimensionPixelSize(R.dimen.list_divider_small_margin)
+
+        val insetDivider = InsetDrawable(divider, leftInset, 0, rightInset, 0)
+        a.recycle()
+
+        val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        itemDecoration.setDrawable(insetDivider)
+        recyclerView.addItemDecoration(itemDecoration)
     }
 }
