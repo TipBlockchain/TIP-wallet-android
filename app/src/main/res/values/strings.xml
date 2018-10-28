@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kasakasa Prototype</string>
+    <string name="app_name">Kasakasa</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="background_content_desc">background</string>
@@ -151,6 +151,9 @@
     <string name="prompt_message">Message</string>
     <string name="prompt_amount">Amount</string>
     <string name="prompt_recepient">Recepient</string>
+    <string name="title_add_to_contacts">Add to contacts</string>
+    <string name="message_added_to_contacts">%s added to your contacts.</string>
+    <string name="confirm_add_to_contacts">Do you want to add %s to your contact list?</string>
     <string name="okay">Okay</string>
     <string name="cancel">Cancel</string>
     <string name="transaction_sent">Transaction Sent</string>
@@ -173,6 +176,9 @@
     <string name="placeholder_seed_phrase">one two three four five six seven eight nine ten eleven twelve</string>
     <string name="recovery_phrase_must_be_copied">The recovery phrase must be backed up to proceed.</string>
     <string name="title_activity_onboarding_user_profile">OnboardingUserProfileActivity</string>
+    <string name="title_allow_camera_access">Allow camera access</string>
+    <string name="error_adding_contact">Error adding contact: %s</string>
+    <string name="error_setting_up_search">Error setting up search: %s</string>
     <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
     <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
     <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>

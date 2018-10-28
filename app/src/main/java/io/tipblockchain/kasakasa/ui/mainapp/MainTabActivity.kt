@@ -6,15 +6,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main_tab.*
 
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment
 import io.tipblockchain.kasakasa.ui.settings.MyAccountFragment
-import io.tipblockchain.kasakasa.ui.settings.MyAccountPreferenceFragment
 
 class MainTabActivity : AppCompatActivity() {
 
@@ -29,12 +28,11 @@ class MainTabActivity : AppCompatActivity() {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        mSectionsPagerAdapter?.replaceFragment(ContactFragment.newInstance(1))
 
         when (item.itemId) {
 
             R.id.navigation_home -> {
-                mSectionsPagerAdapter?.replaceFragment(ContactFragment.newInstance(1))
+                mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
 //                supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_contacts)
                 return@OnNavigationItemSelectedListener true
@@ -68,9 +66,14 @@ class MainTabActivity : AppCompatActivity() {
 
 //        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
 //        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
-        mSectionsPagerAdapter?.replaceFragment(ContactFragment.newInstance(1))
         supportActionBar?.setTitle(R.string.title_contacts)
 
+        this.addStartingFragment()
+
+    }
+
+    private fun addStartingFragment() {
+        mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
     }
 
     /**
@@ -82,7 +85,7 @@ class MainTabActivity : AppCompatActivity() {
         override fun getItem(position: Int): Fragment = when (position) {
             0 -> PlaceholderFragment.newInstance(position + 1)
             1 -> WalletFragment()
-            2 -> ContactFragment()
+            2 -> ContactListFragment()
             else -> PlaceholderFragment.newInstance(position + 1)
         }
 
@@ -137,5 +140,4 @@ class MainTabActivity : AppCompatActivity() {
             }
         }
     }
-
 }

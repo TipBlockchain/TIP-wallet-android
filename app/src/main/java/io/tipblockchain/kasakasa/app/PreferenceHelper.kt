@@ -15,6 +15,7 @@ class PreferenceHelper (private var context: Context) {
         private val ONBOARDING_COMPLETE = "onboarding_complete"
         private val CURRENT_USER = "current_user"
         private val PLACEHOLDER_VALUE = "playceholder_value"
+        private val AUTHORIZATION = "authorization"
 
 
         var onboardingComplete: Boolean
@@ -35,6 +36,16 @@ class PreferenceHelper (private var context: Context) {
                 }
 
             }
+
+        var authorization: String?
+        get() = prefs.getString(AUTHORIZATION, null)
+        set(value) {
+            if (value != null) {
+                prefs.edit().putString(AUTHORIZATION, value).apply()
+            } else {
+                prefs.edit().remove(AUTHORIZATION)
+            }
+        }
 
         private fun removeCurrentUser() {
             prefs.edit().remove(CURRENT_USER)

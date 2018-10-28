@@ -14,8 +14,8 @@ class OnboardingUserProfileViewModel: AndroidViewModel {
     var firstname: String? = null
     var lastname: String? = null
 
-    var userRepository: UserRepository
-    var walletRepository: WalletRepository
+    var userRepository: UserRepository = UserRepository.instance
+    var walletRepository: WalletRepository = WalletRepository.instance
 
 
     var name: String = ""
@@ -34,8 +34,6 @@ class OnboardingUserProfileViewModel: AndroidViewModel {
         }
 
     constructor(application: Application): super(application) {
-        userRepository = UserRepository(application)
-        walletRepository = WalletRepository(application)
     }
 
     override fun toString(): String {

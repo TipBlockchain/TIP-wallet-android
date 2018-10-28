@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2f17ad89bc2b588c31e8fb53cfc621fc",
+    "identityHash": "8bab1ffdbb09c24f22200b75ebf22cb1",
     "entities": [
       {
         "tableName": "transactions",
@@ -110,7 +110,7 @@
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, `smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -158,6 +158,24 @@
             "fieldPath": "lastMessage",
             "columnName": "lastMessage",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "smallPhotoUrl",
+            "columnName": "smallPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "originalPhotoUrl",
+            "columnName": "originalPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediumPhotoUrl",
+            "columnName": "mediumPhoto",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -263,7 +281,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2f17ad89bc2b588c31e8fb53cfc621fc\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8bab1ffdbb09c24f22200b75ebf22cb1\")"
     ]
   }
 }

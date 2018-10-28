@@ -8,10 +8,9 @@ class RecoveryPhraseViewModel: AndroidViewModel {
     var recoveryPhrase: String? = null
     var isBackedUp: Boolean = false
 
-    private var walletRepository: WalletRepository
+    private var walletRepository: WalletRepository = WalletRepository.instance
 
     constructor(application: Application): super(application) {
-        walletRepository = WalletRepository(application)
     }
 
     fun createNewWallet(password: String)    {

@@ -1,9 +1,10 @@
 package io.tipblockchain.kasakasa.networking
 
+import com.android.example.github.api.ApiResponse
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
-import io.tipblockchain.kasakasa.data.responses.UsernameResponse
+import io.tipblockchain.kasakasa.data.responses.*
 import retrofit2.http.*
 
 interface TipApi {
@@ -22,4 +23,24 @@ interface TipApi {
 
     @POST("/secure/identity")
     fun createAccount(@Body user: User): Observable<User>
+
+    @GET("/accounts/search")
+    fun searchByUsername(@Query(value = "username") username: String): Observable<UserSearchResponse>
+
+    @POST("/secure/authorize")
+    fun authorize(@Body message: SecureMessage): Observable<Authorization>
+
+    // Contacts
+    @GET(value = "/contacts")
+    fun getContactList(): Observable<ApiResponse<List<User>>>
+
+    @POST(value = "/contacts")
+    fun addContact(@Body contact: ContactRequest): Observable<ContactListResponse>
+
+    @POST(value = "/contacts/multiple")
+    fun addContacts(@Body contactIds: ContactListRequest): Observable<ContactListResponse>
+
+    @DELETE(value = "/contacts")
+    fun deleteContact(contact: User): Observable<ContactListResponse>
+
 }

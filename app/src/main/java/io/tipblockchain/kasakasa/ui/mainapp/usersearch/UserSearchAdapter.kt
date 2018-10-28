@@ -1,6 +1,5 @@
-package io.tipblockchain.kasakasa.ui.mainapp
+package io.tipblockchain.kasakasa.ui.mainapp.usersearch
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,32 +9,20 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
-
-
-import io.tipblockchain.kasakasa.ui.mainapp.ContactFragment.OnListFragmentInteractionListener
-
 import kotlinx.android.synthetic.main.row_contact.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
-class MyContactRecyclerViewAdapter(
-        private val context: Context,
-        private val mValues: List<User>,
-        private val mListener: OnListFragmentInteractionListener?)
-    : RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder>() {
+class UserSearchAdapter: RecyclerView.Adapter<UserSearchAdapter.ViewHolder> {
 
-    private val mOnClickListener: View.OnClickListener
+    private var mValues: List<User> = listOf()
+    private var mOnClickListener: View.OnClickListener
 
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as User
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
-        }
+    constructor(onClickListener: View.OnClickListener): super() {
+        mOnClickListener = onClickListener
+    }
+
+    fun setResults(users: List<User>) {
+        mValues = users
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,7 +35,11 @@ class MyContactRecyclerViewAdapter(
         val item = mValues[position]
         holder.mIdView.text = item.username
         holder.mContentView.text = item.name
-        Picasso.get().load(item.pictureUrl).into(holder.mAvatarImageView)
+        if (item.originalPhotoUrl != null) {
+            Picasso.get().load(item.originalPhotoUrl!!).into(holder.mAvatarImageView)
+        } else {
+            Picasso.get().load(R.drawable.avatar_placeholder_small).into(holder.mAvatarImageView)
+        }
 
         with(holder.mView) {
             tag = item
@@ -60,7 +51,7 @@ class MyContactRecyclerViewAdapter(
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.fistnameTv
-        val mContentView: TextView = mView.messageTv
+        val mContentView: TextView = mView.usernameTv
         val mAvatarImageView: ImageView = mView.avatarImageView
 
         override fun toString(): String {

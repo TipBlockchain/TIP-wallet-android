@@ -41,6 +41,7 @@ class ChooseUsernameActivity : AppCompatActivity() {
     private var checkUsernameSubscription: Disposable? = null
     private val LOG_TAG = ChooseUsernameActivity::class.java.name
     private var usernameTask: Disposable? = null
+    private var tipApiService = TipApiService.instance
     private var taskHandler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +69,7 @@ class ChooseUsernameActivity : AppCompatActivity() {
 
     private fun checkUsername(username: String) {
         cancelSubscription()
-        checkUsernameSubscription = TipApiService().checkUsername(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+        checkUsernameSubscription = tipApiService.checkUsername(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
             Log.d(LOG_TAG, "Username response is $it")
             if (!it.isAvailable) {
                 usernameTv.error = getString(R.string.error_username_unavailable)

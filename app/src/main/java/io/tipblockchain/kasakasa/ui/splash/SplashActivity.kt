@@ -12,7 +12,7 @@ import io.tipblockchain.kasakasa.ui.onboarding.OnboardingActivity
 
 class SplashActivity : BaseActivity(), SplashScreenContract.View {
 
-    lateinit var presenter: SplashPresenter
+    private lateinit var presenter: SplashPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +36,12 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
     }
 
     private fun setupPresenter() {
-        val walletRepository = WalletRepository(App.application())
-        presenter = SplashPresenter(this.application)
+        val walletRepository = WalletRepository.instance
+        presenter = SplashPresenter()
         presenter.attach(this)
 
         walletRepository.primaryWallet().observe(this, Observer {wallet ->
-            presenter?.walletFetched(wallet)
+            presenter.walletFetched(wallet)
         })
     }
 }
