@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main_tab.*
 
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment
+import io.tipblockchain.kasakasa.ui.mainapp.transactions.WalletFragment
 import io.tipblockchain.kasakasa.ui.settings.MyAccountFragment
 
 class MainTabActivity : AppCompatActivity() {

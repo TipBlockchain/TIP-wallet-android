@@ -33,6 +33,7 @@ import org.web3j.crypto.Credentials
 import org.web3j.crypto.CipherException
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.Request
+import org.web3j.protocol.core.methods.response.EthGasPrice
 import org.web3j.protocol.core.methods.response.EthGetBalance
 
 
@@ -43,7 +44,6 @@ class Web3Bridge {
 
     }
 
-    private val secureRandom = SecureRandom()
     private var web3: Web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/SSWOxqisHlJoSVWYy09p "))
     private var tipToken: TipToken? = null
 
@@ -60,84 +60,15 @@ class Web3Bridge {
         return credentials
     }
 
-    fun loadBip39Credentials(seed: String, password: String) : Credentials {
-        val credentials = WalletUtils.loadBip39Credentials(seed, password)
-        return credentials
-    }
-
-    fun createWalletFromSeed(seed: String): JSONObject {
-
-        val processJson = JSONObject()
-
-        try {
-            val ecKeyPair = Keys.createEcKeyPair()
-            val privateKeyInDec = ecKeyPair.privateKey
-
-            val sPrivatekeyInHex = privateKeyInDec.toString(16)
-
-            val aWallet = Wallet.createLight(seed, ecKeyPair)
-            val sAddress = aWallet.getAddress()
-
-
-            processJson.put("address", "0x$sAddress")
-            processJson.put("privatekey", sPrivatekeyInHex)
-
-
-        } catch (e: CipherException) {
-            //
-        } catch (e: InvalidAlgorithmParameterException) {
-            //
-        } catch (e: NoSuchAlgorithmException) {
-            //
-        } catch (e: NoSuchProviderException) {
-            //
-        }
-
-        return processJson
-    }
-
-    fun createWalletFromSeed2(seedCode: String, password: String) {
-        val seed = DeterministicSeed(seedCode, null, password, Date().time)
-        val chain = DeterministicKeyChain.builder().seed(seed).build()
-        val keyPath = HDUtils.parsePath("M/44H/60H/0H/0/0")
-        val key = chain.getKeyByPath(keyPath, true)
-        val privKey = key.privKey
-        val privateKeyString = privKey.toString(16)
-
-// Web3j
-        val credentials = Credentials.create(privateKeyString)
-        println(credentials.address)
-        val json = JSONObject()
-        json.put("address", "0x${credentials.address}")
-        json.put("privateKey", privateKeyString)
-    }
-
-
-    fun createNewLightWallet(password: String): String {
-        return WalletUtils.generateLightNewWalletFile(password, FileUtils().walletsDir())
-    }
-
-    fun createNewFullWallet(password: String) : String {
-        return WalletUtils.generateFullNewWalletFile(password, FileUtils().walletsDir())
-    }
-
     fun createBip39Wallet(password: String): Bip39Wallet {
         val bip39Wallet = WalletUtils.generateBip39Wallet(password, FileUtils().walletsDir())
         return bip39Wallet
     }
 
-    fun sendEthTransaction(to: String, value: String, walletFile: File): TransactionReceipt {
-        val credentials = loadCredentialsWithPassword("password", walletFile)
+    fun sendEthTransaction(to: String, value: String, walletFile: File, password: String): TransactionReceipt {
+        val credentials = loadCredentialsWithPassword(password, walletFile)
         val receipt = Transfer.sendFunds(web3, credentials, to, BigDecimal(value), Convert.Unit.ETHER).send()
         return receipt
-    }
-
-    fun generateMnemonic(): String {
-        val initialEntropy = ByteArray(16)
-        secureRandom.nextBytes(initialEntropy)
-
-        val mnemonic = MnemonicUtils.generateMnemonic(initialEntropy)
-        return mnemonic
     }
 
     fun sendTipTransaction(to: String, value: BigInteger) {
@@ -146,5 +77,17 @@ class Web3Bridge {
 
     fun getBalance(address: String): Request<*, EthGetBalance>? {
         return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST)
+    }
+
+    fun getEthBalanceAsync(address: String): EthGetBalance {
+        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST).sendAsync().get()
+    }
+
+    fun getGasPrice(): EthGasPrice {
+        return web3.ethGasPrice().sendAsync().get()
+    }
+
+    fun getTipBalance(address: String) {
+        tipToken!!.balanceOf(address).send()
     }
 }

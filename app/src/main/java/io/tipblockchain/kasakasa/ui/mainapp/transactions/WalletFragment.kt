@@ -1,6 +1,7 @@
-package io.tipblockchain.kasakasa.ui.mainapp
+package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
 import android.content.Context
+import android.database.DataSetObserver
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -9,11 +10,15 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.SpinnerAdapter
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.ui.mainapp.MyTransactionRecyclerViewAdapter
 
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.TransactionsContentManager
 import kotlinx.android.synthetic.main.fragment_wallet.*
@@ -23,16 +28,19 @@ import kotlinx.android.synthetic.main.fragment_wallet.*
  * Activities containing this fragment MUST implement the
  * [WalletFragment.OnListFragmentInteractionListener] interface.
  */
-class WalletFragment : Fragment() {
+class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, Wallet.View {
 
     // TODO: Customize parameters
     private var columnCount = 1
 
     private var listener: OnListFragmentInteractionListener? = null
+    private var presenter: WalletPresenter? = null
+
+    private val logTag = javaClass.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
@@ -46,6 +54,10 @@ class WalletFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        presenter = WalletPresenter()
+        presenter?.attach(this)
+
         transactionList.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
 
@@ -72,6 +84,19 @@ class WalletFragment : Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        Log.d(logTag, "Creating options menu")
+        inflater?.inflate(R.menu.menu_currency_options, menu)
+        val item: MenuItem = menu?.findItem(R.id.spinner) as MenuItem
+        val spinner: Spinner = item.actionView as Spinner
+        val currencyOptions = listOf("TIP", "ETH")
+        var adapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
+        spinner.adapter = adapter
+        spinner.layoutMode = Spinner.MODE_DROPDOWN
+
+        spinner.onItemSelectedListener = this
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 //        if (context is OnListFragmentInteractionListener) {
@@ -84,6 +109,7 @@ class WalletFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+        presenter?.detach()
     }
 
     /**
@@ -115,5 +141,22 @@ class WalletFragment : Fragment() {
                         putInt(ARG_COLUMN_COUNT, columnCount)
                     }
                 }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        Log.d(logTag, "Nothing selected")
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        Log.d(logTag, "Menu item selected: position: $position, id: $id")
+    }
+
+
+    override fun onBalanceFetched(address: String, currency: Currency) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
