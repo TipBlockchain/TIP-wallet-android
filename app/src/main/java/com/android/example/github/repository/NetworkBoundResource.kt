@@ -20,6 +20,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import android.util.Log
 import com.android.example.github.AppExecutors
 import com.android.example.github.api.ApiEmptyResponse
 import com.android.example.github.api.ApiErrorResponse
@@ -27,7 +28,6 @@ import com.android.example.github.api.ApiResponse
 import com.android.example.github.api.ApiSuccessResponse
 import com.android.example.github.vo.Resource
 import io.reactivex.Observable
-import javax.xml.transform.Result
 
 /**
  * A generic class that can provide a resource backed by both the sqlite database and the network.
@@ -42,6 +42,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
 @MainThread constructor(private val appExecutors: AppExecutors) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
+    private val logTag = javaClass.name
 
     init {
         result.value = Resource.loading(null)
@@ -61,6 +62,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
 
     @MainThread
     private fun setValue(newValue: Resource<ResultType>) {
+        Log.i(logTag, "Setting value: ${newValue}")
         if (result.value != newValue) {
             result.value = newValue
         }
@@ -70,6 +72,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         val apiResponse = createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
         result.addSource(dbSource) { newData ->
+            Log.i(logTag, "Initial: adding source: ${newData}")
             setValue(Resource.loading(newData))
         }
         result.addSource(apiResponse) { response ->
@@ -77,6 +80,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
             result.removeSource(dbSource)
             when (response) {
                 is ApiSuccessResponse -> {
+                    Log.i(logTag, "ApiSuccessRespnose: response: ${response}")
                     appExecutors.diskIO().execute {
                         saveCallResult(processResponse(response))
                         appExecutors.mainThread().execute {
@@ -84,6 +88,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
                             // otherwise we will get immediately last cached value,
                             // which may not be updated with latest results received from network.
                             result.addSource(loadFromDb()) { newData ->
+                                Log.i(logTag, "ApiSuccessResponse: adding source: ${newData}")
                                 setValue(Resource.success(newData))
                             }
                         }
@@ -93,13 +98,16 @@ abstract class NetworkBoundResource<ResultType, RequestType>
                     appExecutors.mainThread().execute {
                         // reload from disk whatever we had
                         result.addSource(loadFromDb()) { newData ->
+                            Log.i(logTag, "ApiEmptyResponse: adding source: ${newData}")
                             setValue(Resource.success(newData))
                         }
                     }
                 }
                 is ApiErrorResponse -> {
+                    Log.i(logTag, "fetch failed")
                     onFetchFailed()
                     result.addSource(dbSource) { newData ->
+                        Log.i(logTag, "ApiErrorResponse: adding source: ${newData}")
                         setValue(Resource.error(response.errorMessage, newData))
                     }
                 }

@@ -1,9 +1,12 @@
 package io.tipblockchain.kasakasa.data.db.repository
 
 import android.app.Application
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.LiveDataReactiveStreams
+import android.arch.lifecycle.Observer
 import android.os.AsyncTask
+import android.util.Log
 import com.android.example.github.AppExecutors
 import com.android.example.github.api.ApiResponse
 import com.android.example.github.repository.NetworkBoundResource
@@ -11,12 +14,14 @@ import com.android.example.github.vo.Resource
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.dao.UserDao
+import io.tipblockchain.kasakasa.data.responses.ContactListResponse
 import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
 import kotlinx.serialization.json.JSON
@@ -24,6 +29,7 @@ import retrofit2.Response
 import java.lang.Exception
 
 typealias ContactsUpdated = (Boolean, Throwable?) -> Unit
+typealias ContactsUpdatedWithResults = (List<User>?, Throwable?) -> Unit
 
 class UserRepository {
     private var dao: UserDao
@@ -32,6 +38,9 @@ class UserRepository {
     private val appExecutors = AppExecutors()
 
     private var contactsFetched = false
+
+    private val logTag = javaClass.name
+    private var fetchContactsDisposable: Disposable? = null
 
     private constructor(application: Application) {
         val db = TipRoomDatabase.getDatabase(application)
@@ -56,32 +65,39 @@ class UserRepository {
         return apiService.searchByUsername(term)
     }
 
-    fun loadContacts(): LiveData<Resource<List<User>>> {
-        return object : NetworkBoundResource<List<User>, List<User>> (appExecutors) {
+    fun loadContacts(owner: LifecycleOwner, callback: ContactsUpdatedWithResults) {
+        dao.findContacts().observe(owner, object : Observer<List<User>> {
+            override fun onChanged(contacts: List<User>?) {
 
-            override fun saveCallResult(item: List<User>) {
-                dao.insertMany(item)
+                if (!contactsFetched) {
+                    fetchContactsDisposable = apiService.getContacts().subscribeOn(Schedulers.io())
+                            // Have to observe on Schedulers.io() since we write to database
+                            .observeOn(Schedulers.io())
+                            .onErrorReturn { ContactListResponse() }
+                            .subscribe ({
+                                contactsFetched = true
+                                val contacts = it.contacts
+                                contacts.map { it.isContact = true }
+                                dao.insertMany(contacts)
+                                AndroidSchedulers.mainThread().scheduleDirect {
+                                    callback(it.contacts, null)
+                                }
+                            }, {
+                                Log.e(logTag, "Error fetching contacts: $it")
+                                AndroidSchedulers.mainThread().scheduleDirect {
+                                    callback(null, it)
+                                }
+                            })
+                } else {
+                    callback(contacts, null)
+                }
             }
+        })
 
-            override fun shouldFetch(data: List<User>?): Boolean {
-                return !contactsFetched || data == null
-            }
+    }
 
-            override fun loadFromDb(): LiveData<List<User>> {
-                return dao.findContacts()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<List<User>>> {
-                contactsFetched = true
-                val liveData = apiService.getContacts()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .onErrorReturn {  ApiResponse.create(Response.success(listOf()))}
-                        .toFlowable(BackpressureStrategy.LATEST)
-                liveData.onErrorReturn { ApiResponse.create(Response.success(listOf()))}
-                return LiveDataReactiveStreams.fromPublisher(liveData)
-            }
-        }.asLiveData()
+    fun loadContactsFromDb(): LiveData<List<User>> {
+        return dao.findContacts()
     }
 
     fun addContact(user: User, callback: ContactsUpdated) {

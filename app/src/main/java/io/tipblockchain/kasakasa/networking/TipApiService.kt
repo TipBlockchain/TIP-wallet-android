@@ -26,7 +26,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://928c0d4b.ngrok.io"
+        private val baseUrl: String = "https://35fa0235.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -85,22 +85,22 @@ class TipApiService {
         return tipApi.authorize(message)
     }
 
-    fun getContacts(): Observable<ApiResponse<List<User>>> {
+    fun getContacts(): Observable<ContactListResponse> {
         return tipApi.getContactList()
     }
 
-    fun addContact(contact: User): Observable<ContactListResponse> {
+    fun addContact(contact: User): Observable<ContactListStringResponse> {
         val request = ContactRequest(contactId = contact.id)
         return tipApi.addContact(request)
     }
 
-    fun addContacts(contacts: List<User>): Observable<ContactListResponse> {
+    fun addContacts(contacts: List<User>): Observable<ContactListStringResponse> {
         val contactIds = contacts.map { it.id }
         val request = ContactListRequest(contactIds = contactIds)
         return tipApi.addContacts(request)
     }
 
-    fun removeContact(contact: User): Observable<ContactListResponse> {
+    fun removeContact(contact: User): Observable<ContactListStringResponse> {
         return tipApi.deleteContact(contact)
     }
 }

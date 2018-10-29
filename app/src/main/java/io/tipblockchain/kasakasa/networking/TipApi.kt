@@ -32,15 +32,15 @@ interface TipApi {
 
     // Contacts
     @GET(value = "/contacts")
-    fun getContactList(): Observable<ApiResponse<List<User>>>
+    fun getContactList(): Observable<ContactListResponse>
 
     @POST(value = "/contacts")
-    fun addContact(@Body contact: ContactRequest): Observable<ContactListResponse>
+    fun addContact(@Body contact: ContactRequest): Observable<ContactListStringResponse>
 
     @POST(value = "/contacts/multiple")
-    fun addContacts(@Body contactIds: ContactListRequest): Observable<ContactListResponse>
+    fun addContacts(@Body contactIds: ContactListRequest): Observable<ContactListStringResponse>
 
     @DELETE(value = "/contacts")
-    fun deleteContact(contact: User): Observable<ContactListResponse>
+    fun deleteContact(contact: User): Observable<ContactListStringResponse>
 
 }
