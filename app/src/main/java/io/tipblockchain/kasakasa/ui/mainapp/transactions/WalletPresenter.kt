@@ -3,15 +3,20 @@ package io.tipblockchain.kasakasa.ui.mainapp.transactions
 import io.tipblockchain.kasakasa.crypto.EthProcessor
 import io.tipblockchain.kasakasa.crypto.TipProcessor
 import io.tipblockchain.kasakasa.crypto.TransactionProcessor
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 
-class WalletPresenter: Wallet.Presenter {
+class WalletPresenter: WalletInterface.Presenter {
 
-    private val tipProcessor = TipProcessor()
-    private val ethProcessor = EthProcessor()
+    private var tipProcessor: TipProcessor? = null
+    private var ethProcessor = EthProcessor()
     private var currentProcessor: TransactionProcessor? = null
 
-    override fun attach(view: Wallet.View) {
+    init {
+        currentProcessor = ethProcessor
+    }
+
+    override fun attach(view: WalletInterface.View) {
         super.attach(view)
         startListening()
     }
@@ -20,11 +25,21 @@ class WalletPresenter: Wallet.Presenter {
         stopListening()
         super.detach()
     }
-    override fun fetchBalance(address: String, currency: Currency) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    override fun setWallet(wallet: Wallet) {
+        tipProcessor = TipProcessor(wallet)
     }
 
-    override fun getTransactions(address: String, currency: Currency) {
+    override fun fetchBalance(address: String?, currency: Currency) {
+        if (address != null) {
+            val balance = currentProcessor?.getBalance(address)
+            if (balance != null) {
+                view?.onBalanceFetched(address, currency, balance)
+            }
+        }
+    }
+
+    override fun getTransactions(address: String?, currency: Currency) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -33,12 +48,9 @@ class WalletPresenter: Wallet.Presenter {
             Currency.ETH -> currentProcessor = ethProcessor
             Currency.TIP -> currentProcessor = tipProcessor
         }
-        currentProcessor?.getBalance("")
     }
 
-    override var view: Wallet.View?
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    override var view: WalletInterface.View? = null
 
     private fun startListening() {
 

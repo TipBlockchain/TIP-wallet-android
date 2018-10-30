@@ -26,7 +26,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://35fa0235.ngrok.io"
+        private val baseUrl: String = "https://0bcc1947.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 

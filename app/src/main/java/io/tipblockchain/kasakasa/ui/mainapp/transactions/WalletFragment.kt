@@ -1,7 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
+import android.arch.lifecycle.Observer
 import android.content.Context
-import android.database.DataSetObserver
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -14,21 +14,23 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.SpinnerAdapter
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.ui.mainapp.MyTransactionRecyclerViewAdapter
 
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.TransactionsContentManager
 import kotlinx.android.synthetic.main.fragment_wallet.*
+import java.math.BigDecimal
 
 /**
  * A fragment representing a list of Items.
  * Activities containing this fragment MUST implement the
  * [WalletFragment.OnListFragmentInteractionListener] interface.
  */
-class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, Wallet.View {
+class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInterface.View {
 
     // TODO: Customize parameters
     private var columnCount = 1
@@ -36,11 +38,15 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, Wallet.Vi
     private var listener: OnListFragmentInteractionListener? = null
     private var presenter: WalletPresenter? = null
 
+    private var currentWallet: Wallet? = null
+    private var currency: Currency = Currency.TIP
+
     private val logTag = javaClass.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
@@ -81,7 +87,11 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, Wallet.Vi
             Snackbar.make(v, "Receive payment", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        loadWallet()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -92,9 +102,17 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, Wallet.Vi
         val currencyOptions = listOf("TIP", "ETH")
         var adapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
         spinner.adapter = adapter
-        spinner.layoutMode = Spinner.MODE_DROPDOWN
-
+        spinner.dropDownVerticalOffset = getActionBarHeight()
+        spinner.dropDownHorizontalOffset = 0
         spinner.onItemSelectedListener = this
+    }
+
+    private fun getActionBarHeight(): Int {
+        val styledAttributes = context!!.theme.obtainStyledAttributes(
+                intArrayOf(android.R.attr.actionBarSize))
+        val barSize = styledAttributes.getDimension(0, 0f).toInt()
+        styledAttributes.recycle()
+        return barSize
     }
 
     override fun onAttach(context: Context) {
@@ -143,17 +161,33 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, Wallet.Vi
                 }
     }
 
+    private fun loadWallet() {
+        WalletRepository.instance.primaryWallet().observe(activity!!, Observer<Wallet?> { wallet ->
+            if (wallet != null) {
+                presenter?.setWallet(wallet)
+                currentWallet = wallet
+                presenter?.fetchBalance(wallet.address, currency)
+            }
+        })
+    }
+
     override fun onNothingSelected(parent: AdapterView<*>?) {
         Log.d(logTag, "Nothing selected")
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         Log.d(logTag, "Menu item selected: position: $position, id: $id")
+        when (position) {
+            0 -> currency = Currency.TIP
+            1 -> currency = Currency.ETH
+        }
+        presenter?.switchCurrency(currency)
+        presenter?.fetchBalance(currentWallet?.address, currency)
     }
 
 
-    override fun onBalanceFetched(address: String, currency: Currency) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
+        balanceTv.text = "${balance.toString()} ${currency.name}"
     }
 
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {

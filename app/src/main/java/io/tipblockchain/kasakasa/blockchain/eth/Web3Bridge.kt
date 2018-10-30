@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.blockchain.eth
 
-import android.content.Context
 import io.tipblockchain.kasakasa.blockchain.smartcontracts.TipToken
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.utils.FileUtils
@@ -12,47 +11,40 @@ import org.web3j.tx.Transfer
 import org.web3j.utils.Convert
 import java.math.BigDecimal
 import java.math.BigInteger
-import org.web3j.crypto.Wallet.createLight
-import org.json.JSONObject
-import java.security.InvalidAlgorithmParameterException
-import java.security.NoSuchAlgorithmException
-import java.security.NoSuchProviderException
-import org.bitcoinj.crypto.HDUtils
-import org.bitcoinj.crypto.ChildNumber
-import org.bitcoinj.wallet.DeterministicKeyChain
-import org.bitcoinj.wallet.DeterministicSeed
 import java.io.File
-import java.security.SecureRandom
-import java.util.*
 
 import io.tipblockchain.kasakasa.crypto.*
-import org.web3j.crypto.Keys
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import org.web3j.crypto.Bip39Wallet
-import org.web3j.crypto.Wallet
 import org.web3j.crypto.Credentials
-import org.web3j.crypto.CipherException
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.Request
 import org.web3j.protocol.core.methods.response.EthGasPrice
 import org.web3j.protocol.core.methods.response.EthGetBalance
+import org.web3j.tx.ClientTransactionManager
 
 
 class Web3Bridge {
 
-    init {
-//        loadTipSmartContract()
-
-    }
-
-    private var web3: Web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/SSWOxqisHlJoSVWYy09p "))
-    private var tipToken: TipToken? = null
+    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get("ether_node_url")))
+    private var readOnlyTipToken: TipToken? = null
+    private var unlockedTipToken: TipToken? = null
 
     private var gasPrice: String = "21000"
     private var gasLimit: String = "21000"
 
 
-    private fun loadTipSmartContract(walletFile: File) {
-        tipToken = TipToken.load(AppProperties.get("tip_contract_address"), web3, loadCredentialsWithPassword("password", walletFile), BigInteger(gasPrice), BigInteger(gasLimit))
+    constructor() {
+
+    }
+
+    constructor(wallet: Wallet) {
+        loadTipSmartContract(wallet)
+    }
+
+    private fun loadTipSmartContract(wallet: Wallet) {
+//        readOnlyTipToken = TipToken.load(AppProperties.get("tip_contract_address"), web3, loadCredentialsWithPassword("password", walletFile), BigInteger(gasPrice), BigInteger(gasLimit))
+        readOnlyTipToken = TipToken.load(AppProperties.get("tip_contract_address"), web3, ClientTransactionManager(web3, wallet.address), BigInteger(gasPrice), BigInteger(gasLimit))
     }
 
     fun loadCredentialsWithPassword(password: String, file: File) : Credentials {
@@ -72,10 +64,10 @@ class Web3Bridge {
     }
 
     fun sendTipTransaction(to: String, value: BigInteger) {
-        tipToken!!.transfer(to, value)
+        unlockedTipToken?.transfer(to, value)
     }
 
-    fun getBalance(address: String): Request<*, EthGetBalance>? {
+    fun getEthBalance(address: String): Request<*, EthGetBalance>? {
         return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST)
     }
 
@@ -88,6 +80,10 @@ class Web3Bridge {
     }
 
     fun getTipBalance(address: String) {
-        tipToken!!.balanceOf(address).send()
+        readOnlyTipToken?.balanceOf(address)?.send()
+    }
+
+    fun getTipBalanceAsync(address: String): BigInteger? {
+        return readOnlyTipToken?.balanceOf(address)?.sendAsync()?.get()
     }
 }
