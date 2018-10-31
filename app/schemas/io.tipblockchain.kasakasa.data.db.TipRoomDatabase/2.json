@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "28d40d8537060d2ed98778fd248917b2",
+    "version": 2,
+    "identityHash": "fc389baa74a1a5dcd06b05aba6f53a67",
     "entities": [
       {
         "tableName": "transactions",
@@ -275,14 +275,6 @@
               "currency"
             ],
             "createSql": "CREATE  INDEX `index_wallets_currency` ON `${TABLE_NAME}` (`currency`)"
-          },
-          {
-            "name": "index_wallets_address",
-            "unique": false,
-            "columnNames": [
-              "address"
-            ],
-            "createSql": "CREATE  INDEX `index_wallets_address` ON `${TABLE_NAME}` (`address`)"
           }
         ],
         "foreignKeys": []
@@ -290,7 +282,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"28d40d8537060d2ed98778fd248917b2\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fc389baa74a1a5dcd06b05aba6f53a67\")"
     ]
   }
 }

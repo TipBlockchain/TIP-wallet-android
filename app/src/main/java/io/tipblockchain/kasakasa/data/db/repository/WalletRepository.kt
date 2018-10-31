@@ -34,6 +34,10 @@ class WalletRepository {
         return dao.findWallet( address)
     }
 
+    fun findWalletForCurrency(currency: Currency): LiveData<Wallet?> {
+        return dao.findWalletForCurrency(currency = currency.name)
+    }
+
     fun insert(wallet: Wallet) {
         insertAsyncTask(dao).execute(wallet)
     }
@@ -44,9 +48,11 @@ class WalletRepository {
         val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
-            val wallet = Wallet(credentials.address, walletFile.absolutePath)
-            this.insert(wallet)
-            return NewWallet(bip39Wallet.mnemonic, wallet)
+            val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name)
+            this.insert(tipWallet)
+            val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name)
+            this.insert(ethWallet)
+            return NewWallet(bip39Wallet.mnemonic, tipWallet)
         }
 
         return null
@@ -80,4 +86,4 @@ class WalletRepository {
     }
 }
 
-data class NewWallet(val mnemonic: String, val wallet: Wallet){}
+data class NewWallet(val mnemonic: String, val wallet: Wallet)

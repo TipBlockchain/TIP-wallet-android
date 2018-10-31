@@ -6,6 +6,7 @@ import org.web3j.utils.Convert
 import java.math.BigDecimal
 
 class TipProcessor: TransactionProcessor {
+
     var web3Bridge: Web3Bridge = Web3Bridge()
 
     constructor(wallet: Wallet) {
@@ -16,7 +17,7 @@ class TipProcessor: TransactionProcessor {
         if (balanceInWei != null) {
             return Convert.fromWei(balanceInWei.toBigDecimal(), Convert.Unit.ETHER)
         }
-        return BigDecimal(0)
+        return BigDecimal(0.00)
     }
 
     override fun getTransactions(address: String) {

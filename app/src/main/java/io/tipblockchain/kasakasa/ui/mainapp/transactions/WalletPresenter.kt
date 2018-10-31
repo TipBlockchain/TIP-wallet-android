@@ -1,19 +1,21 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
+import android.arch.lifecycle.Observer
 import io.tipblockchain.kasakasa.crypto.EthProcessor
 import io.tipblockchain.kasakasa.crypto.TipProcessor
 import io.tipblockchain.kasakasa.crypto.TransactionProcessor
-import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 
 class WalletPresenter: WalletInterface.Presenter {
 
     private var tipProcessor: TipProcessor? = null
     private var ethProcessor = EthProcessor()
     private var currentProcessor: TransactionProcessor? = null
+    private var currency: Currency = Currency.TIP
 
     init {
-        currentProcessor = ethProcessor
+        currentProcessor = tipProcessor
     }
 
     override fun attach(view: WalletInterface.View) {
@@ -24,10 +26,6 @@ class WalletPresenter: WalletInterface.Presenter {
     override fun detach() {
         stopListening()
         super.detach()
-    }
-
-    override fun setWallet(wallet: Wallet) {
-        tipProcessor = TipProcessor(wallet)
     }
 
     override fun fetchBalance(address: String?, currency: Currency) {
@@ -44,10 +42,12 @@ class WalletPresenter: WalletInterface.Presenter {
     }
 
     override fun switchCurrency(currency: Currency) {
+        this.currency = currency
         when (currency) {
             Currency.ETH -> currentProcessor = ethProcessor
             Currency.TIP -> currentProcessor = tipProcessor
         }
+        loadWallet()
     }
 
     override var view: WalletInterface.View? = null
@@ -58,5 +58,16 @@ class WalletPresenter: WalletInterface.Presenter {
 
     private fun stopListening() {
 
+    }
+
+    private fun loadWallet() {
+        WalletRepository.instance.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
+            if (wallet != null) {
+                if (currency == Currency.TIP && tipProcessor == null) {
+                    tipProcessor = TipProcessor(wallet)
+                }
+                fetchBalance(wallet.address, currency)
+            }
+        })
     }
 }

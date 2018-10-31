@@ -39,7 +39,7 @@
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/advent_pro_light"
         android:gravity="center"
-        android:text="@string/placeholder_tipamount"
+        android:text="@string/placeholder_zero_tip_amount"
         android:textColor="@android:color/white"
         android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"

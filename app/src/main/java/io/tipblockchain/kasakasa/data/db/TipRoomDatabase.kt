@@ -7,13 +7,15 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
-import android.util.Log
 import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
 import io.tipblockchain.kasakasa.data.db.dao.UserDao
 import io.tipblockchain.kasakasa.data.db.dao.WalletDao
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
+import android.arch.persistence.room.migration.Migration
+
+
 
 
 @Database(entities = arrayOf(Transaction::class, User::class, Wallet::class), version = 1)
@@ -57,7 +59,16 @@ abstract class TipRoomDatabase: RoomDatabase() {
                 PopulateDbAsync(INSTANCE!!).execute()
             }
         }
+
+
+        private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("INSERT INTO wallets (address, filePath, created, lastSynced, balance, isPrimary) " +
+                        "   SELECT address, filePath, created, lastSynced, balance, isPrimary FROM wallet2;")
+            }
+        }
     }
+
 
     private class PopulateDbAsync internal constructor(db: TipRoomDatabase) : AsyncTask<Void, Void, Void>() {
 

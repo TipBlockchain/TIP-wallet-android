@@ -32,6 +32,7 @@ class ContactListFragment: Fragment(), ContactList.View {
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
+        setupPresenter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +49,7 @@ class ContactListFragment: Fragment(), ContactList.View {
 
     override fun onStart() {
         super.onStart()
-        setupPresenter()
+
     }
 
     override fun onStop() {

@@ -16,9 +16,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
-import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
-import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.ui.mainapp.MyTransactionRecyclerViewAdapter
 
 import io.tipblockchain.kasakasa.ui.mainapp.dummy.TransactionsContentManager
@@ -38,10 +36,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private var listener: OnListFragmentInteractionListener? = null
     private var presenter: WalletPresenter? = null
 
-    private var currentWallet: Wallet? = null
-    private var currency: Currency = Currency.TIP
-
     private val logTag = javaClass.name
+    private var lastCurrency: Currency = Currency.TIP
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +46,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
+        setupPresenter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -61,8 +58,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter = WalletPresenter()
-        presenter?.attach(this)
 
         transactionList.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
@@ -91,7 +86,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     override fun onResume() {
         super.onResume()
-        loadWallet()
+        currencySelected(lastCurrency)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -113,6 +108,11 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         val barSize = styledAttributes.getDimension(0, 0f).toInt()
         styledAttributes.recycle()
         return barSize
+    }
+
+    private fun currencySelected(currency: Currency) {
+        lastCurrency = currency
+        presenter?.switchCurrency(lastCurrency)
     }
 
     override fun onAttach(context: Context) {
@@ -161,16 +161,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
                 }
     }
 
-    private fun loadWallet() {
-        WalletRepository.instance.primaryWallet().observe(activity!!, Observer<Wallet?> { wallet ->
-            if (wallet != null) {
-                presenter?.setWallet(wallet)
-                currentWallet = wallet
-                presenter?.fetchBalance(wallet.address, currency)
-            }
-        })
-    }
-
     override fun onNothingSelected(parent: AdapterView<*>?) {
         Log.d(logTag, "Nothing selected")
     }
@@ -178,11 +168,9 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         Log.d(logTag, "Menu item selected: position: $position, id: $id")
         when (position) {
-            0 -> currency = Currency.TIP
-            1 -> currency = Currency.ETH
+            0 -> currencySelected(Currency.TIP)
+            1 -> currencySelected(Currency.ETH)
         }
-        presenter?.switchCurrency(currency)
-        presenter?.fetchBalance(currentWallet?.address, currency)
     }
 
 
@@ -193,4 +181,10 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    private fun setupPresenter() {
+        presenter = WalletPresenter()
+        presenter?.attach(this)
+    }
+
 }
