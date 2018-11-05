@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -17,11 +16,10 @@ import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.repository.Currency
-import io.tipblockchain.kasakasa.ui.mainapp.MyTransactionRecyclerViewAdapter
 
-import io.tipblockchain.kasakasa.ui.mainapp.dummy.TransactionsContentManager
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * A fragment representing a list of Items.
@@ -38,6 +36,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     private val logTag = javaClass.name
     private var lastCurrency: Currency = Currency.TIP
+    private var adapter: TransactionRecyclerViewAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,20 +58,22 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         super.onViewCreated(view, savedInstanceState)
 
 
-        transactionList.addItemDecoration(DividerItemDecoration(context,
+        recyclerView.addItemDecoration(DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL))
 
-        if (transactionList is RecyclerView) {
-            with(transactionList) {
+        if (recyclerView is RecyclerView) {
+            with(recyclerView) {
                 layoutManager = when {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyTransactionRecyclerViewAdapter(TransactionsContentManager.ITEMS, listener)
+//                adapter = MyTransactionRecyclerViewAdapter(TransactionsContentManager.ITEMS, listener)
             }
         } else {
-            Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${transactionList}")
+            Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${recyclerView}")
         }
+        adapter = TransactionRecyclerViewAdapter(listOf(), listener)
+        recyclerView.adapter = adapter
 
         sendBtn.setOnClickListener { v ->
             Snackbar.make(v, "Send Payment", Snackbar.LENGTH_LONG)
@@ -95,8 +96,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         val item: MenuItem = menu?.findItem(R.id.spinner) as MenuItem
         val spinner: Spinner = item.actionView as Spinner
         val currencyOptions = listOf("TIP", "ETH")
-        var adapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
-        spinner.adapter = adapter
+        var menuAdapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
+        spinner.adapter = menuAdapter
         spinner.dropDownVerticalOffset = getActionBarHeight()
         spinner.dropDownHorizontalOffset = 0
         spinner.onItemSelectedListener = this
@@ -113,6 +114,10 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private fun currencySelected(currency: Currency) {
         lastCurrency = currency
         presenter?.switchCurrency(lastCurrency)
+    }
+
+    override fun onTransactionsFetchError(error: Throwable?, currency: Currency) {
+
     }
 
     override fun onAttach(context: Context) {
@@ -175,11 +180,14 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
-        balanceTv.text = "${balance.toString()} ${currency.name}"
+        balanceTv.text = "${balance.setScale(4, RoundingMode.HALF_UP).toString()} ${currency.name}"
     }
 
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (currency != lastCurrency) {
+            return
+        }
+        adapter?.setItems(transactions)
     }
 
     private fun setupPresenter() {

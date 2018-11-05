@@ -19,6 +19,7 @@ import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.Request
+import org.web3j.protocol.core.methods.response.EthBlockNumber
 import org.web3j.protocol.core.methods.response.EthGasPrice
 import org.web3j.protocol.core.methods.response.EthGetBalance
 import org.web3j.tx.ClientTransactionManager
@@ -61,6 +62,10 @@ class Web3Bridge {
         val credentials = loadCredentialsWithPassword(password, walletFile)
         val receipt = Transfer.sendFunds(web3, credentials, to, BigDecimal(value), Convert.Unit.ETHER).send()
         return receipt
+    }
+
+    fun latestBlock(): BigInteger {
+        return web3.ethBlockNumber().sendAsync().get().blockNumber
     }
 
     fun sendTipTransaction(to: String, value: BigInteger) {

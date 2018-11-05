@@ -11,11 +11,12 @@ interface WalletInterface {
     interface View: BaseView, LifecycleOwner {
         fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal)
         fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>)
+        fun onTransactionsFetchError(error: Throwable?, currency: Currency)
     }
 
     interface Presenter: BasePresenter<View> {
         fun fetchBalance(address: String?, currency: Currency)
-        fun getTransactions(address: String?, currency: Currency)
+        fun getTransactions(address: String, startBlock: String, currency: Currency)
         fun switchCurrency(currency: Currency)
     }
 }

@@ -5,6 +5,7 @@ import io.tipblockchain.kasakasa.crypto.EthProcessor
 import io.tipblockchain.kasakasa.crypto.TipProcessor
 import io.tipblockchain.kasakasa.crypto.TransactionProcessor
 import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 
 class WalletPresenter: WalletInterface.Presenter {
@@ -12,6 +13,7 @@ class WalletPresenter: WalletInterface.Presenter {
     private var tipProcessor: TipProcessor? = null
     private var ethProcessor = EthProcessor()
     private var currentProcessor: TransactionProcessor? = null
+    private var txRepository: TransactionRepository = TransactionRepository.instance
     private var currency: Currency = Currency.TIP
 
     init {
@@ -37,15 +39,34 @@ class WalletPresenter: WalletInterface.Presenter {
         }
     }
 
-    override fun getTransactions(address: String?, currency: Currency) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getTransactions(address: String, startBlock: String, currency: Currency) {
+        when (currency) {
+            Currency.TIP -> {
+                txRepository.fetchTipTransactions(address = address, startBlock = startBlock, callback = { txlist, err ->
+                    if (txlist != null) {
+                        view?.onTransactionsFetched(address, Currency.TIP, txlist)
+                    } else {
+                        view?.onTransactionsFetchError(err, Currency.TIP)
+                    }
+                })
+            }
+            Currency.ETH -> {
+                txRepository.fetchEthTransactions(address = address, startBlock = startBlock, callback = { txlist, err ->
+                    if (txlist != null) {
+                        view?.onTransactionsFetched(address, Currency.ETH, txlist)
+                    } else {
+                        view?.onTransactionsFetchError(err, Currency.ETH)
+                    }
+                })
+            }
+        }
     }
 
     override fun switchCurrency(currency: Currency) {
         this.currency = currency
         when (currency) {
-            Currency.ETH -> currentProcessor = ethProcessor
             Currency.TIP -> currentProcessor = tipProcessor
+            Currency.ETH -> currentProcessor = ethProcessor
         }
         loadWallet()
     }
@@ -67,6 +88,7 @@ class WalletPresenter: WalletInterface.Presenter {
                     tipProcessor = TipProcessor(wallet)
                 }
                 fetchBalance(wallet.address, currency)
+                getTransactions(address = wallet.address, currency = currency, startBlock = wallet.blockNumber)
             }
         })
     }

@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.networking
 
-import com.android.example.github.api.ApiResponse
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User

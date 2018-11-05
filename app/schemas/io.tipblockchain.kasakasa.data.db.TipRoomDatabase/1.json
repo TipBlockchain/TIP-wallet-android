@@ -2,21 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "28d40d8537060d2ed98778fd248917b2",
+    "identityHash": "c02191e24f4aa3cb498f0fde0c1620fc",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `hash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `time` INTEGER NOT NULL, `message` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `tipFromUser` TEXT, `tipToUser` TEXT, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `gasPrice` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `tokenSymbol` TEXT, `txReceiptStatus` TEXT, PRIMARY KEY(`hash`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "hash",
+            "columnName": "hash",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "hash",
-            "columnName": "hash",
+            "fieldPath": "blockHash",
+            "columnName": "blockHash",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -33,6 +33,18 @@
             "notNull": true
           },
           {
+            "fieldPath": "tipFromUser",
+            "columnName": "tipFromUser",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tipToUser",
+            "columnName": "tipToUser",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "currency",
             "columnName": "currency",
             "affinity": "TEXT",
@@ -46,7 +58,31 @@
           },
           {
             "fieldPath": "time",
-            "columnName": "time",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gas",
+            "columnName": "gas",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gasPrice",
+            "columnName": "gasPrice",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confirmations",
+            "columnName": "confirmations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nonce",
+            "columnName": "nonce",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -54,12 +90,24 @@
             "fieldPath": "message",
             "columnName": "message",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
+          },
+          {
+            "fieldPath": "tokenSymbol",
+            "columnName": "tokenSymbol",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "receiptStatus",
+            "columnName": "txReceiptStatus",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "hash"
           ],
           "autoGenerate": false
         },
@@ -215,7 +263,7 @@
       },
       {
         "tableName": "wallets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `filePath` TEXT, `created` INTEGER NOT NULL, `balance` TEXT NOT NULL, `currency` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, `lastSynced` INTEGER NOT NULL, PRIMARY KEY(`address`, `currency`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `filePath` TEXT, `created` INTEGER NOT NULL, `balance` TEXT NOT NULL, `currency` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, `blockNumber` TEXT NOT NULL, `lastSynced` INTEGER NOT NULL, PRIMARY KEY(`address`, `currency`))",
         "fields": [
           {
             "fieldPath": "address",
@@ -251,6 +299,12 @@
             "fieldPath": "isPrimary",
             "columnName": "isPrimary",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "blockNumber",
+            "columnName": "blockNumber",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -290,7 +344,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"28d40d8537060d2ed98778fd248917b2\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c02191e24f4aa3cb498f0fde0c1620fc\")"
     ]
   }
 }

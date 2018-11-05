@@ -4,26 +4,25 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
-import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockHash
+import com.google.gson.annotations.SerializedName
 import java.math.BigInteger
-import java.util.*
-import javax.annotation.Nonnull
 
 @Entity(tableName = "transactions", indices = [Index(value = ["hash"], unique = true), Index(value = ["from"]), Index(value = ["to"]), Index(value = ["currency"]), Index(value = ["from", "currency"])])
 class Transaction(
-        @PrimaryKey @Nonnull @ColumnInfo(name = "id") val id: String,
-        @ColumnInfo(name = "hash") val hash: String,
-        @ColumnInfo(name = "blockhash") val blockHash: String,
+        @PrimaryKey @ColumnInfo(name = "hash") val hash: String,
+        @ColumnInfo(name = "blockHash") val blockHash: String,
         @ColumnInfo (name = "from") val from: String,
         @ColumnInfo (name = "to") val to: String,
-        @ColumnInfo (name = "tipFromUser") val tipFromUser: String?,
-        @ColumnInfo (name = "tipToUser") val tipToUser: String?,
-        @ColumnInfo (name = "currency") val currency: String,
+        @ColumnInfo (name = "tipFromUser") var tipFromUser: String?,
+        @ColumnInfo (name = "tipToUser") var tipToUser: String?,
+        @ColumnInfo (name = "currency") var currency: String,
         @ColumnInfo (name = "value") val value: BigInteger,
-        @ColumnInfo (name = "timestamp") val time: Date,
-        @ColumnInfo (name = "status") val status: String,
+        @ColumnInfo (name = "timestamp") @SerializedName("timeStamp") val time: String,
         @ColumnInfo (name = "gas") val gas: BigInteger,
         @ColumnInfo (name = "gasPrice") val gasPrice: BigInteger,
-        @ColumnInfo (name = "confirmations") val confirmations: BigInteger,
+        @ColumnInfo (name = "confirmations") var confirmations: BigInteger,
         @ColumnInfo (name = "nonce") val nonce: Int,
-        @ColumnInfo (name = "message") val message: String)
+        @ColumnInfo (name = "message") var message: String?,
+        @ColumnInfo (name = "tokenSymbol") var tokenSymbol: String?,
+        @ColumnInfo (name = "txReceiptStatus") @SerializedName("txreceipt_status") var receiptStatus: String?)
+
