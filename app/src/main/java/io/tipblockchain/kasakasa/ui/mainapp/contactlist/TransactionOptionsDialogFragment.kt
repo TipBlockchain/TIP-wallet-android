@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.ui.mainapp.SendTransferActivity
+import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 
 class TransactionOptionsDialogFragment: DialogFragment() {
 

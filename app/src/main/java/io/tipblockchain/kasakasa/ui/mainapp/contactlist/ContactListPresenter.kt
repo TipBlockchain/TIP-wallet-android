@@ -5,7 +5,7 @@ import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 class ContactListPresenter: ContactList.Presenter {
 
-    var userRepository: UserRepository = UserRepository.instance
+    private val userRepository: UserRepository = UserRepository.instance
 
     override fun fetchContactList() {
         userRepository.loadContacts(view!!) { contacts, error ->

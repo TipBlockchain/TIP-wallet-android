@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:fitsSystemWindows="true"
-    tools:context=".ui.mainapp.SendTransferActivity">
+    tools:context=".ui.mainapp.sendtransfer.SendTransferActivity">
 
 
     <ImageView
@@ -28,7 +28,10 @@
     <ScrollView
         android:id="@+id/form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -37,16 +40,22 @@
             android:layout_marginTop="100dp"
             android:orientation="vertical">
 
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/Platform.Widget.AppCompat.Spinner" />
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="20dp"
+                android:layout_weight="0.33"
                 android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:layout_weight="0.33">
+                android:theme="@style/AppTheme.WhiteColorAccent">
 
                 <AutoCompleteTextView
-                    android:id="@+id/fistnameTv"
+                    android:id="@+id/recepientTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_recepient"
@@ -65,16 +74,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="20dp"
+                android:layout_weight="0.33"
                 android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:layout_weight="0.33">
+                android:theme="@style/AppTheme.WhiteColorAccent">
 
                 <AutoCompleteTextView
                     android:id="@+id/lastnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_amount"
-                    android:inputType="text|number|numberDecimal"
+                    android:inputType="number|numberDecimal"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
@@ -88,8 +97,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.33"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:textColorHint="@color/colorVeryLightGray">
+                android:textColorHint="@color/colorVeryLightGray"
+                android:theme="@style/AppTheme.WhiteColorAccent">
 
                 <EditText
                     android:id="@+id/usernameTv"
@@ -99,7 +108,7 @@
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
-                    android:inputType="text"
+                    android:inputType="text|textCapSentences|textAutoCorrect"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"

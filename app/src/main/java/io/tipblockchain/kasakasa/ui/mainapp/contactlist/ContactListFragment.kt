@@ -47,11 +47,6 @@ class ContactListFragment: Fragment(), ContactList.View {
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-
     override fun onStop() {
         presenter.detach()
         super.onStop()
