@@ -9,6 +9,7 @@ import java.math.BigDecimal
 
 interface WalletInterface {
     interface View: BaseView, LifecycleOwner {
+        fun onBalanceFetchError()
         fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal)
         fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>)
         fun onTransactionsFetchError(error: Throwable?, currency: Currency)

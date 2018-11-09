@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="TextView"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/fullnameTv"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:text="TextView"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

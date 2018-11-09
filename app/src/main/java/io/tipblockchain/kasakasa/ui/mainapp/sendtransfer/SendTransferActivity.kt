@@ -12,8 +12,11 @@ import android.support.design.widget.Snackbar
 import android.view.View
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.ConfirmTransferActivity
+import io.tipblockchain.kasakasa.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_send_transfer.*
 
 class SendTransferActivity : BaseActivity(), SendTransfer.View {
@@ -32,8 +35,9 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View {
         adapter = UserFilterAdapter(this, listOf())
         recepientTv.setAdapter(adapter)
 
+        recepientTv.threshold = 2
         presenter?.fetchContactList()
-        nextButton.setOnClickListener { navigateToConfirmTransactionPage() }
+        nextButton.setOnClickListener { nextButtonClicked() }
     }
 
     private fun populateAutoComplete() {
@@ -71,10 +75,48 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View {
         }
     }
 
-    fun  navigateToConfirmTransactionPage() {
+    fun  navigateToConfirmWithTransaction(tx: PendingTransaction) {
         val intent = Intent(this, ConfirmTransferActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
+        intent.putExtra("transaction", tx)
         startActivity(intent)
+    }
+
+    fun nextButtonClicked() {
+        showProgress(true)
+        validateInputs()
+    }
+
+    fun validateInputs() {
+        val usernameOrAddress = recepientTv.text.toString()
+        val amount = amountTv.text.toString()
+        val message = messageTv.text.toString()
+
+        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = amount, currency = Currency.ETH, message = message)
+    }
+
+    override fun onInvalidRecipient() {
+        showProgress(false)
+        showMessage("Recipient field is not valid. Please enter a valid TIP username or ETH address.")
+    }
+
+    override fun onUserNotFound(username: String) {
+        showProgress(false)
+        showMessage("User $username not found in your contacts. You can only send transactions by username to users in your contact list. Please add $username to your contacts and try again")
+    }
+
+    override fun onWalletError() {
+        showProgress(false)
+        showMessage("Failed to load your wallet")
+    }
+
+    override fun onInsufficientBalanceError() {
+        showProgress(false)
+        showMessage("Insufficient balance")
+    }
+
+    override fun onSendPendingTransaction(tx: PendingTransaction) {
+        showProgress(false)
+        navigateToConfirmWithTransaction(tx)
     }
 
     override fun onContactsFetched(list: List<User>) {

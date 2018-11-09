@@ -54,6 +54,7 @@
             android:name=".ui.backup.BackupAccountActivity"
             android:label="@string/title_activity_backup_account" />
         <activity
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:name=".ui.mainapp.sendtransfer.SendTransferActivity"
             android:label="@string/send_payment" />
         <activity

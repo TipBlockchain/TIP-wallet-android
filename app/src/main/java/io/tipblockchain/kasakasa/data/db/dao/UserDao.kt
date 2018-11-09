@@ -26,7 +26,7 @@ interface UserDao {
     fun findContacts(): LiveData<List<User>>
 
     @Query("SELECT * FROM users WHERE username = :username")
-    fun findUserByUsername(username: String): LiveData<User>
+    fun findUserByUsername(username: String): LiveData<User?>
 
     @Update
     fun updateUser(userToUpdate: User)

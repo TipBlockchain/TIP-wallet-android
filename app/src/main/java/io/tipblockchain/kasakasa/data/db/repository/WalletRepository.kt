@@ -3,12 +3,14 @@ package io.tipblockchain.kasakasa.data.db.repository
 import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
+import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.dao.WalletDao
 import io.tipblockchain.kasakasa.utils.FileUtils
+import java.math.BigInteger
 
 class WalletRepository {
     private var dao: WalletDao
@@ -34,12 +36,22 @@ class WalletRepository {
         return dao.findWallet( address)
     }
 
+    fun findWalletForAddressAndCurrency(address: String, currency: Currency): LiveData<Wallet?> {
+        return dao.findWalletForAddressAndCurrency(address, currency = currency.name)
+    }
+
     fun findWalletForCurrency(currency: Currency): LiveData<Wallet?> {
         return dao.findWalletForCurrency(currency = currency.name)
     }
 
     fun insert(wallet: Wallet) {
         insertAsyncTask(dao).execute(wallet)
+    }
+
+    fun update(wallet: Wallet) {
+        Schedulers.io().scheduleDirect{
+            dao.update(wallet)
+        }
     }
 
     fun newWalletWithPassword(password: String): NewWallet? {

@@ -9,14 +9,14 @@ import java.io.File
 import java.math.BigInteger
 import java.util.*
 
-@Entity(tableName = "wallets", primaryKeys = [ "address", "currency"], indices = [Index("currency"), Index(value = "address")])
+@Entity(tableName = "wallets", primaryKeys = [ "address", "currency"], indices = [Index("currency"), Index("address")])
 data class Wallet (
         @ColumnInfo(name = "address") var address: String,
-        @ColumnInfo(name = "filePath") val filePath: String?,
+        @ColumnInfo(name = "filePath") var filePath: String?,
         @ColumnInfo(name = "created") val created: Date = Date(),
-        @ColumnInfo(name = "balance") val balance: BigInteger = BigInteger.ZERO,
+        @ColumnInfo(name = "balance") var balance: BigInteger = BigInteger.ZERO,
         @ColumnInfo(name = "currency") val currency: String = "TIP",
-        @ColumnInfo(name = "isPrimary") val isPrimary: Boolean = true,
-        @ColumnInfo(name = "blockNumber") val blockNumber: String = "0",
+        @ColumnInfo(name = "isPrimary") var isPrimary: Boolean = true,
+        @ColumnInfo(name = "blockNumber") var blockNumber: String = "0",
         @ColumnInfo(name = "lastSynced") val lastSynced: Date = Date()
         )

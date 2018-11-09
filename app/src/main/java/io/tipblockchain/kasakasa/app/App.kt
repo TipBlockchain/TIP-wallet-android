@@ -16,11 +16,11 @@ class App : Application() {
         private set
 
         fun applicationContext() : Context {
-            return instance!!.applicationContext
+            return instance.applicationContext
         }
 
         fun application(): App {
-            return instance!!
+            return instance
         }
     }
 
@@ -32,7 +32,7 @@ class App : Application() {
         MultiDex.install(this)
 
         Stetho.initializeWithDefaults(this)
-        TipRoomDatabase.getDatabase(instance!!.applicationContext)
+        TipRoomDatabase.getDatabase(instance.applicationContext)
         PreferenceHelper.placehoderValue = "Some random value"
 
         // Use ApplicationContext.

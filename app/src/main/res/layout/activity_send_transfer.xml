@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.mainapp.sendtransfer.SendTransferActivity">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
@@ -40,35 +39,41 @@
             android:layout_marginTop="100dp"
             android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/spinner3"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Platform.Widget.AppCompat.Spinner" />
+                android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
-
-                <AutoCompleteTextView
-                    android:id="@+id/recepientTv"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_recepient"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@color/colorWhite"
-                    android:textColorHint="@color/colorWhite"
-                    android:textColorLink="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="0.8"
+                    android:textColorHint="@color/colorVeryLightGray"
+                    android:theme="@style/AppTheme.WhiteColorAccent">
 
-            </android.support.design.widget.TextInputLayout>
+                    <AutoCompleteTextView
+                        android:id="@+id/recepientTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_recepient"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHighlight="@color/colorWhite"
+                        android:textColorHint="@color/colorWhite"
+                        android:textColorLink="@color/colorWhite"
+                        android:theme="@style/AppTheme.WhiteEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:drawableRight="@drawable/qr_code" />
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -78,12 +83,12 @@
                 android:textColorHint="@color/colorVeryLightGray"
                 android:theme="@style/AppTheme.WhiteColorAccent">
 
-                <AutoCompleteTextView
-                    android:id="@+id/lastnameTv"
+                <EditText
+                    android:id="@+id/amountTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_amount"
-                    android:inputType="number|numberDecimal"
+                    android:inputType="text|number|numberDecimal"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
@@ -101,14 +106,14 @@
                 android:theme="@style/AppTheme.WhiteColorAccent">
 
                 <EditText
-                    android:id="@+id/usernameTv"
+                    android:id="@+id/messageTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_message"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
-                    android:inputType="text|textCapSentences|textAutoCorrect"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@android:color/white"

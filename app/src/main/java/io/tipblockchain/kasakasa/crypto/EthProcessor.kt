@@ -2,17 +2,16 @@ package io.tipblockchain.kasakasa.crypto
 
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import org.web3j.protocol.core.methods.response.EthGetBalance
-import org.web3j.utils.Convert
-import java.math.BigDecimal
+import java.math.BigInteger
 
 class EthProcessor: TransactionProcessor {
 
     private val web3Bridge: Web3Bridge = Web3Bridge()
 
-    override fun getBalance(address: String): BigDecimal {
+    override fun getBalance(address: String): BigInteger? {
         val ethGetBalance: EthGetBalance = web3Bridge.getEthBalanceAsync(address)
-        val balanceInWei = ethGetBalance.balance
-        return Convert.fromWei(balanceInWei.toBigDecimal(), Convert.Unit.ETHER)
+        return ethGetBalance.balance
+
     }
 
     override fun getTransactions(address: String) {

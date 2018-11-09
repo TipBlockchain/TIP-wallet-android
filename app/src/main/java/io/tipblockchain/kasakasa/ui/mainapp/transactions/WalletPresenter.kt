@@ -7,6 +7,8 @@ import io.tipblockchain.kasakasa.crypto.TransactionProcessor
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
+import org.web3j.utils.Convert
+import java.math.BigInteger
 
 class WalletPresenter: WalletInterface.Presenter {
 
@@ -14,6 +16,7 @@ class WalletPresenter: WalletInterface.Presenter {
     private var ethProcessor = EthProcessor()
     private var currentProcessor: TransactionProcessor? = null
     private var txRepository: TransactionRepository = TransactionRepository.instance
+    private val walletRepository = WalletRepository.instance
     private var currency: Currency = Currency.TIP
 
     init {
@@ -32,10 +35,17 @@ class WalletPresenter: WalletInterface.Presenter {
 
     override fun fetchBalance(address: String?, currency: Currency) {
         if (address != null) {
-            val balance = currentProcessor?.getBalance(address)
-            if (balance != null) {
-                view?.onBalanceFetched(address, currency, balance)
-            }
+            val balance = currentProcessor?.getBalance(address) ?: BigInteger.ZERO
+            val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
+            WalletRepository.instance.findWalletForAddressAndCurrency(address, currency).observe(view!!, Observer {
+               if (it != null && balance != null) {
+                   it.balance = balance
+                   walletRepository.update(it)
+                   view?.onBalanceFetched(address, currency, balanceInEth)
+               } else {
+                   view?.onBalanceFetchError()
+               }
+            })
         }
     }
 
@@ -82,14 +92,16 @@ class WalletPresenter: WalletInterface.Presenter {
     }
 
     private fun loadWallet() {
-        WalletRepository.instance.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
-            if (wallet != null) {
-                if (currency == Currency.TIP && tipProcessor == null) {
-                    tipProcessor = TipProcessor(wallet)
+        if (view != null) {
+            WalletRepository.instance.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
+                if (wallet != null) {
+                    if (currency == Currency.TIP && tipProcessor == null) {
+                        tipProcessor = TipProcessor(wallet)
+                    }
+                    fetchBalance(wallet.address, currency)
+                    getTransactions(address = wallet.address, currency = currency, startBlock = wallet.blockNumber)
                 }
-                fetchBalance(wallet.address, currency)
-                getTransactions(address = wallet.address, currency = currency, startBlock = wallet.blockNumber)
-            }
-        })
+            })
+        }
     }
 }

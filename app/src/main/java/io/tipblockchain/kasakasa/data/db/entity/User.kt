@@ -40,4 +40,8 @@ data class User(
     fun isValid(): Boolean {
         return !(this.username.isEmpty() || this.id.isEmpty() || this.address.isEmpty())
     }
+
+    override fun toString(): String {
+        return username
+    }
 }

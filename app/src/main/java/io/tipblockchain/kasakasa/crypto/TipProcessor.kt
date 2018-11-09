@@ -2,8 +2,11 @@ package io.tipblockchain.kasakasa.crypto
 
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import org.web3j.utils.Convert
 import java.math.BigDecimal
+import java.math.BigInteger
 
 class TipProcessor: TransactionProcessor {
 
@@ -12,12 +15,8 @@ class TipProcessor: TransactionProcessor {
     constructor(wallet: Wallet) {
         web3Bridge = Web3Bridge(wallet)
     }
-    override fun getBalance(address: String): BigDecimal {
-        val balanceInWei = web3Bridge.getTipBalanceAsync(address)
-        if (balanceInWei != null) {
-            return Convert.fromWei(balanceInWei.toBigDecimal(), Convert.Unit.ETHER)
-        }
-        return BigDecimal(0.00)
+    override fun getBalance(address: String): BigInteger? {
+        return web3Bridge.getTipBalanceAsync(address)
     }
 
     override fun getTransactions(address: String) {

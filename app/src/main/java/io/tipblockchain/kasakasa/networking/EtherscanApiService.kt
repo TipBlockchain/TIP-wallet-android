@@ -20,7 +20,7 @@ class EtherscanApiService {
 
     var apiKey: String
     get() = AppProperties.get("etherscan_api_key")
-    private set(value) {}
+    private set(_) {}
 
 
     companion object {

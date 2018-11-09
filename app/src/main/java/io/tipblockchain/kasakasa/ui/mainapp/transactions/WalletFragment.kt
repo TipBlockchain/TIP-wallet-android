@@ -16,7 +16,6 @@ import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.repository.Currency
-
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -178,6 +177,10 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         }
     }
 
+    override fun onBalanceFetchError() {
+        Snackbar.make(recyclerView, "Error updating your balance", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+    }
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
         balanceTv.text = "${balance.setScale(4, RoundingMode.HALF_UP).toString()} ${currency.name}"

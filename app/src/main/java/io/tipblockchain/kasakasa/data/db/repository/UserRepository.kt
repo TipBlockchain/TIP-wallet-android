@@ -61,7 +61,11 @@ class UserRepository {
         return dao.findContacts()
     }
 
-    fun findUsersBySearch(term: String): Observable<UserSearchResponse> {
+    fun findUserByUsername(username: String): LiveData<User?> {
+        return dao.findUserByUsername(username)
+    }
+
+    fun fetchUsersBySearch(term: String): Observable<UserSearchResponse> {
         return apiService.searchByUsername(term)
     }
 
