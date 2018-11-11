@@ -57,7 +57,7 @@ class TransactionRepository {
                     Log.i("TX", "status = ${response.status}")
                     Log.i("TIP TX", "txlist = ${response.result}")
                     val txlist = response.result
-                    if (!txlist.isEmpty()) {
+                    if (txlist != null && !txlist.isEmpty()) {
                         val addedCurrency: List<Transaction> = txlist.map { it.currency = Currency.TIP.name
                         it}
                         dao.insertAll(addedCurrency)
@@ -69,6 +69,7 @@ class TransactionRepository {
         }, {
                     Log.e("TX", "Error getting transactinos: $it")
                     Log.e("TX", "Stack: ${it.stackTrace}")
+                    it.printStackTrace(System.err)
             callback(null, it)
         })
     }
@@ -83,7 +84,7 @@ class TransactionRepository {
                     Log.i("TX", "status = ${response.status}")
                     Log.i("ETH TX", "txlist = ${response.result}")
                     val txlist = response.result
-                    if (!txlist.isEmpty()) {
+                    if (txlist != null && !txlist.isEmpty()) {
                         val addedCurrency: List<Transaction> = txlist.map { it.currency = Currency.ETH.name
                             it}
                         dao.insertAll(addedCurrency)
@@ -95,6 +96,7 @@ class TransactionRepository {
                 }, {
                     Log.e("TX", "Error getting transactinos: $it")
                     Log.e("TX", "Stack: ${it.stackTrace}")
+                    it.printStackTrace(System.err)
                     callback(null, it)
                 })
     }

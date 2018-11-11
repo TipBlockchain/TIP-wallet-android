@@ -64,10 +64,10 @@ class SendTransferPresenter: SendTransfer.Presenter {
                 address = usernameOrAddress
                 val pending = PendingTransaction(
                         from = wallet.address,
-                        fromUserId = UserRepository.currentUser!!.id,
+                        fromUsername = UserRepository.currentUser!!.username,
                         to = address,
-                        toUserId = null,
-                        amount = value,
+                        toUsername = null,
+                        value = valueAsDecimal,
                         currency = currency)
                 view?.onSendPendingTransaction(tx = pending)
             } else if (TextUtils.isUsername(usernameOrAddress)) {
@@ -78,10 +78,10 @@ class SendTransferPresenter: SendTransfer.Presenter {
                     } else {
                         val pending = PendingTransaction(
                                 from = wallet.address,
-                                fromUserId = UserRepository.currentUser!!.id,
+                                fromUsername = UserRepository.currentUser!!.username,
                                 to = user.address,
-                                toUserId = user.id,
-                                amount = value,
+                                toUsername = user.username,
+                                value = valueAsDecimal,
                                 currency = currency
                         )
                         view?.onSendPendingTransaction(tx = pending)
@@ -92,8 +92,7 @@ class SendTransferPresenter: SendTransfer.Presenter {
             }
 
         })
-
-
     }
+
     override var view: SendTransfer.View? = null
 }

@@ -26,7 +26,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://2ebdcbd5.ngrok.io"
+        private val baseUrl: String = "https://7cddebb7.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -47,9 +47,9 @@ class TipApiService {
 //            if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor()
                 loggingInterceptor.level = Level.BODY
-                okHttpClientBuilder.addInterceptor(loggingInterceptor)
-                okHttpClientBuilder.addInterceptor(StethoInterceptor())
+                okHttpClientBuilder.addNetworkInterceptor(StethoInterceptor())
                 okHttpClientBuilder.addInterceptor(authHeaderInterceptor)
+                okHttpClientBuilder.addNetworkInterceptor(loggingInterceptor)
 //            }
 
             val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).create()
@@ -79,6 +79,10 @@ class TipApiService {
 
     fun searchByUsername(username: String): Observable<UserSearchResponse> {
         return tipApi.searchByUsername(username)
+    }
+
+    fun findAccountByUsername(username: String): Observable<User?> {
+        return tipApi.getAccountByUsername(username)
     }
 
     fun authorize(message: SecureMessage): Observable<Authorization> {

@@ -134,7 +134,10 @@
     <string name="jane_smith">\@JaneSmith99</string>
     <string name="prefs_setup_complete">SetupComplete</string>
     <string name="default_prefs_file">DefaultPreferences.prefs</string>
-    <string name="placeholder_amount">2725.66 TIP</string>
+    <string name="placeholder_amount">0.00 TIP</string>
+    <string name="placeholder_tx_fee">+ 0.000000 ETH</string>
+    <string name="amount_and_currency">%s %s</string>
+    <string name="plus_amount_and_currency">+ %s %s</string>
     <string name="placeholder_tipamount">5420.75 TIP</string>
     <string name="placeholder_txTime">Mon 11:47 pm</string>
     <string name="title_activity_confirm_payment">ConfirmPaymentActivity</string>
@@ -150,6 +153,7 @@
     <string name="total_amount">Total amount</string>
     <string name="prompt_message">Message</string>
     <string name="prompt_amount">Amount</string>
+    <string name="prompt_transaction_fee">Transaction Fee</string>
     <string name="prompt_recepient">Recepient</string>
     <string name="title_add_to_contacts">Add to contacts</string>
     <string name="message_added_to_contacts">%s added to your contacts.</string>
@@ -165,6 +169,7 @@
     <string name="verify_phone">Verify your number</string>
     <string name="prompt_enter_verification">Enter your phone verification code</string>
     <string name="save_password">Save Password</string>
+    <string name="enter_password">Enter your password</string>
     <string name="title_activity_recovery_phrase">RecoveryPhraseActivity</string>
     <string name="title_activity_verify_recovery_phrase">VerifyRecoveryPhraseActivity</string>
     <string name="verify_recovery_phrase">Verify Recovery Phrase</string>
@@ -178,12 +183,18 @@
     <string name="title_activity_onboarding_user_profile">OnboardingUserProfileActivity</string>
     <string name="title_allow_camera_access">Allow camera access</string>
     <string name="error_adding_contact">Error adding contact: %s</string>
-    <string name="error_setting_up_search">Error setting up search: %s</string>
+    <string name="error_setting_up_search">Error setting up search: \n%s</string>
+    <string name="error_sending_transaction">Error sending transaction: \n%s</string>
+    <string name="could_not_unlock_wallet">Your wallet could not be unlocked. Please check your password and try again.</string>
     <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
     <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
     <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>
     <string name="congrats_account_created">Congrats!\nYou successfully created a TIP account.\nWelcome to TIP.</string>
     <string name="generic_error">Sorry, the operation could not be completed due to an error.</string>
     <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
+    <string name="invalid_transaction">Invalid transaction: %s</string>
     <string name="placeholder_zero_tip_amount">0.00 TIP</string>
+    <string name="unlock_wallet">Unlock your wallet</string>
+    <string name="enter_password_unlock">Enter your password to unlock your wallet and send this transaction.</string>
+    <string name="total">Total</string>
 </resources>

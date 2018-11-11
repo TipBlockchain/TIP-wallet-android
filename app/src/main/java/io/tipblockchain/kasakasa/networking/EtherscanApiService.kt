@@ -37,8 +37,8 @@ class EtherscanApiService {
 //            if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            okHttpClientBuilder.addNetworkInterceptor(StethoInterceptor())
             okHttpClientBuilder.addInterceptor(loggingInterceptor)
-            okHttpClientBuilder.addInterceptor(StethoInterceptor())
 //            }
 
             val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).create()

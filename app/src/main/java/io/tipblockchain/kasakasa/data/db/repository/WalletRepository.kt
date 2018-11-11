@@ -60,7 +60,7 @@ class WalletRepository {
         val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
-            val blockNumber = web3Bridge.latestBlock().toString(10)
+            val blockNumber = web3Bridge.latestBlock()
             val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber)
             this.insert(tipWallet)
             val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber)

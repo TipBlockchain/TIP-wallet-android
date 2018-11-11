@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:minHeight="159dp"
-    tools:context=".ui.mainapp.ConfirmTransferActivity">
+    tools:context=".ui.mainapp.confirmtransfer.ConfirmTransferActivity">
 
     <ImageView
         android:id="@+id/backgroundImageView"

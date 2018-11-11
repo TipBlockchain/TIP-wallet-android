@@ -23,6 +23,9 @@ interface TipApi {
     @POST("/secure/identity")
     fun createAccount(@Body user: User): Observable<User>
 
+    @GET("/accounts/profile/{username}")
+    fun getAccountByUsername(@Path(value = "username") username: String): Observable<User?>
+
     @GET("/accounts/search")
     fun searchByUsername(@Query(value = "username") username: String): Observable<UserSearchResponse>
 

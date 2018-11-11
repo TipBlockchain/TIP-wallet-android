@@ -20,6 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
@@ -58,7 +59,7 @@
             android:name=".ui.mainapp.sendtransfer.SendTransferActivity"
             android:label="@string/send_payment" />
         <activity
-            android:name=".ui.mainapp.ConfirmTransferActivity"
+            android:name=".ui.mainapp.confirmtransfer.ConfirmTransferActivity"
             android:label="@string/title_activity_confirm_payment"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.mainapp.TransactionConfirmedActivity" />

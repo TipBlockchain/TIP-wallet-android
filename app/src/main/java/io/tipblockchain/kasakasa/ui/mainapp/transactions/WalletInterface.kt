@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
 import android.arch.lifecycle.LifecycleOwner
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.ui.BasePresenter
 import io.tipblockchain.kasakasa.ui.BaseView
@@ -16,8 +17,8 @@ interface WalletInterface {
     }
 
     interface Presenter: BasePresenter<View> {
-        fun fetchBalance(address: String?, currency: Currency)
-        fun getTransactions(address: String, startBlock: String, currency: Currency)
+        fun fetchBalance(wallet: Wallet)
+        fun getTransactions(wallet: Wallet)
         fun switchCurrency(currency: Currency)
     }
 }

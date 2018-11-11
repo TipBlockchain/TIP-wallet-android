@@ -19,33 +19,52 @@ import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.Request
-import org.web3j.protocol.core.methods.response.EthBlockNumber
 import org.web3j.protocol.core.methods.response.EthGasPrice
 import org.web3j.protocol.core.methods.response.EthGetBalance
 import org.web3j.tx.ClientTransactionManager
+import java.util.concurrent.Future
 
 
 class Web3Bridge {
 
     private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get("ether_node_url")))
     private var readOnlyTipToken: TipToken? = null
-    private var unlockedTipToken: TipToken? = null
 
-    private var gasPrice: String = "21000"
-    private var gasLimit: String = "21000"
+    private var defaultGasPrice = 21_000_000L
+    private var defaultGasLimit = 99_000L
 
 
-    constructor() {
-
-    }
+    constructor()
 
     constructor(wallet: Wallet) {
         loadTipSmartContract(wallet)
     }
 
     private fun loadTipSmartContract(wallet: Wallet) {
-//        readOnlyTipToken = TipToken.load(AppProperties.get("tip_contract_address"), web3, loadCredentialsWithPassword("password", walletFile), BigInteger(gasPrice), BigInteger(gasLimit))
-        readOnlyTipToken = TipToken.load(AppProperties.get("tip_contract_address"), web3, ClientTransactionManager(web3, wallet.address), BigInteger(gasPrice), BigInteger(gasLimit))
+        readOnlyTipToken = TipToken.load(
+                AppProperties.get("tip_contract_address"),
+                web3,
+                ClientTransactionManager(web3, wallet.address),
+                BigInteger.valueOf(defaultGasPrice),
+                BigInteger.valueOf(defaultGasLimit))
+    }
+
+    private fun loadTipTokenWithCredentials(credentials: Credentials): TipToken {
+        val gasPrice = getGasPrice()
+        return TipToken.load(
+                AppProperties.get("tip_contract_address"),
+                web3,
+                credentials,
+                gasPrice,
+                BigInteger.valueOf(defaultGasLimit))
+    }
+
+    fun loadCredentialsForWalletWithPassword(wallet: Wallet, password: String): Credentials? {
+        val walletFile = FileUtils().fileFromPath(wallet.filePath?: "")
+        if (walletFile == null) {
+            return null
+        }
+        return loadCredentialsWithPassword(password, walletFile)
     }
 
     fun loadCredentialsWithPassword(password: String, file: File) : Credentials {
@@ -58,37 +77,41 @@ class Web3Bridge {
         return bip39Wallet
     }
 
-    fun sendEthTransaction(to: String, value: String, walletFile: File, password: String): TransactionReceipt {
-        val credentials = loadCredentialsWithPassword(password, walletFile)
-        val receipt = Transfer.sendFunds(web3, credentials, to, BigDecimal(value), Convert.Unit.ETHER).send()
-        return receipt
+    fun sendEthTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).sendAsync().get()
     }
 
     fun latestBlock(): BigInteger {
         return web3.ethBlockNumber().sendAsync().get().blockNumber
     }
 
-    fun sendTipTransaction(to: String, value: BigInteger) {
-        unlockedTipToken?.transfer(to, value)
+    fun sendTipTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        val tipToken = loadTipTokenWithCredentials(credentials)
+        val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        return tipToken.transfer(to, valueInWei)?.sendAsync()?.get()
     }
 
-    fun getEthBalance(address: String): Request<*, EthGetBalance>? {
-        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST)
+    fun getEthBalance(address: String): BigInteger {
+        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST).send().balance
     }
 
-    fun getEthBalanceAsync(address: String): EthGetBalance {
-        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST).sendAsync().get()
+    fun getTipBalance(address: String): BigInteger? {
+        return readOnlyTipToken?.balanceOf(address)?.send()
     }
 
-    fun getGasPrice(): EthGasPrice {
-        return web3.ethGasPrice().sendAsync().get()
-    }
-
-    fun getTipBalance(address: String) {
-        readOnlyTipToken?.balanceOf(address)?.send()
+    fun getEthBalanceAsync(address: String): BigInteger {
+        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST).sendAsync().get().balance
     }
 
     fun getTipBalanceAsync(address: String): BigInteger? {
         return readOnlyTipToken?.balanceOf(address)?.sendAsync()?.get()
+    }
+
+    fun getGasPrice(): BigInteger {
+        return web3.ethGasPrice().sendAsync().get().gasPrice
+    }
+
+    fun getGasLimit(): BigInteger {
+        return BigInteger.valueOf(defaultGasLimit)
     }
 }

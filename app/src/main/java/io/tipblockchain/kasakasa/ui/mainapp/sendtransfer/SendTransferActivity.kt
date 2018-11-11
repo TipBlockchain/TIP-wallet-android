@@ -10,19 +10,21 @@ import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.ui.BaseActivity
-import io.tipblockchain.kasakasa.ui.mainapp.ConfirmTransferActivity
-import io.tipblockchain.kasakasa.utils.TextUtils
+import io.tipblockchain.kasakasa.ui.mainapp.confirmtransfer.ConfirmTransferActivity
 import kotlinx.android.synthetic.main.activity_send_transfer.*
 
-class SendTransferActivity : BaseActivity(), SendTransfer.View {
+class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnItemSelectedListener {
     private val REQUEST_READ_CONTACTS = 0
     var presenter: SendTransferPresenter? = null
     var adapter: UserFilterAdapter? = null
+    var selectedCurrency: Currency = Currency.TIP
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,13 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View {
         recepientTv.threshold = 2
         presenter?.fetchContactList()
         nextButton.setOnClickListener { nextButtonClicked() }
+
+        setupSpinner()
+    }
+
+    override fun onDestroy() {
+        presenter?.detach()
+        super.onDestroy()
     }
 
     private fun populateAutoComplete() {
@@ -46,6 +55,19 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View {
         }
     }
 
+    private fun setupSpinner() {
+        ArrayAdapter.createFromResource(
+                this,
+                R.array.currency_options,
+                android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+            spinner.onItemSelectedListener = this
+        }
+    }
     private fun mayRequestContacts(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true
@@ -91,7 +113,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View {
         val amount = amountTv.text.toString()
         val message = messageTv.text.toString()
 
-        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = amount, currency = Currency.ETH, message = message)
+        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = amount, currency = selectedCurrency, message = message)
     }
 
     override fun onInvalidRecipient() {
@@ -126,6 +148,18 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View {
     override fun onContactsFetchError(error: Throwable) {
         showMessage(error.localizedMessage)
     }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (position) {
+            0 -> selectedCurrency = Currency.TIP
+            1 -> selectedCurrency = Currency.ETH
+        }
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */

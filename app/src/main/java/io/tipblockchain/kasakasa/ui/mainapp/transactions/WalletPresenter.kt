@@ -1,9 +1,11 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
 import android.arch.lifecycle.Observer
+import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.crypto.EthProcessor
 import io.tipblockchain.kasakasa.crypto.TipProcessor
 import io.tipblockchain.kasakasa.crypto.TransactionProcessor
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
@@ -17,7 +19,6 @@ class WalletPresenter: WalletInterface.Presenter {
     private var currentProcessor: TransactionProcessor? = null
     private var txRepository: TransactionRepository = TransactionRepository.instance
     private val walletRepository = WalletRepository.instance
-    private var currency: Currency = Currency.TIP
 
     init {
         currentProcessor = tipProcessor
@@ -33,37 +34,44 @@ class WalletPresenter: WalletInterface.Presenter {
         super.detach()
     }
 
-    override fun fetchBalance(address: String?, currency: Currency) {
-        if (address != null) {
-            val balance = currentProcessor?.getBalance(address) ?: BigInteger.ZERO
-            val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
-            WalletRepository.instance.findWalletForAddressAndCurrency(address, currency).observe(view!!, Observer {
-               if (it != null && balance != null) {
-                   it.balance = balance
-                   walletRepository.update(it)
-                   view?.onBalanceFetched(address, currency, balanceInEth)
-               } else {
-                   view?.onBalanceFetchError()
-               }
-            })
-        }
+    override fun fetchBalance(wallet: Wallet) {
+        val balance = currentProcessor?.getBalance(wallet.address) ?: BigInteger.ZERO
+        val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
+        val latestBlock = Web3Bridge().latestBlock()
+        if (balance != null) {
+            if (balance != wallet.balance || latestBlock != wallet.blockNumber) {
+                wallet.balance = balance
+                wallet.blockNumber = latestBlock
+                walletRepository.update(wallet)
+            }
+            view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
+         } else {
+             view?.onBalanceFetchError()
+         }
     }
 
-    override fun getTransactions(address: String, startBlock: String, currency: Currency) {
-        when (currency) {
+    override fun getTransactions(wallet: Wallet) {
+        val latestBlock = Web3Bridge().latestBlock()
+        if (latestBlock == wallet.blockNumber) {
+            return
+        }
+        val c: Currency = Currency.valueOf(wallet.currency)
+        when (c) {
             Currency.TIP -> {
-                txRepository.fetchTipTransactions(address = address, startBlock = startBlock, callback = { txlist, err ->
+                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), callback = { txlist, err ->
                     if (txlist != null) {
-                        view?.onTransactionsFetched(address, Currency.TIP, txlist)
+                        if (txlist.count() > 0) {
+                        }
+                        view?.onTransactionsFetched(wallet.address, Currency.TIP, txlist)
                     } else {
                         view?.onTransactionsFetchError(err, Currency.TIP)
                     }
                 })
             }
             Currency.ETH -> {
-                txRepository.fetchEthTransactions(address = address, startBlock = startBlock, callback = { txlist, err ->
+                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), callback = { txlist, err ->
                     if (txlist != null) {
-                        view?.onTransactionsFetched(address, Currency.ETH, txlist)
+                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)
                     } else {
                         view?.onTransactionsFetchError(err, Currency.ETH)
                     }
@@ -73,12 +81,11 @@ class WalletPresenter: WalletInterface.Presenter {
     }
 
     override fun switchCurrency(currency: Currency) {
-        this.currency = currency
         when (currency) {
             Currency.TIP -> currentProcessor = tipProcessor
             Currency.ETH -> currentProcessor = ethProcessor
         }
-        loadWallet()
+        loadWallet(currency)
     }
 
     override var view: WalletInterface.View? = null
@@ -91,15 +98,15 @@ class WalletPresenter: WalletInterface.Presenter {
 
     }
 
-    private fun loadWallet() {
+    private fun loadWallet(currency: Currency) {
         if (view != null) {
-            WalletRepository.instance.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
+            walletRepository.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
                 if (wallet != null) {
                     if (currency == Currency.TIP && tipProcessor == null) {
                         tipProcessor = TipProcessor(wallet)
                     }
-                    fetchBalance(wallet.address, currency)
-                    getTransactions(address = wallet.address, currency = currency, startBlock = wallet.blockNumber)
+                    getTransactions(wallet)
+                    fetchBalance(wallet)
                 }
             })
         }

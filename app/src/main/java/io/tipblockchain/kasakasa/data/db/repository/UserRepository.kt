@@ -61,12 +61,19 @@ class UserRepository {
         return dao.findContacts()
     }
 
+    fun findUserById(userId: String): LiveData<User?> {
+        return dao.findUserById(userId)
+    }
     fun findUserByUsername(username: String): LiveData<User?> {
         return dao.findUserByUsername(username)
     }
 
     fun fetchUsersBySearch(term: String): Observable<UserSearchResponse> {
         return apiService.searchByUsername(term)
+    }
+
+    fun fetchUserByUsername(username: String): Observable<User?> {
+        return apiService.findAccountByUsername(username)
     }
 
     fun loadContacts(owner: LifecycleOwner, callback: ContactsUpdatedWithResults) {

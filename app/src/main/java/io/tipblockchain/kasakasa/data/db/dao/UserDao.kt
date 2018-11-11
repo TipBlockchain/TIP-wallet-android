@@ -25,7 +25,10 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE isContact = 1 ORDER BY lastMessage DESC")
     fun findContacts(): LiveData<List<User>>
 
-    @Query("SELECT * FROM users WHERE username = :username")
+    @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
+    fun findUserById(userId: String): LiveData<User?>
+
+    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
     fun findUserByUsername(username: String): LiveData<User?>
 
     @Update
