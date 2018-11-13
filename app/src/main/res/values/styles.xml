@@ -14,12 +14,15 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
     </style>
+
     <style name="AppTheme.ActionBar.NoTitle" parent="AppTheme.ActionBar">
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/gradient</item>
     </style>
@@ -95,14 +98,16 @@
         <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="AppTheme.TextInputLayout.hint">
-       <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textColorHint">@color/colorWhite</item>
         <item name="android:textSize">12sp</item>
         <item name="colorControlNormal">@color/colorWhite</item>
         <item name="colorControlActivated">@color/colorWhite</item>
         <item name="colorControlHighlight">@color/colorWhite</item>
     </style>
+
     <style name="AppTheme.WhiteColorAccent">
         <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textColorHint">@color/colorWhite</item>
@@ -120,11 +125,13 @@
         <item name="colorControlNormal">@color/colorWhite</item>
         <item name="colorControlActivated">@color/colorWhite</item>
     </style>
+
     <style name="AppTheme.TextBox">
         <item name="android:padding">10dp</item>
         <item name="android:colorBackground">@color/colorLightGray</item>
         <item name="android:textAppearance">@style/AppTheme.TextViewDarkNormal</item>
     </style>
+
     <style name="error_appearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@color/colorPink</item>

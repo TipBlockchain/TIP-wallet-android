@@ -9,9 +9,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.google.zxing.client.android.Intents
+import com.google.zxing.integration.android.IntentIntegrator
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.Currency
@@ -25,6 +28,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     var presenter: SendTransferPresenter? = null
     var adapter: UserFilterAdapter? = null
     var selectedCurrency: Currency = Currency.TIP
+    val scannerRequestCode = 99
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +44,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         recepientTv.threshold = 2
         presenter?.fetchContactList()
         nextButton.setOnClickListener { nextButtonClicked() }
-
+        scanButton.setOnClickListener { showQRCodeScanner() }
         setupSpinner()
     }
 
@@ -68,6 +72,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
             spinner.onItemSelectedListener = this
         }
     }
+
     private fun mayRequestContacts(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true
@@ -83,6 +88,34 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
             requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_READ_CONTACTS)
         }
         return false
+    }
+
+    private fun showQRCodeScanner() {
+        val integrator = IntentIntegrator(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        integrator.setPrompt(getString(R.string.scan_address))
+        integrator.setBeepEnabled(true)
+        integrator.setBarcodeImageEnabled(true)
+        integrator.setRequestCode(scannerRequestCode)
+        integrator.initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == scannerRequestCode) {
+            if (data == null || !data.hasExtra(Intents.Scan.RESULT)) {
+                showMessage(getString(R.string.scan_cancelled))
+                return
+            }
+
+            val qrCode = data.getStringExtra(Intents.Scan.RESULT)
+            if (qrCode.isEmpty()) {
+                showMessage(getString(R.string.scan_cancelled))
+                return
+            }
+
+            Log.d(LOG_TAG, "Adress scanned: $qrCode")
+            recepientTv.setText(qrCode)
+        }
     }
 
     /**

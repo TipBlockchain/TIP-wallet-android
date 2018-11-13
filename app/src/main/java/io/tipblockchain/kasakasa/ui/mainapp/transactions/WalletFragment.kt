@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -16,6 +17,8 @@ import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.ui.mainapp.receivetransfer.ReceiveTransferActivity
+import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -75,12 +78,12 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         recyclerView.adapter = adapter
 
         sendBtn.setOnClickListener { v ->
-            Snackbar.make(v, "Send Payment", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val intent = Intent(activity, SendTransferActivity::class.java)
+            startActivity(intent)
         }
         receiveBtn.setOnClickListener { v ->
-            Snackbar.make(v, "Receive payment", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val intent = Intent(activity, ReceiveTransferActivity::class.java)
+            startActivity(intent)
         }
     }
 

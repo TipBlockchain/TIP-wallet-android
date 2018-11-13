@@ -123,6 +123,7 @@ dependencies {
     implementation "com.github.heetch:Android-country-picker:1.0.6"
     implementation "com.facebook.stetho:stetho:1.5.0"
     implementation "com.facebook.stetho:stetho-okhttp3:1.5.0"
+    implementation "com.journeyapps:zxing-android-embedded:3.6.0"
     implementation("com.romandanylyk:pageindicatorview:1.0.1") {
         exclude group: "com.android.support"
     }
