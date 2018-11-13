@@ -65,12 +65,9 @@ class MainTabActivity : AppCompatActivity() {
         // Set up the ViewPager with the sections adapter.
         viewPager.adapter = mSectionsPagerAdapter
 
-//        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-//        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
         supportActionBar?.setTitle(R.string.title_contacts)
 
         this.addStartingFragment()
-
     }
 
     private fun addStartingFragment() {
