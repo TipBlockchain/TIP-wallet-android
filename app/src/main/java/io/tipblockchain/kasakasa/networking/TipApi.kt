@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.responses.*
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface TipApi {
@@ -23,8 +24,15 @@ interface TipApi {
     @POST("/secure/identity")
     fun createAccount(@Body user: User): Observable<User>
 
+    @GET("/accounts/my")
+    fun getMyAccount(): Observable<User?>
+
     @GET("/accounts/profile/{username}")
     fun getAccountByUsername(@Path(value = "username") username: String): Observable<User?>
+
+    @Multipart
+    @POST("/accounts/photos")
+    fun uploadPhoto(@Part image: MultipartBody.Part): Observable<User?>
 
     @GET("/accounts/search")
     fun searchByUsername(@Query(value = "username") username: String): Observable<UserSearchResponse>

@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_onboarding_user_profile.*
 import kotlinx.android.synthetic.main.content_onboarding_user_profile.*
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.v7.app.AlertDialog
@@ -24,7 +23,6 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.yalantis.ucrop.UCrop
-import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.data.responses.Authorization
 import io.tipblockchain.kasakasa.databinding.ActivityOnboardingUserProfileBinding
@@ -33,6 +31,8 @@ import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
 import io.tipblockchain.kasakasa.utils.FileUtils
+import java.io.File
+import java.lang.Exception
 
 
 class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View {
@@ -41,6 +41,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     private var permissionsGranted: Boolean = false
     private var presenter: OnboardingUserProfile.Presenter? = null
     private val walletRepository = WalletRepository.instance
+    private var displayPicFile: File? = null
 
     private enum class ActivityRequest(val code: Int) {
         CAMERA(111),
@@ -102,6 +103,9 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
             ActivityRequest.CROP.code -> if (resultCode == Activity.RESULT_OK) {
                 val croppedImageUri = UCrop.getOutput(imageReturnedIntent!!)
                 profileImageView.setImageURI(croppedImageUri)
+                try {
+                    displayPicFile = File(croppedImageUri?.path)
+                } catch (e: Exception) {}
             } else {
                 val cropError = UCrop.getError(imageReturnedIntent!!)
                 showOkDialog(cropError?.localizedMessage ?: getString(R.string.generic_error))
@@ -192,24 +196,42 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     fun nextButtonClicked() {
+        this
         saveViewModel()
         this.checkValues()
     }
 
+    override fun onPhotoUploaded() {
+        this.showCongratsDialog()
+    }
+
+    override fun onErrorUpdatingUser(error: Throwable) {
+        showOkDialog(getString(R.string.error_updating_user_info, error.localizedMessage))
+    }
+
     override fun onAuthorizationFetched(auth: Authorization?, error: Throwable?) {
         if (error != null) {
-            showOkDialog("Error creating your account", onClickListener = object: DialogInterface.OnClickListener {
+            showOkDialog(getString(R.string.error_creating_account, error.localizedMessage), onClickListener = object: DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     finish()
                 }
             })
         } else {
-            showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    navigateToMainApp()
-                }
-            })
+            if (displayPicFile != null) {
+                presenter?.uploadPhoto(displayPicFile!!)
+            } else {
+                showCongratsDialog()
+            }
+
         }
+    }
+
+    private fun showCongratsDialog() {
+        showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                navigateToMainApp()
+            }
+        })
     }
     override fun onGenericError(error: Throwable) {
         showMessage(error.localizedMessage)
@@ -235,14 +257,6 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
                 navigateToCreateWallet()
             }
         })
-    }
-
-    override fun onAccountCreated() {
-//        showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
-//            override fun onClick(dialog: DialogInterface?, which: Int) {
-//                navigateToMainApp()
-//            }
-//        })
     }
 
     private fun getViewModel() = ViewModelProviders.of(this).get(OnboardingUserProfileViewModel::class.java)

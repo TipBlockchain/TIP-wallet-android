@@ -1,7 +1,6 @@
 package io.tipblockchain.kasakasa.networking
 
 import android.util.Log
-import com.android.example.github.api.ApiResponse
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
@@ -10,13 +9,13 @@ import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.responses.*
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 class TipApiService {
 
@@ -26,7 +25,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://14859492.ngrok.io"
+        private val baseUrl: String = "https://edc9e912.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -77,6 +76,10 @@ class TipApiService {
         return tipApi.createAccount(user)
     }
 
+    fun getMyAccount(): Observable<User?> {
+        return tipApi.getMyAccount()
+    }
+
     fun searchByUsername(username: String): Observable<UserSearchResponse> {
         return tipApi.searchByUsername(username)
     }
@@ -91,6 +94,12 @@ class TipApiService {
 
     fun getContacts(): Observable<ContactListResponse> {
         return tipApi.getContactList()
+    }
+
+    fun uploadProfilePhoto(imageFile: File): Observable<User?> {
+        var requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile)
+        val multipart: MultipartBody.Part = MultipartBody.Part.createFormData("file", imageFile.name, requestBody)
+        return tipApi.uploadPhoto(multipart)
     }
 
     fun addContact(contact: User): Observable<ContactListStringResponse> {

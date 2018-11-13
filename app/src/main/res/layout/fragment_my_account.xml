@@ -7,7 +7,7 @@
     android:background="@drawable/gradient">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/backgroundImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/background_content_desc"
@@ -18,39 +18,67 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/shapes_background" />
 
-    <ImageView
-        android:id="@+id/avatarIv"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/female_30_round"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView3" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/topContraintLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:shadowColor="@android:color/white"
-        android:text="@string/placeholder_username_jane"
-        android:textColor="@android:color/white"
-        android:textColorLink="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatarIv" />
+        android:layout_gravity="center">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/profileConstraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/user_profile_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_border_color="@color/colorWhite"
+                app:riv_border_width="2dp"
+                app:riv_corner_radius="80dp"
+                app:riv_mutate_background="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/cameraImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:srcCompat="@android:drawable/ic_menu_camera" />
+        </android.support.constraint.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/usernameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:gravity="center"
+            android:shadowColor="@android:color/white"
+            android:text="@string/placeholder_username_jane"
+            android:textColor="@android:color/white"
+            android:textColorLink="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileConstraintLayout" />
+    </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -58,10 +86,10 @@
         android:layout_marginTop="20dp"
         android:background="@color/colorWhite"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText">
+        app:layout_constraintTop_toBottomOf="@+id/topContraintLayout">
 
         <Button
             android:id="@+id/button"

@@ -184,6 +184,8 @@
     <string name="title_activity_onboarding_user_profile">Profile Details</string>
     <string name="title_allow_camera_access">Allow camera access</string>
     <string name="error_adding_contact">Error adding contact: %s</string>
+    <string name="error_updating_user_info">"Error updating your information: %s</string>
+    <string name="error_creating_account">Error creating your account:\n%s</string>
     <string name="error_setting_up_search">Error setting up search: \n%s</string>
     <string name="error_sending_transaction">Error sending transaction: \n%s</string>
     <string name="error_copying_address">Could not copy your address</string>
