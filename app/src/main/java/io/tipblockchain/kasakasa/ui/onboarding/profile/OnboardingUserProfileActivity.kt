@@ -31,6 +31,7 @@ import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
 import io.tipblockchain.kasakasa.utils.FileUtils
+import io.tipblockchain.kasakasa.utils.KeyboardUtils
 import java.io.File
 import java.lang.Exception
 
@@ -210,6 +211,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     override fun onAuthorizationFetched(auth: Authorization?, error: Throwable?) {
+        KeyboardUtils.hideKeyboard(this)
         if (error != null) {
             showOkDialog(getString(R.string.error_creating_account, error.localizedMessage), onClickListener = object: DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
