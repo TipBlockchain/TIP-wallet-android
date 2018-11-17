@@ -36,7 +36,7 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:fontFamily">@font/advent_pro_medium</item>
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_demi</item>
         <item name="android:textSize">22sp</item>
         <item name="android:layout_marginLeft">40dp</item>
         <item name="android:layout_marginRight">40dp</item>
@@ -55,8 +55,9 @@
     </style>
 
     <style name="AppTheme.TextViewRowTitle" parent="">
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_demi</item>
         <item name="android:textColor">@color/darkTextColor</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTheme.TextViewSeedPhrase" parent="">
@@ -65,31 +66,32 @@
     </style>
 
     <style name="AppTheme.TextViewRowSubtitle" parent="">
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_regular</item>
         <item name="android:textColor">@color/lightTextColor</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AppTheme.TextViewLightTitle" parent="">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/advent_pro_medium</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_demi</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="AppTheme.TextViewLightContent" parent="">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_ultra_light</item>
         <item name="android:textSize">22sp</item>
     </style>
 
     <style name="AppTheme.TextViewLightNormal" parent="">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="AppTheme.TextViewDarkNormal" parent="">
         <item name="android:textColor">@color/colorDarkGray</item>
-        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:fontFamily">@font/avenir_next_lt_pro_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
 

@@ -9,7 +9,7 @@
     <string name="smart_addresses">Smart Addresses</string>
     <string name="discovery_on_blockchain">Discovery on the blockchain.</string>
     <string name="send_money_to_friends">Send money to friends and family using their username or phone number.</string>
-    <string name="information_is_indexed">Information on our network is searchable so users and business can find each other by searching. Discover new ways to interact using blockchain technology.</string>
+    <string name="information_is_indexed">Information on our network is searchable so users and business can find each other. Discover new ways to interact using blockchain technology.</string>
     <string name="chat_with_friends">Chat securely with your friends and family and transfer cryptocurrency over instant messaging.</string>
     <string name="todo">TODO</string>
     <string name="create_account">Create Account</string>
@@ -197,7 +197,8 @@
     <string name="generic_error">Sorry, the operation could not be completed due to an error.</string>
     <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
     <string name="invalid_transaction">Invalid transaction: %s</string>
-    <string name="placeholder_zero_tip_amount">0.00 TIP</string>
+    <string name="invalid_transaction_value">Invalid transaction value</string>
+    <string name="placeholder_zero_tip_amount">0.0000</string>
     <string name="unlock_wallet">Unlock your wallet</string>
     <string name="scan_address">Scan destination address</string>
     <string name="scan_cancelled">Scan cancelled.</string>
@@ -210,4 +211,6 @@
     <string name="share">Share</string>
     <string name="share_address">Hey I\'m in TIP. You can send me TIP or ETH either using my TIP username, %s or the old way, to my ETH address: %s</string>
     <string name="copy_address">Copy Address</string>
+    <string name="tip">TIP</string>
+    <string name="eth">ETH</string>
 </resources>

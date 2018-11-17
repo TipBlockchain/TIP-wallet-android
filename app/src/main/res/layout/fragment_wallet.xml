@@ -20,23 +20,32 @@
 
     <TextView
         android:id="@+id/balanceTv"
-        android:layout_width="312dp"
-        android:layout_height="89dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/advent_pro_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:gravity="center"
+        android:padding="0dp"
         android:text="@string/placeholder_zero_tip_amount"
         android:textColor="@android:color/white"
-        android:textSize="50sp"
+        style="@style/AppTheme.TextViewLightContent"
+        android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/currencyTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tip"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        style="@style/AppTheme.TextViewLightNormal"
+        app:layout_constraintBottom_toTopOf="@id/balanceTv"
+        app:layout_constraintEnd_toEndOf="@id/balanceTv" />
+
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/sendReceiveLayout"
         android:layout_width="287dp"
         android:layout_height="58dp"
         android:layout_marginStart="8dp"
@@ -89,7 +98,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/sendReceiveLayout"
         tools:listitem="@layout/row_transaction" />
 
 </android.support.constraint.ConstraintLayout>
