@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -47,6 +49,9 @@ class TransactionRepository {
 
     fun loadTransactions(currency: Currency): LiveData<List<Transaction>> {
         return dao.findTransactions(currency = currency.name)
+    }
+    fun loadTransactions_notLive(currency: Currency): Flowable<List<Transaction>> {
+        return dao.findTransactions_notLive(currency = currency.name)
     }
 
     // TODO: rename to fetchNewTipTransactions()

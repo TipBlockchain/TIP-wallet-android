@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.data.db.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import io.reactivex.Flowable
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.UserTransaction
 
@@ -25,6 +26,9 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE currency = :currency ORDER BY timestamp DESC")
     fun findTransactions(currency: String): LiveData<List<Transaction>>
+
+    @Query("SELECT * FROM transactions WHERE currency = :currency ORDER BY timestamp DESC")
+    fun findTransactions_notLive(currency: String): Flowable<List<Transaction>>
 
     @Query("DELETE FROM transactions WHERE hash = :hash")
     fun delete(hash: String)

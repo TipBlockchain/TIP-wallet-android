@@ -1,16 +1,22 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.crypto.EthProcessor
 import io.tipblockchain.kasakasa.crypto.TipProcessor
 import io.tipblockchain.kasakasa.crypto.TransactionProcessor
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import org.web3j.utils.Convert
 import java.math.BigInteger
+import java.util.*
 
 class WalletPresenter: WalletInterface.Presenter {
 
@@ -20,13 +26,14 @@ class WalletPresenter: WalletInterface.Presenter {
     private var txRepository: TransactionRepository = TransactionRepository.instance
     private val walletRepository = WalletRepository.instance
 
+    private var tipWallet: Wallet? = null
+    private var ethWallet: Wallet? = null
+    private var currentWallet: Wallet? = null
+
+    private var txDisposable: Disposable? = null
+
     init {
         currentProcessor = tipProcessor
-    }
-
-    override fun attach(view: WalletInterface.View) {
-        super.attach(view)
-        startListening()
     }
 
     override fun detach() {
@@ -34,23 +41,46 @@ class WalletPresenter: WalletInterface.Presenter {
         super.detach()
     }
 
-    override fun fetchBalance(wallet: Wallet) {
+    override fun switchCurrency(currency: Currency) {
+        when (currency) {
+            Currency.TIP -> {
+                currentProcessor = tipProcessor
+                currentWallet = tipWallet
+            }
+            Currency.ETH -> {
+                currentProcessor = ethProcessor
+                currentWallet = ethWallet
+            }
+        }
+        if (currentWallet != null) {
+            val balanceChanged = fetchBalance(currentWallet!!)
+            if (balanceChanged) {
+                fetchTransactions(currentWallet!!)
+            } else {
+                loadTransactions(wallet = currentWallet!!)
+            }
+        }
+    }
+
+    override fun fetchBalance(wallet: Wallet): Boolean {
+        var balanceChanged = false
         val balance = currentProcessor?.getBalance(wallet.address) ?: BigInteger.ZERO
         val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
-        val latestBlock = Web3Bridge().latestBlock()
         if (balance != null) {
-            if (balance != wallet.balance || latestBlock != wallet.blockNumber) {
+            if (balance != wallet.balance) {
                 wallet.balance = balance
-                wallet.blockNumber = latestBlock
+                wallet.lastSynced = Date()
                 walletRepository.update(wallet)
+                balanceChanged = true
             }
             view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
          } else {
              view?.onBalanceFetchError()
          }
+        return balanceChanged
     }
 
-    override fun getTransactions(wallet: Wallet) {
+    override fun fetchTransactions(wallet: Wallet) {
         val latestBlock = Web3Bridge().latestBlock()
         if (latestBlock == wallet.blockNumber) {
             return
@@ -58,57 +88,86 @@ class WalletPresenter: WalletInterface.Presenter {
         val c: Currency = Currency.valueOf(wallet.currency)
         when (c) {
             Currency.TIP -> {
-                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), callback = { txlist, err ->
+                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
+                    wallet.blockNumber = latestBlock
+                    walletRepository.update(wallet)
                     if (txlist != null) {
-                        if (txlist.count() > 0) {
-                        }
-                        view?.onTransactionsFetched(wallet.address, Currency.TIP, txlist)
+                        // TODO: Fetch transactions iff new transactions or balance is different, else just load transactions
+//                        view?.onTransactionsFetched(wallet.address, Currency.TIP, txlist)
                     } else {
                         view?.onTransactionsFetchError(err, Currency.TIP)
                     }
+                    this.loadTransactions(wallet)
                 })
             }
             Currency.ETH -> {
-                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), callback = { txlist, err ->
+                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
+                    this.loadTransactions(wallet)
                     if (txlist != null) {
-                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)
+//                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)
                     } else {
                         view?.onTransactionsFetchError(err, Currency.ETH)
                     }
                 })
             }
         }
-    }
-
-    override fun switchCurrency(currency: Currency) {
-        when (currency) {
-            Currency.TIP -> currentProcessor = tipProcessor
-            Currency.ETH -> currentProcessor = ethProcessor
+        if (wallet.blockNumber != latestBlock) {
+            wallet.blockNumber = latestBlock
+            walletRepository.update(wallet)
         }
-        loadWallet(currency)
     }
 
     override var view: WalletInterface.View? = null
 
     private fun startListening() {
+        txRepository.loadAllTransactions().observe(view!!, Observer { txlist ->
+            if (currentWallet != null && txlist != null && !txlist.isEmpty()) {
+                val address = currentWallet!!.address
+                val currentWalletTxList = txlist.filter { tx ->
+                    tx.currency == currentWallet?.currency && (tx.from == address || tx.to == address)
+                }
+                view?.onTransactionsFetched(address, Currency.valueOf(currentWallet!!.currency), currentWalletTxList)
+            }
+        })
+    }
 
+    private fun loadTransactions(wallet: Wallet) {
+        val currency = Currency.valueOf(wallet.currency)
+        txDisposable?.dispose()
+
+        txDisposable = txRepository.loadTransactions_notLive(currency).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe { txlist ->
+            if (currentWallet != null && !txlist.isEmpty()) {
+                val address = currentWallet!!.address
+                val currentWalletTxList = txlist.filter { tx ->
+                    tx.currency == currentWallet?.currency && (tx.from == address || tx.to == address)
+                }
+                view?.onTransactionsFetched(address, Currency.valueOf(currentWallet!!.currency), currentWalletTxList)
+            }
+        }
     }
 
     private fun stopListening() {
 
     }
 
-    private fun loadWallet(currency: Currency) {
-        if (view != null) {
-            walletRepository.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
+    override fun loadWallets() {
+        if (ethWallet == null) {
+            walletRepository.findWalletForCurrency(Currency.ETH).observe(view!!, Observer { wallet ->
                 if (wallet != null) {
-                    if (currency == Currency.TIP && tipProcessor == null) {
-                        tipProcessor = TipProcessor(wallet)
-                    }
-                    getTransactions(wallet)
-                    fetchBalance(wallet)
+                    ethWallet = wallet
                 }
             })
         }
+        if (tipWallet == null) {
+            walletRepository.findWalletForCurrency(Currency.TIP).observe(view!!, Observer { wallet ->
+                if (wallet != null && tipWallet == null) {
+                    tipWallet = wallet
+                    if(tipProcessor == null) {
+                        tipProcessor = TipProcessor(wallet)
+                    }
+                }
+            })
+        }
+        startListening()
     }
 }
