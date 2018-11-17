@@ -233,7 +233,7 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
          * @return A new instance of fragment MyAccountFragment.
          */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): MyAccountFragment {
+        fun newInstance(param1: String): MyAccountFragment {
             val fragment = MyAccountFragment()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)

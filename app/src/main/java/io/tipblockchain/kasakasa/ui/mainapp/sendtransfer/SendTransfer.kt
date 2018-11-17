@@ -13,6 +13,7 @@ interface SendTransfer {
         fun onUserNotFound(username: String)
         fun onInvalidRecipient()
         fun onInsufficientBalanceError()
+        fun onInvalidTransactionValueError()
         fun onWalletError()
         fun onSendPendingTransaction(tx: PendingTransaction)
         fun onContactsFetched(list: List<User>)

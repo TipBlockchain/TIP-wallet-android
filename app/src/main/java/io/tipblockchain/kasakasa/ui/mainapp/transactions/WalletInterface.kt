@@ -9,6 +9,7 @@ import io.tipblockchain.kasakasa.ui.BaseView
 import java.math.BigDecimal
 
 interface WalletInterface {
+
     interface View: BaseView, LifecycleOwner {
         fun onBalanceFetchError()
         fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal)
@@ -17,8 +18,9 @@ interface WalletInterface {
     }
 
     interface Presenter: BasePresenter<View> {
-        fun fetchBalance(wallet: Wallet)
-        fun getTransactions(wallet: Wallet)
+        fun loadWallets()
+        fun fetchBalance(wallet: Wallet): Boolean
+        fun fetchTransactions(wallet: Wallet)
         fun switchCurrency(currency: Currency)
     }
 }

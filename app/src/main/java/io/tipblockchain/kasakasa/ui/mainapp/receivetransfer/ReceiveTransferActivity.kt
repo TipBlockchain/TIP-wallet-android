@@ -16,6 +16,7 @@ import io.tipblockchain.kasakasa.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_receive_transfer.*
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import kotlinx.android.synthetic.main.content_receive_transfer.*
@@ -75,6 +76,13 @@ class ReceiveTransferActivity : BaseActivity(), ReceiveTransfer.View {
     }
 
     override fun showWallet(address: String) {
+        val user = UserRepository.currentUser
+        usernameTv.setText(user?.username)
+        if (user?.originalPhotoUrl != null) {
+            Picasso.get().load(user.originalPhotoUrl).into(displayImageView)
+        } else {
+            Picasso.get().load(R.drawable.avatar_placeholder_small).into(displayImageView)
+        }
         this.address = address
         try {
             val barcodeEncoder = BarcodeEncoder()

@@ -26,7 +26,6 @@ class TransactionRepository {
 
     private var dao: TransactionDao
     private var allTransactions: LiveData<List<Transaction>>
-    private var web3Bridge = Web3Bridge()
     private var etherscanApiService = EtherscanApiService.instance
 
     private var tipTxDisposable: Disposable? = null
@@ -38,18 +37,23 @@ class TransactionRepository {
         allTransactions = dao.findAllTransactions()
     }
 
-    fun allTransactions(): LiveData<List<Transaction>> {
-        return allTransactions
+    fun loadTransactionsForAddress(address: String): LiveData<List<Transaction>> {
+        return dao.findTransactionsForAddress(address = address)
     }
 
-    fun sendTransaction(amount: BigInteger, currency: Currency) {
-
+    fun loadAllTransactions(): LiveData<List<Transaction>> {
+        return dao.findAllTransactions()
     }
 
-    fun fetchTipTransactions(address: String, startBlock: String, callback: TransactionsUpdatedWithResults) {
+    fun loadTransactions(currency: Currency): LiveData<List<Transaction>> {
+        return dao.findTransactions(currency = currency.name)
+    }
+
+    // TODO: rename to fetchNewTipTransactions()
+    fun fetchTipTransactions(address: String, startBlock: String, endBlock: String = "latest", callback: TransactionsUpdatedWithResults) {
         tipTxDisposable?.dispose()
 
-        tipTxDisposable = etherscanApiService.getTipTransactions(address = address, startBlock = startBlock, endBlock = "latest")
+        tipTxDisposable = etherscanApiService.getTipTransactions(address = address, startBlock = startBlock, endBlock = endBlock)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
 //                .onErrorReturn { EtherscanTxListResponse(status = "-1", message = "Error", result = listOf()) }
@@ -58,7 +62,7 @@ class TransactionRepository {
                     Log.i("TIP TX", "txlist = ${response.result}")
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {
-                        val addedCurrency: List<Transaction> = txlist.map { it.currency = Currency.TIP.name
+                        val addedCurrency = txlist.map { it.currency = Currency.TIP.name
                         it}
                         dao.insertAll(addedCurrency)
                     }
@@ -74,9 +78,9 @@ class TransactionRepository {
         })
     }
 
-    fun fetchEthTransactions(address: String, startBlock: String, callback: TransactionsUpdatedWithResults) {
+    fun fetchEthTransactions(address: String, startBlock: String, endBlock: String = "latest", callback: TransactionsUpdatedWithResults) {
         ethTxDisposable?.dispose()
-        ethTxDisposable = etherscanApiService.getEthTransactions(address = address, startBlock = startBlock, endBlock = "latest")
+        ethTxDisposable = etherscanApiService.getEthTransactions(address = address, startBlock = startBlock, endBlock = endBlock)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
 //                .onErrorReturn { EtherscanTxListResponse(status = "-1", message = "Error", result = listOf()) }
@@ -85,7 +89,7 @@ class TransactionRepository {
                     Log.i("ETH TX", "txlist = ${response.result}")
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {
-                        val addedCurrency: List<Transaction> = txlist.map { it.currency = Currency.ETH.name
+                        val addedCurrency = txlist.map { it.currency = Currency.ETH.name
                             it}
                         dao.insertAll(addedCurrency)
                     }

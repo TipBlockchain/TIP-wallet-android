@@ -154,6 +154,11 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         showMessage("Recipient field is not valid. Please enter a valid TIP username or ETH address.")
     }
 
+    override fun onInvalidTransactionValueError() {
+        showProgress(false)
+        showMessage(getString(R.string.invalid_transaction_value))
+    }
+
     override fun onUserNotFound(username: String) {
         showProgress(false)
         showMessage("User $username not found in your contacts. You can only send transactions by username to users in your contact list. Please add $username to your contacts and try again")

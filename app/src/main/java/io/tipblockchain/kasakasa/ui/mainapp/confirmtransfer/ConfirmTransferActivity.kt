@@ -3,6 +3,7 @@ package io.tipblockchain.kasakasa.ui.mainapp.confirmtransfer
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
@@ -101,7 +102,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         val view = layoutInflater.inflate(R.layout.dialog_confirm_password, null)
         val alertDialog = AlertDialog.Builder(this).create()
         alertDialog.setTitle(getString(R.string.unlock_wallet))
-        alertDialog.setIcon(resources.getDrawable(android.R.drawable.ic_secure))
+        alertDialog.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_secure))
         alertDialog.setCancelable(false)
 
         val passwordView =  view.findViewById(R.id.passwordTv) as EditText

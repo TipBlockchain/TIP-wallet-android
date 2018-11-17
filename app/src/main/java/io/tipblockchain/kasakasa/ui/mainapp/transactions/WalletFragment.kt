@@ -22,6 +22,7 @@ import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.NumberFormat
 
 /**
  * A fragment representing a list of Items.
@@ -77,11 +78,11 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         adapter = TransactionRecyclerViewAdapter(listOf(), listener)
         recyclerView.adapter = adapter
 
-        sendBtn.setOnClickListener { v ->
+        sendBtn.setOnClickListener {
             val intent = Intent(activity, SendTransferActivity::class.java)
             startActivity(intent)
         }
-        receiveBtn.setOnClickListener { v ->
+        receiveBtn.setOnClickListener {
             val intent = Intent(activity, ReceiveTransferActivity::class.java)
             startActivity(intent)
         }
@@ -89,7 +90,9 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     override fun onResume() {
         super.onResume()
-        currencySelected(lastCurrency)
+
+        // TODO save and reuse last currency selected
+//        currencySelected(lastCurrency)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -186,7 +189,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     }
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
-        balanceTv.text = "${balance.setScale(4, RoundingMode.HALF_UP).toString()} ${currency.name}"
+        balanceTv.text = NumberFormat.getInstance().format( balance.setScale(4, RoundingMode.CEILING))
+        currencyTv.setText(currency.name)
     }
 
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {
@@ -199,6 +203,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private fun setupPresenter() {
         presenter = WalletPresenter()
         presenter?.attach(this)
+        presenter?.switchCurrency(lastCurrency)
+        presenter?.loadWallets()
     }
 
 }

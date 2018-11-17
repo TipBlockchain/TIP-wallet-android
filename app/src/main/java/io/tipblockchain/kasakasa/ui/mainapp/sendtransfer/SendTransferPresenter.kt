@@ -42,6 +42,15 @@ class SendTransferPresenter: SendTransfer.Presenter {
 
     override fun validateTransfer(usernameOrAddress: String, value: String, currency: Currency, message: String) {
 
+        if (!TextUtils.isEthAddress(usernameOrAddress) && !TextUtils.isUsername(usernameOrAddress)) {
+            view?.onInvalidRecipient()
+            return
+        }
+        if (!TextUtils.isNumeric(value)) {
+            view?.onInsufficientBalanceError()
+            return
+        }
+
         walletRepository.findWalletForCurrency(currency).observe(view!!, Observer { wallet ->
             val valueAsDecimal = BigDecimal(value)
             if (wallet == null) {
@@ -90,7 +99,6 @@ class SendTransferPresenter: SendTransfer.Presenter {
             } else {
                 view?.onInvalidRecipient()
             }
-
         })
     }
 

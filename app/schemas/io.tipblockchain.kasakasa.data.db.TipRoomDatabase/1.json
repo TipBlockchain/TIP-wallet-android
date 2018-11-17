@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c02191e24f4aa3cb498f0fde0c1620fc",
+    "identityHash": "dc5b52b7a7166feca631ee929f29d726",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `tipFromUser` TEXT, `tipToUser` TEXT, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `gasPrice` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `tokenSymbol` TEXT, `txReceiptStatus` TEXT, PRIMARY KEY(`hash`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `fromTipUserId` TEXT, `toTipUserId` TEXT, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `gasPrice` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `tokenSymbol` TEXT, `txReceiptStatus` TEXT, PRIMARY KEY(`hash`), FOREIGN KEY(`fromTipUserId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`toTipUserId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "hash",
@@ -33,14 +33,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "tipFromUser",
-            "columnName": "tipFromUser",
+            "fieldPath": "fromTipUserId",
+            "columnName": "fromTipUserId",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "tipToUser",
-            "columnName": "tipToUser",
+            "fieldPath": "toTipUserId",
+            "columnName": "toTipUserId",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -152,9 +152,48 @@
               "currency"
             ],
             "createSql": "CREATE  INDEX `index_transactions_from_currency` ON `${TABLE_NAME}` (`from`, `currency`)"
+          },
+          {
+            "name": "index_transactions_toTipUserId",
+            "unique": false,
+            "columnNames": [
+              "toTipUserId"
+            ],
+            "createSql": "CREATE  INDEX `index_transactions_toTipUserId` ON `${TABLE_NAME}` (`toTipUserId`)"
+          },
+          {
+            "name": "index_transactions_fromTipUserId",
+            "unique": false,
+            "columnNames": [
+              "fromTipUserId"
+            ],
+            "createSql": "CREATE  INDEX `index_transactions_fromTipUserId` ON `${TABLE_NAME}` (`fromTipUserId`)"
           }
         ],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "users",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "fromTipUserId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "users",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "toTipUserId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "users",
@@ -344,7 +383,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c02191e24f4aa3cb498f0fde0c1620fc\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"dc5b52b7a7166feca631ee929f29d726\")"
     ]
   }
 }

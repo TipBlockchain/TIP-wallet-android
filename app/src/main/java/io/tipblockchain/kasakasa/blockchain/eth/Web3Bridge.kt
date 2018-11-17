@@ -18,11 +18,7 @@ import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.DefaultBlockParameterName
-import org.web3j.protocol.core.Request
-import org.web3j.protocol.core.methods.response.EthGasPrice
-import org.web3j.protocol.core.methods.response.EthGetBalance
 import org.web3j.tx.ClientTransactionManager
-import java.util.concurrent.Future
 
 
 class Web3Bridge {

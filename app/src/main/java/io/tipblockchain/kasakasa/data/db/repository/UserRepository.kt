@@ -36,7 +36,6 @@ class UserRepository {
     private var dao: UserDao
     private var apiService: TipApiService
     private var allUsers: LiveData<List<User>>
-    private val appExecutors = AppExecutors()
     private val LOG_TAG = javaClass.name
     private var contactsFetched = false
 
@@ -66,6 +65,11 @@ class UserRepository {
     fun findUserById(userId: String): LiveData<User?> {
         return dao.findUserById(userId)
     }
+
+    fun findUsersByIds(userIds: List<String>): LiveData<List<User>> {
+        return dao.findUsers(userIds)
+    }
+
     fun findUserByUsername(username: String): LiveData<User?> {
         return dao.findUserByUsername(username)
     }
@@ -107,11 +111,11 @@ class UserRepository {
                             .onErrorReturn { ContactListResponse() }
                             .subscribe ({
                                 contactsFetched = true
-                                val contacts = it.contacts
-                                contacts.map { it.isContact = true }
-                                dao.insertMany(contacts)
+                                val itContacts = it.contacts
+                                itContacts.map { it.isContact = true }
+                                dao.insertMany(itContacts)
                                 AndroidSchedulers.mainThread().scheduleDirect {
-                                    callback(it.contacts, null)
+                                    callback(itContacts, null)
                                 }
                             }, {
                                 Log.e(logTag, "Error fetching contacts: $it")

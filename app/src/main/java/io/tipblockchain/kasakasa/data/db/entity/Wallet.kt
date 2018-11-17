@@ -18,5 +18,5 @@ data class Wallet (
         @ColumnInfo(name = "currency") val currency: String = "TIP",
         @ColumnInfo(name = "isPrimary") var isPrimary: Boolean = true,
         @ColumnInfo(name = "blockNumber") var blockNumber: BigInteger = BigInteger.ZERO,
-        @ColumnInfo(name = "lastSynced") val lastSynced: Date = Date()
+        @ColumnInfo(name = "lastSynced") var lastSynced: Date = Date()
         )

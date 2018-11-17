@@ -197,7 +197,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     fun nextButtonClicked() {
-        this
+        KeyboardUtils.hideKeyboard(this)
         saveViewModel()
         this.checkValues()
     }

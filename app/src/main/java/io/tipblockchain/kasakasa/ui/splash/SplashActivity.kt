@@ -37,7 +37,6 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
             return
         }
         mainAppLaunched = true
-        Log.d(LOG_TAG, "Going to main app")
         val intent = Intent(this, MainTabActivity::class.java)
         startActivity(intent)
     }
