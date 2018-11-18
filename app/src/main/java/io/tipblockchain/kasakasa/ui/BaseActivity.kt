@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.View
 import io.tipblockchain.kasakasa.R
 
@@ -19,6 +20,17 @@ open class BaseActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         this.LOG_TAG = this.javaClass.name
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     protected fun showOkCancelDialog(title: String? = null, message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {

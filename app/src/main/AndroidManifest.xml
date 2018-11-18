@@ -74,13 +74,21 @@
             android:label="@string/send_payment"
             android:windowSoftInputMode="stateVisible|adjustResize"
             android:screenOrientation="portrait"
-            />
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mainapp.MainTabActivity" />
+        </activity>
         <activity
             android:name=".ui.mainapp.confirmtransfer.ConfirmTransferActivity"
             android:label="@string/title_activity_confirm_payment"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            />
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mainapp.sendtransfer.SendTransferActivity" />
+        </activity>
         <activity
             android:name=".ui.mainapp.TransactionConfirmedActivity"
             android:screenOrientation="portrait"
@@ -139,9 +147,12 @@
         <activity
             android:name=".ui.mainapp.receivetransfer.ReceiveTransferActivity"
             android:label="@string/title_activity_receive_transfer"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            ></activity>
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.mainapp.MainTabActivity" />
+        </activity>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"

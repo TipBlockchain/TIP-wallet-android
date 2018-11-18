@@ -1,5 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
+import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 
 import io.tipblockchain.kasakasa.ui.mainapp.transactions.WalletFragment.OnListFragmentInteractionListener
@@ -24,11 +27,13 @@ import java.util.*
  * TODO: Replace the implementation with code for your data type.
  */
 class TransactionRecyclerViewAdapter(
+        private var mContext: Context,
         private var mValues: List<Transaction>,
         private val mListener: OnListFragmentInteractionListener?)
     : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
+    private val currentUser = UserRepository.currentUser
 
     init {
         mOnClickListener = View.OnClickListener { v ->
@@ -49,8 +54,19 @@ class TransactionRecyclerViewAdapter(
         val transaction = mValues[position]
 
         val fromName = transaction.from
+        val toName = transaction.to
+        var addressToShow: String
+        var outgoing = false
+
+        if (currentUser?.address == fromName) {
+            addressToShow = toName
+            holder.mAmountView.setTextColor(ContextCompat.getColor(mContext, R.color.sentRed))
+        } else {
+            addressToShow = fromName
+            holder.mAmountView.setTextColor(ContextCompat.getColor(mContext, R.color.receivedGreen))
+        }
 //        val otherUser: User = transaction.from
-        holder.mUsernameView.text = fromName
+        holder.mUsernameView.text = addressToShow
         holder.mMessageTv.text = transaction.message
         val valueInEth =  Convert.fromWei(transaction.value.toBigDecimal(), Convert.Unit.ETHER)
 

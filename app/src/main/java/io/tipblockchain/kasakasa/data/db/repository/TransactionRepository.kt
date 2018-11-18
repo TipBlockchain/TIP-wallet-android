@@ -67,9 +67,10 @@ class TransactionRepository {
                     Log.i("TIP TX", "txlist = ${response.result}")
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {
-                        val addedCurrency = txlist.map { it.currency = Currency.TIP.name
+                        var cleanedList = txlist.map { it.currency = Currency.TIP.name
                         it}
-                        dao.insertAll(addedCurrency)
+                        cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
+                        dao.insertAll(cleanedList)
                     }
                     AndroidSchedulers.mainThread().scheduleDirect {
                         callback(txlist, null)
@@ -94,9 +95,10 @@ class TransactionRepository {
                     Log.i("ETH TX", "txlist = ${response.result}")
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {
-                        val addedCurrency = txlist.map { it.currency = Currency.ETH.name
+                        var cleanedList = txlist.map { it.currency = Currency.ETH.name
                             it}
-                        dao.insertAll(addedCurrency)
+                        cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
+                        dao.insertAll(cleanedList)
                     }
                     AndroidSchedulers.mainThread().scheduleDirect {
                         callback(txlist, null)

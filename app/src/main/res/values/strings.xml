@@ -213,4 +213,6 @@
     <string name="copy_address">Copy Address</string>
     <string name="tip">TIP</string>
     <string name="eth">ETH</string>
+    <string name="sending">Sending transaction...</string>
+    <string name="no_contacts">You do not have any contacts yet. Click the Plus button to find people.</string>
 </resources>

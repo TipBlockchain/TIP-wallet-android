@@ -31,7 +31,6 @@ class ReceiveTransferActivity : BaseActivity(), ReceiveTransfer.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_receive_transfer)
-        setSupportActionBar(toolbar)
         presenter = ReceiveTransferPresenter()
         presenter!!.attach(this)
 
@@ -63,14 +62,12 @@ class ReceiveTransferActivity : BaseActivity(), ReceiveTransfer.View {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(LOG_TAG, "Options item selected: $item")
         val currentUser = UserRepository.currentUser
-        if (item != null && item.itemId == R.id.menu_item_share && currentUser != null) {
+        if (item.itemId == R.id.menu_item_share && currentUser != null) {
             shareAccountInfo(currentUser)
             return true
-        } else {
-            showMessage(getString(R.string.error_sending_transaction))
         }
         return super.onOptionsItemSelected(item)
     }

@@ -15,7 +15,6 @@ class TransactionConfirmedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_confirmed)
         confirmBtn.setOnClickListener { navigateToMainApp() }
-
     }
 
     fun navigateToMainApp() {

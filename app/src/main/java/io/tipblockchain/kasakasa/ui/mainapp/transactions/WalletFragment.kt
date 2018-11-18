@@ -70,12 +70,12 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-//                adapter = MyTransactionRecyclerViewAdapter(TransactionsContentManager.ITEMS, listener)
             }
         } else {
             Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${recyclerView}")
         }
-        adapter = TransactionRecyclerViewAdapter(listOf(), listener)
+        listener = ListFragmentInteractionListener()
+        adapter = TransactionRecyclerViewAdapter(context!!, listOf(), listener)
         recyclerView.adapter = adapter
 
         sendBtn.setOnClickListener {
@@ -108,6 +108,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         spinner.onItemSelectedListener = this
     }
 
+
     private fun getActionBarHeight(): Int {
         val styledAttributes = context!!.theme.obtainStyledAttributes(
                 intArrayOf(android.R.attr.actionBarSize))
@@ -137,6 +138,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onDetach() {
         super.onDetach()
         listener = null
+        adapter = null
         presenter?.detach()
     }
 
@@ -156,6 +158,11 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         fun onListFragmentInteraction(item: Transaction)
     }
 
+    inner class ListFragmentInteractionListener: OnListFragmentInteractionListener {
+        override fun onListFragmentInteraction(item: Transaction) {
+
+        }
+    }
     companion object {
 
         // TODO: Customize parameter argument names

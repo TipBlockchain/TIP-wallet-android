@@ -66,6 +66,9 @@ class ContactListFragment: Fragment(), ContactList.View {
         listener = null
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -110,6 +113,9 @@ class ContactListFragment: Fragment(), ContactList.View {
         hideSpinner()
         if (contacts != null) {
             mAdapter.setResults(contacts.toMutableList())
+            showEmptyView(contacts.isEmpty())
+        } else {
+            showEmptyView()
         }
     }
 
@@ -145,6 +151,16 @@ class ContactListFragment: Fragment(), ContactList.View {
 
     private fun hideSpinner() {
 
+    }
+
+    private fun showEmptyView(show: Boolean = true) {
+        if (show){
+            emptyView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            emptyView.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
     }
 
     private fun navigagteToUserSearch() {

@@ -46,7 +46,7 @@ class Web3Bridge {
     }
 
     private fun loadTipTokenWithCredentials(credentials: Credentials): TipToken {
-        val gasPrice = getGasPrice()
+        val gasPrice = BigInteger.valueOf(defaultGasPrice)
         return TipToken.load(
                 AppProperties.get("tip_contract_address"),
                 web3,
@@ -104,7 +104,7 @@ class Web3Bridge {
     }
 
     fun getGasPrice(): BigInteger {
-        return web3.ethGasPrice().sendAsync().get().gasPrice
+        return BigInteger.valueOf(defaultGasPrice)
     }
 
     fun getGasLimit(): BigInteger {

@@ -16,7 +16,7 @@ import java.math.BigInteger
             Index(value = ["toTipUserId"]),
             Index(value = ["fromTipUserId"])
         ],
-        foreignKeys = arrayOf(
+        foreignKeys = [
                 ForeignKey(
                         entity = User::class,
                         parentColumns = arrayOf("id"),
@@ -27,7 +27,7 @@ import java.math.BigInteger
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("toTipUserId"),
                         onDelete = SET_NULL)
-        ))
+        ])
 
 class Transaction(
         @PrimaryKey @ColumnInfo(name = "hash") val hash: String,

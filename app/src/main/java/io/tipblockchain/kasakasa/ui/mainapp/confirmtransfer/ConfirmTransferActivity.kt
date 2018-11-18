@@ -1,7 +1,12 @@
 package io.tipblockchain.kasakasa.ui.mainapp.confirmtransfer
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.TargetApi
 import android.arch.lifecycle.Observer
+import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -47,6 +52,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onTransactionFeeCalculated(txFee: BigDecimal) {
+        transactionFeeTv.text = getString(R.string.amount_and_currency, txFee, "ETH")
         if (pendingTransaction?.currency == Currency.ETH) {
             additionalTxFeeTv.visibility = View.GONE
             val totalAmount = pendingTransaction?.value?.plus(txFee)
@@ -58,7 +64,10 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onInvalidTransactionError(error: Throwable) {
-        showOkDialog(getString(R.string.invalid_transaction, error.localizedMessage))
+        showOkDialog(getString(R.string.invalid_transaction, error.localizedMessage), DialogInterface.OnClickListener { dialog, which ->
+            finish()
+        })
+
     }
 
     override fun onInvalidPasswordError() {
@@ -66,10 +75,12 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onTransactionSent() {
+        showProgress(false)
         navigateToTransactionConfirmed()
     }
 
     override fun onTransactionError(error: Throwable) {
+        showProgress(false)
         showOkDialog(getString(R.string.error_sending_transaction, error.localizedMessage))
     }
 
@@ -109,7 +120,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
             val password = passwordView.text.toString()
-            presenter?.sendTransactionWithPassword(pendingTransaction!!, password)
+            sendTransaction(password)
         }
 
 
@@ -119,6 +130,39 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
         alertDialog.setView(view)
         alertDialog.show()
+    }
+
+    private fun sendTransaction(password: String) {
+        showProgress(true)
+        presenter?.sendTransactionWithPassword(pendingTransaction!!, password)
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private fun showProgress(show: Boolean = true) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+
+        contentConstraingLayout.visibility = if (show) View.GONE else View.VISIBLE
+        contentConstraingLayout.animate()
+                .setDuration(shortAnimTime)
+                .alpha((if (show) 0 else 1).toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        contentConstraingLayout.visibility = if (show) View.GONE else View.VISIBLE
+                    }
+                })
+
+        progressLinearLayout.visibility = if (show) View.VISIBLE else View.GONE
+        progressLinearLayout.animate()
+                .setDuration(shortAnimTime)
+                .alpha((if (show) 1 else 0).toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        progressLinearLayout.visibility = if (show) View.VISIBLE else View.GONE
+                    }
+                })
     }
 
 }

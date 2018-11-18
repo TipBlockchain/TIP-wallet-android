@@ -9,7 +9,6 @@ import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.crypto.EthProcessor
 import io.tipblockchain.kasakasa.crypto.TipProcessor
 import io.tipblockchain.kasakasa.crypto.TransactionProcessor
-import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
@@ -31,6 +30,7 @@ class WalletPresenter: WalletInterface.Presenter {
     private var currentWallet: Wallet? = null
 
     private var txDisposable: Disposable? = null
+    private var txFound = false
 
     init {
         currentProcessor = tipProcessor
@@ -82,9 +82,6 @@ class WalletPresenter: WalletInterface.Presenter {
 
     override fun fetchTransactions(wallet: Wallet) {
         val latestBlock = Web3Bridge().latestBlock()
-        if (latestBlock == wallet.blockNumber) {
-            return
-        }
         val c: Currency = Currency.valueOf(wallet.currency)
         when (c) {
             Currency.TIP -> {
@@ -112,7 +109,7 @@ class WalletPresenter: WalletInterface.Presenter {
             }
         }
         if (wallet.blockNumber != latestBlock) {
-            wallet.blockNumber = latestBlock
+            wallet.blockNumber = latestBlock.minus(BigInteger.valueOf(7)).max(wallet.blockNumber)
             walletRepository.update(wallet)
         }
     }
