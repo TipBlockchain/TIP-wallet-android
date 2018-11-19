@@ -60,6 +60,8 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         } else {
             additionalTxFeeTv.visibility = View.VISIBLE
             additionalTxFeeTv.text = getString(R.string.plus_amount_and_currency, txFee, "ETH")
+            totalAmountLabelTv.visibility = View.GONE
+            totalAmountValueTv.visibility = View.GONE
         }
     }
 

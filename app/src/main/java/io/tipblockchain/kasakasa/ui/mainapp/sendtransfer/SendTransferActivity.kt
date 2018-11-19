@@ -46,6 +46,10 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
         setupSpinner()
+        var username = intent.getStringExtra("user")
+        if (username  != null) {
+            recepientTv.setText(username)
+        }
     }
 
     override fun onDestroy() {

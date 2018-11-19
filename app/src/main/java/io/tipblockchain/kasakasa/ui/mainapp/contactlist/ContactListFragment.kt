@@ -41,7 +41,7 @@ class ContactListFragment: Fragment(), ContactList.View {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            navigagteToUserSearch()
+            navigateToUserSearch()
         }
 
         return view
@@ -88,6 +88,9 @@ class ContactListFragment: Fragment(), ContactList.View {
 
         override fun  onListFragmentInteraction(item: User) {
             val dialogFragment = TransactionOptionsDialogFragment()
+            var bundle = Bundle()
+            bundle.putString("user", item.username)
+            dialogFragment.arguments = bundle
             dialogFragment.show(fragmentManager, "transaction")
         }
     }
@@ -163,7 +166,7 @@ class ContactListFragment: Fragment(), ContactList.View {
         }
     }
 
-    private fun navigagteToUserSearch() {
+    private fun navigateToUserSearch() {
         val intent = Intent(activity, UserSearchActivity::class.java)
         startActivity(intent)
         Log.d("ContactList", "Starting search")
