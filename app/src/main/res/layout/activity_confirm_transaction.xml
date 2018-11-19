@@ -7,13 +7,20 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:minHeight="250dp"
-    tools:context=".ui.mainapp.confirmtransfer.ConfirmTransferActivity">
+    tools:context=".ui.mainapp.confirmtransfer.ConfirmTransferActivity"
+    tools:layout_editor_absoluteY="25dp">
 
     <ImageView
         android:id="@+id/backgroundImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/shapes_background" />
 
     <ImageView
@@ -26,7 +33,7 @@
         app:layout_anchorGravity="bottom|center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImageView"
         app:srcCompat="@drawable/tip_logo" />
 
 
@@ -35,15 +42,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="228dp"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contentConstraingLayout">
+        app:layout_constraintTop_toBottomOf="@id/sentIv">
 
         <ProgressBar
             android:id="@+id/login_progress"
@@ -68,12 +73,16 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/contentConstraingLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/confirmBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentIv">
 
         <LinearLayout
@@ -87,7 +96,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="7dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -122,7 +131,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="7dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -156,9 +165,9 @@
             <LinearLayout
                 android:id="@+id/linearLayoutAmount"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -166,7 +175,7 @@
                     android:id="@+id/transactionValueTv"
                     style="@style/AppTheme.TextViewLightTitle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginTop="0dp"
                     android:layout_weight="0.5"
                     android:gravity="bottom|end"
@@ -174,9 +183,9 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:text="@string/placeholder_amount"
-                    app:autoSizeTextType="uniform"
                     app:autoSizeMaxTextSize="28sp"
-                    app:autoSizeMinTextSize="20sp"/>
+                    app:autoSizeMinTextSize="20sp"
+                    app:autoSizeTextType="uniform" />
 
                 <TextView
                     android:id="@+id/transactionFeeTv"
@@ -190,9 +199,9 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:text="@string/placeholder_tx_fee"
-                    app:autoSizeTextType="uniform"
                     app:autoSizeMaxTextSize="16sp"
-                    app:autoSizeMinTextSize="12sp" />
+                    app:autoSizeMinTextSize="12sp"
+                    app:autoSizeTextType="uniform" />
 
 
             </LinearLayout>
@@ -237,10 +246,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginEnd="8dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -248,6 +259,7 @@
                     style="@style/AppTheme.TextViewLightTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:alpha="0.5"
                     android:text="@string/total" />
 
@@ -257,6 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:text="@string/placeholder_amount" />
@@ -267,6 +280,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:text="@string/placeholder_amount"
@@ -275,23 +289,20 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/confirmBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="50dp"
-            android:text="@string/confirm_payment"
-            android:theme="@style/AppTheme.PrimaryButton"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contentLinearLayout"
-            app:layout_constraintVertical_bias="1.0" />
-
     </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/confirm_payment"
+        android:theme="@style/AppTheme.PrimaryButton"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

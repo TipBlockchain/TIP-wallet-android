@@ -15,42 +15,55 @@ android:minHeight="159dp"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/shapes_background" />
-<TextView
-    android:id="@+id/textView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:text="@string/title_activity_backup_account"
-    android:textAppearance="@android:style/TextAppearance.Holo.Large"
-    android:textColor="@android:color/white"
-    android:textSize="24sp"
-    tools:layout_editor_absoluteX="8dp" />
 
-<ImageView
-    android:id="@+id/sentIv"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="72dp"
-    app:layout_anchorGravity="bottom|center"
-    app:layout_constraintTop_toBottomOf="@+id/textView"
-    app:srcCompat="@drawable/backup_shield"
-    tools:layout_editor_absoluteX="16dp" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="@string/title_activity_backup_account"
+        android:textAppearance="@android:style/TextAppearance.Holo.Large"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-<ImageView
-    android:id="@+id/warningImageView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="96dp"
-    app:layout_constraintTop_toBottomOf="@+id/sentIv"
-    app:srcCompat="@drawable/warning"
-    tools:layout_editor_absoluteX="0dp" />
+    <ImageView
+        android:id="@+id/sentIv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="8dp"
+        app:layout_anchorGravity="bottom|center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:srcCompat="@drawable/backup_shield" />
+
+    <ImageView
+        android:id="@+id/warningImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sentIv"
+        app:srcCompat="@drawable/warning" />
 
 
     <TextView
         android:id="@+id/descriptionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -58,8 +71,10 @@ android:minHeight="159dp"
         android:textAppearance="@android:style/TextAppearance.Holo.Large"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/warningImageView"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/warningImageView" />
 
     <View
         android:id="@+id/divider"
@@ -68,7 +83,8 @@ android:minHeight="159dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorPink"
         app:layout_constraintBottom_toTopOf="@+id/confirmBtn"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/confirmBtn"
