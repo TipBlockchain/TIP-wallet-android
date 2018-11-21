@@ -1,7 +1,6 @@
 package io.tipblockchain.kasakasa.networking
 
 import android.util.Log
-import com.android.example.github.api.ApiResponse
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
@@ -10,13 +9,13 @@ import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.responses.*
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 class TipApiService {
 
@@ -26,7 +25,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://928c0d4b.ngrok.io"
+        private val baseUrl: String = "https://c22a3df1.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -47,9 +46,9 @@ class TipApiService {
 //            if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor()
                 loggingInterceptor.level = Level.BODY
-                okHttpClientBuilder.addInterceptor(loggingInterceptor)
-                okHttpClientBuilder.addInterceptor(StethoInterceptor())
+                okHttpClientBuilder.addNetworkInterceptor(StethoInterceptor())
                 okHttpClientBuilder.addInterceptor(authHeaderInterceptor)
+                okHttpClientBuilder.addNetworkInterceptor(loggingInterceptor)
 //            }
 
             val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).create()
@@ -77,30 +76,44 @@ class TipApiService {
         return tipApi.createAccount(user)
     }
 
+    fun getMyAccount(): Observable<User?> {
+        return tipApi.getMyAccount()
+    }
+
     fun searchByUsername(username: String): Observable<UserSearchResponse> {
         return tipApi.searchByUsername(username)
+    }
+
+    fun findAccountByUsername(username: String): Observable<User?> {
+        return tipApi.getAccountByUsername(username)
     }
 
     fun authorize(message: SecureMessage): Observable<Authorization> {
         return tipApi.authorize(message)
     }
 
-    fun getContacts(): Observable<ApiResponse<List<User>>> {
+    fun getContacts(): Observable<ContactListResponse> {
         return tipApi.getContactList()
     }
 
-    fun addContact(contact: User): Observable<ContactListResponse> {
+    fun uploadProfilePhoto(imageFile: File): Observable<User?> {
+        var requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile)
+        val multipart: MultipartBody.Part = MultipartBody.Part.createFormData("file", imageFile.name, requestBody)
+        return tipApi.uploadPhoto(multipart)
+    }
+
+    fun addContact(contact: User): Observable<ContactListStringResponse> {
         val request = ContactRequest(contactId = contact.id)
         return tipApi.addContact(request)
     }
 
-    fun addContacts(contacts: List<User>): Observable<ContactListResponse> {
+    fun addContacts(contacts: List<User>): Observable<ContactListStringResponse> {
         val contactIds = contacts.map { it.id }
         val request = ContactListRequest(contactIds = contactIds)
         return tipApi.addContacts(request)
     }
 
-    fun removeContact(contact: User): Observable<ContactListResponse> {
+    fun removeContact(contact: User): Observable<ContactListStringResponse> {
         return tipApi.deleteContact(contact)
     }
 }

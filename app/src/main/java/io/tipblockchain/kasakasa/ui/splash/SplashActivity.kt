@@ -3,6 +3,7 @@ package io.tipblockchain.kasakasa.ui.splash
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
@@ -13,6 +14,7 @@ import io.tipblockchain.kasakasa.ui.onboarding.OnboardingActivity
 class SplashActivity : BaseActivity(), SplashScreenContract.View {
 
     private lateinit var presenter: SplashPresenter
+    private var mainAppLaunched = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,10 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
     }
 
     override fun gotoMainApp() {
+        if (mainAppLaunched) {
+            return
+        }
+        mainAppLaunched = true
         val intent = Intent(this, MainTabActivity::class.java)
         startActivity(intent)
     }

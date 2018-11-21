@@ -2,13 +2,10 @@ package io.tipblockchain.kasakasa.ui.mainapp.usersearch
 
 import io.reactivex.subjects.PublishSubject
 import io.tipblockchain.kasakasa.data.db.entity.User
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
-import android.arch.lifecycle.Transformations.switchMap
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
-import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import java.util.concurrent.TimeUnit
 
@@ -54,7 +51,7 @@ class UserSearchPresenter: UserSearch.Presenter {
                 })
                 .distinctUntilChanged()
                 .switchMap { searchTerm ->
-                    userRepository.findUsersBySearch(searchTerm)
+                    userRepository.fetchUsersBySearch(searchTerm)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                 }.subscribe ({response ->

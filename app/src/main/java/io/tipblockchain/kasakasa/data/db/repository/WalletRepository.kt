@@ -3,12 +3,14 @@ package io.tipblockchain.kasakasa.data.db.repository
 import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
+import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.dao.WalletDao
 import io.tipblockchain.kasakasa.utils.FileUtils
+import java.math.BigInteger
 
 class WalletRepository {
     private var dao: WalletDao
@@ -34,8 +36,22 @@ class WalletRepository {
         return dao.findWallet( address)
     }
 
+    fun findWalletForAddressAndCurrency(address: String, currency: Currency): LiveData<Wallet?> {
+        return dao.findWalletForAddressAndCurrency(address, currency = currency.name)
+    }
+
+    fun findWalletForCurrency(currency: Currency): LiveData<Wallet?> {
+        return dao.findWalletForCurrency(currency = currency.name)
+    }
+
     fun insert(wallet: Wallet) {
         insertAsyncTask(dao).execute(wallet)
+    }
+
+    fun update(wallet: Wallet) {
+        Schedulers.io().scheduleDirect{
+            dao.update(wallet)
+        }
     }
 
     fun newWalletWithPassword(password: String): NewWallet? {
@@ -44,9 +60,12 @@ class WalletRepository {
         val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
-            val wallet = Wallet(credentials.address, walletFile.absolutePath)
-            this.insert(wallet)
-            return NewWallet(bip39Wallet.mnemonic, wallet)
+            val blockNumber = web3Bridge.latestBlock()
+            val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber)
+            this.insert(tipWallet)
+            val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber)
+            this.insert(ethWallet)
+            return NewWallet(bip39Wallet.mnemonic, tipWallet)
         }
 
         return null
@@ -80,4 +99,4 @@ class WalletRepository {
     }
 }
 
-data class NewWallet(val mnemonic: String, val wallet: Wallet){}
+data class NewWallet(val mnemonic: String, val wallet: Wallet)

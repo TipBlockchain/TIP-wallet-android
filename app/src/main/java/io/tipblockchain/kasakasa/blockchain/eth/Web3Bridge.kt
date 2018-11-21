@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.blockchain.eth
 
-import android.content.Context
 import io.tipblockchain.kasakasa.blockchain.smartcontracts.TipToken
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.utils.FileUtils
@@ -12,47 +11,56 @@ import org.web3j.tx.Transfer
 import org.web3j.utils.Convert
 import java.math.BigDecimal
 import java.math.BigInteger
-import org.web3j.crypto.Wallet.createLight
-import org.json.JSONObject
-import java.security.InvalidAlgorithmParameterException
-import java.security.NoSuchAlgorithmException
-import java.security.NoSuchProviderException
-import org.bitcoinj.crypto.HDUtils
-import org.bitcoinj.crypto.ChildNumber
-import org.bitcoinj.wallet.DeterministicKeyChain
-import org.bitcoinj.wallet.DeterministicSeed
 import java.io.File
-import java.security.SecureRandom
-import java.util.*
 
 import io.tipblockchain.kasakasa.crypto.*
-import org.web3j.crypto.Keys
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import org.web3j.crypto.Bip39Wallet
-import org.web3j.crypto.Wallet
 import org.web3j.crypto.Credentials
-import org.web3j.crypto.CipherException
 import org.web3j.protocol.core.DefaultBlockParameterName
-import org.web3j.protocol.core.Request
-import org.web3j.protocol.core.methods.response.EthGetBalance
+import org.web3j.tx.ClientTransactionManager
 
 
 class Web3Bridge {
 
-    init {
-//        loadTipSmartContract()
+    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get("ether_node_url")))
+    private var readOnlyTipToken: TipToken? = null
 
+    private var defaultGasPrice = 21_000_000L
+    private var defaultGasLimit = 99_000L
+
+
+    constructor()
+
+    constructor(wallet: Wallet) {
+        loadTipSmartContract(wallet)
     }
 
-    private val secureRandom = SecureRandom()
-    private var web3: Web3j = Web3jFactory.build(HttpService("https://rinkeby.infura.io/SSWOxqisHlJoSVWYy09p "))
-    private var tipToken: TipToken? = null
+    private fun loadTipSmartContract(wallet: Wallet) {
+        readOnlyTipToken = TipToken.load(
+                AppProperties.get("tip_contract_address"),
+                web3,
+                ClientTransactionManager(web3, wallet.address),
+                BigInteger.valueOf(defaultGasPrice),
+                BigInteger.valueOf(defaultGasLimit))
+    }
 
-    private var gasPrice: String = "21000"
-    private var gasLimit: String = "21000"
+    private fun loadTipTokenWithCredentials(credentials: Credentials): TipToken {
+        val gasPrice = BigInteger.valueOf(defaultGasPrice)
+        return TipToken.load(
+                AppProperties.get("tip_contract_address"),
+                web3,
+                credentials,
+                gasPrice,
+                BigInteger.valueOf(defaultGasLimit))
+    }
 
-
-    private fun loadTipSmartContract(walletFile: File) {
-        tipToken = TipToken.load(AppProperties.get("tip_contract_address"), web3, loadCredentialsWithPassword("password", walletFile), BigInteger(gasPrice), BigInteger(gasLimit))
+    fun loadCredentialsForWalletWithPassword(wallet: Wallet, password: String): Credentials? {
+        val walletFile = FileUtils().fileFromPath(wallet.filePath?: "")
+        if (walletFile == null) {
+            return null
+        }
+        return loadCredentialsWithPassword(password, walletFile)
     }
 
     fun loadCredentialsWithPassword(password: String, file: File) : Credentials {
@@ -60,91 +68,46 @@ class Web3Bridge {
         return credentials
     }
 
-    fun loadBip39Credentials(seed: String, password: String) : Credentials {
-        val credentials = WalletUtils.loadBip39Credentials(seed, password)
-        return credentials
-    }
-
-    fun createWalletFromSeed(seed: String): JSONObject {
-
-        val processJson = JSONObject()
-
-        try {
-            val ecKeyPair = Keys.createEcKeyPair()
-            val privateKeyInDec = ecKeyPair.privateKey
-
-            val sPrivatekeyInHex = privateKeyInDec.toString(16)
-
-            val aWallet = Wallet.createLight(seed, ecKeyPair)
-            val sAddress = aWallet.getAddress()
-
-
-            processJson.put("address", "0x$sAddress")
-            processJson.put("privatekey", sPrivatekeyInHex)
-
-
-        } catch (e: CipherException) {
-            //
-        } catch (e: InvalidAlgorithmParameterException) {
-            //
-        } catch (e: NoSuchAlgorithmException) {
-            //
-        } catch (e: NoSuchProviderException) {
-            //
-        }
-
-        return processJson
-    }
-
-    fun createWalletFromSeed2(seedCode: String, password: String) {
-        val seed = DeterministicSeed(seedCode, null, password, Date().time)
-        val chain = DeterministicKeyChain.builder().seed(seed).build()
-        val keyPath = HDUtils.parsePath("M/44H/60H/0H/0/0")
-        val key = chain.getKeyByPath(keyPath, true)
-        val privKey = key.privKey
-        val privateKeyString = privKey.toString(16)
-
-// Web3j
-        val credentials = Credentials.create(privateKeyString)
-        println(credentials.address)
-        val json = JSONObject()
-        json.put("address", "0x${credentials.address}")
-        json.put("privateKey", privateKeyString)
-    }
-
-
-    fun createNewLightWallet(password: String): String {
-        return WalletUtils.generateLightNewWalletFile(password, FileUtils().walletsDir())
-    }
-
-    fun createNewFullWallet(password: String) : String {
-        return WalletUtils.generateFullNewWalletFile(password, FileUtils().walletsDir())
-    }
-
     fun createBip39Wallet(password: String): Bip39Wallet {
         val bip39Wallet = WalletUtils.generateBip39Wallet(password, FileUtils().walletsDir())
         return bip39Wallet
     }
 
-    fun sendEthTransaction(to: String, value: String, walletFile: File): TransactionReceipt {
-        val credentials = loadCredentialsWithPassword("password", walletFile)
-        val receipt = Transfer.sendFunds(web3, credentials, to, BigDecimal(value), Convert.Unit.ETHER).send()
-        return receipt
+    fun sendEthTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).sendAsync().get()
     }
 
-    fun generateMnemonic(): String {
-        val initialEntropy = ByteArray(16)
-        secureRandom.nextBytes(initialEntropy)
-
-        val mnemonic = MnemonicUtils.generateMnemonic(initialEntropy)
-        return mnemonic
+    fun latestBlock(): BigInteger {
+        return web3.ethBlockNumber().sendAsync().get().blockNumber
     }
 
-    fun sendTipTransaction(to: String, value: BigInteger) {
-        tipToken!!.transfer(to, value)
+    fun sendTipTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        val tipToken = loadTipTokenWithCredentials(credentials)
+        val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        return tipToken.transfer(to, valueInWei)?.sendAsync()?.get()
     }
 
-    fun getBalance(address: String): Request<*, EthGetBalance>? {
-        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST)
+    fun getEthBalance(address: String): BigInteger {
+        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST).send().balance
+    }
+
+    fun getTipBalance(address: String): BigInteger? {
+        return readOnlyTipToken?.balanceOf(address)?.send()
+    }
+
+    fun getEthBalanceAsync(address: String): BigInteger {
+        return web3.ethGetBalance(address, DefaultBlockParameterName.LATEST).sendAsync().get().balance
+    }
+
+    fun getTipBalanceAsync(address: String): BigInteger? {
+        return readOnlyTipToken?.balanceOf(address)?.sendAsync()?.get()
+    }
+
+    fun getGasPrice(): BigInteger {
+        return BigInteger.valueOf(defaultGasPrice)
+    }
+
+    fun getGasLimit(): BigInteger {
+        return BigInteger.valueOf(defaultGasLimit)
     }
 }

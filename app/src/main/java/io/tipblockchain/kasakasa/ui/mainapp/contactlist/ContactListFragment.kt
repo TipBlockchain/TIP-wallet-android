@@ -32,6 +32,7 @@ class ContactListFragment: Fragment(), ContactList.View {
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
+        setupPresenter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -40,15 +41,10 @@ class ContactListFragment: Fragment(), ContactList.View {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            navigagteToUserSearch()
+            navigateToUserSearch()
         }
 
         return view
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setupPresenter()
     }
 
     override fun onStop() {
@@ -70,6 +66,9 @@ class ContactListFragment: Fragment(), ContactList.View {
         listener = null
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -89,6 +88,9 @@ class ContactListFragment: Fragment(), ContactList.View {
 
         override fun  onListFragmentInteraction(item: User) {
             val dialogFragment = TransactionOptionsDialogFragment()
+            var bundle = Bundle()
+            bundle.putString("user", item.username)
+            dialogFragment.arguments = bundle
             dialogFragment.show(fragmentManager, "transaction")
         }
     }
@@ -114,6 +116,9 @@ class ContactListFragment: Fragment(), ContactList.View {
         hideSpinner()
         if (contacts != null) {
             mAdapter.setResults(contacts.toMutableList())
+            showEmptyView(contacts.isEmpty())
+        } else {
+            showEmptyView()
         }
     }
 
@@ -151,7 +156,17 @@ class ContactListFragment: Fragment(), ContactList.View {
 
     }
 
-    private fun navigagteToUserSearch() {
+    private fun showEmptyView(show: Boolean = true) {
+        if (show){
+            emptyView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            emptyView.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun navigateToUserSearch() {
         val intent = Intent(activity, UserSearchActivity::class.java)
         startActivity(intent)
         Log.d("ContactList", "Starting search")

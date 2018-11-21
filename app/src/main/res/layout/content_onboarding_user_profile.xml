@@ -9,7 +9,7 @@
             type="io.tipblockchain.kasakasa.ui.onboarding.profile.OnboardingUserProfileViewModel"/>
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,30 +37,37 @@
         <ScrollView
             android:id="@+id/form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/nextBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp">
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/profileImageView"
-                        android:layout_width="160dp"
-                        android:layout_height="160dp"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/user_profile_placeholder"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +114,7 @@
                         android:text="@{viewModel.firstname}"
                         android:textColor="@android:color/white"
                         android:textColorHint="@color/colorWhite"
-                        android:theme="@style/AppTheme.WhiteEditText"/>
+                        android:theme="@style/AppTheme.WhiteEditText" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -171,15 +178,17 @@
             android:id="@+id/nextBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="40dp"
             android:text="@string/next"
             android:textStyle="bold"
             android:theme="@style/AppTheme.PrimaryButton"
             app:layout_anchor="@+id/form"
-            app:layout_anchorGravity="bottom|center_horizontal" />
+            app:layout_anchorGravity="bottom|center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

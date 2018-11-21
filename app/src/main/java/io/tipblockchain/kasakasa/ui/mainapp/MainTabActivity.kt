@@ -12,10 +12,12 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main_tab.*
 
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment
-import io.tipblockchain.kasakasa.ui.settings.MyAccountFragment
+import io.tipblockchain.kasakasa.ui.mainapp.transactions.WalletFragment
+import io.tipblockchain.kasakasa.ui.mainapp.myaccount.MyAccountFragment
 
-class MainTabActivity : AppCompatActivity() {
+class MainTabActivity : BaseActivity() {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -64,12 +66,9 @@ class MainTabActivity : AppCompatActivity() {
         // Set up the ViewPager with the sections adapter.
         viewPager.adapter = mSectionsPagerAdapter
 
-//        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-//        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
         supportActionBar?.setTitle(R.string.title_contacts)
 
         this.addStartingFragment()
-
     }
 
     private fun addStartingFragment() {

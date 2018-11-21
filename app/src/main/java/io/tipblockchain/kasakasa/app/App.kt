@@ -9,32 +9,30 @@ import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 
 class App : Application() {
 
-    init {
-        instance = this
-    }
+    lateinit var preferenceHelper: PreferenceHelper
 
     companion object {
-        private var instance: App? = null
-        lateinit var preferenceHelper: PreferenceHelper
+        lateinit var instance: App
         private set
 
         fun applicationContext() : Context {
-            return instance!!.applicationContext
+            return instance.applicationContext
         }
 
         fun application(): App {
-            return instance!!
+            return instance
         }
     }
 
     override fun onCreate() {
         super.onCreate()
 
+        instance = this
+
         MultiDex.install(this)
-        preferenceHelper = PreferenceHelper(this)
 
         Stetho.initializeWithDefaults(this)
-        TipRoomDatabase.getDatabase(instance!!.applicationContext)
+        TipRoomDatabase.getDatabase(instance.applicationContext)
         PreferenceHelper.placehoderValue = "Some random value"
 
         // Use ApplicationContext.

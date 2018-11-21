@@ -1,32 +1,39 @@
-package io.tipblockchain.kasakasa.ui.mainapp
+package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
+import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 
-import io.tipblockchain.kasakasa.ui.mainapp.WalletFragment.OnListFragmentInteractionListener
+import io.tipblockchain.kasakasa.ui.mainapp.transactions.WalletFragment.OnListFragmentInteractionListener
 
 import kotlinx.android.synthetic.main.row_transaction.view.*
+import org.web3j.utils.Convert
+import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MyTransactionRecyclerViewAdapter(
-        private val mValues: List<Transaction>,
+class TransactionRecyclerViewAdapter(
+        private var mContext: Context,
+        private var mValues: List<Transaction>,
         private val mListener: OnListFragmentInteractionListener?)
-    : RecyclerView.Adapter<MyTransactionRecyclerViewAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
+    private val currentUser = UserRepository.currentUser
 
     init {
         mOnClickListener = View.OnClickListener { v ->
@@ -47,17 +54,36 @@ class MyTransactionRecyclerViewAdapter(
         val transaction = mValues[position]
 
         val fromName = transaction.from
+        val toName = transaction.to
+        var addressToShow: String
+        var outgoing = false
+
+        if (currentUser?.address == fromName) {
+            addressToShow = toName
+            holder.mAmountView.setTextColor(ContextCompat.getColor(mContext, R.color.sentRed))
+        } else {
+            addressToShow = fromName
+            holder.mAmountView.setTextColor(ContextCompat.getColor(mContext, R.color.receivedGreen))
+        }
 //        val otherUser: User = transaction.from
-        holder.mUsernameView.text = fromName
+        holder.mUsernameView.text = addressToShow
         holder.mMessageTv.text = transaction.message
-        holder.mAmountView.text = "${transaction.value} TIP"
-        holder.mTimeTv.text = transaction.time.toString()
+        val valueInEth =  Convert.fromWei(transaction.value.toBigDecimal(), Convert.Unit.ETHER)
+
+        holder.mAmountView.text = "${valueInEth.setScale(4, RoundingMode.HALF_UP)} ${transaction.currency}"
+        val timestamp = transaction.time.toLong() * 1000
+        holder.mTimeTv.text = SimpleDateFormat("MM/dd/yy hh':'mm").format(Date(timestamp))
 //        Picasso.get().load(otherUser.pictureUrl).into(holder.mAvartarIv)
 
         with(holder.mView) {
             tag = transaction
             setOnClickListener(mOnClickListener)
         }
+    }
+
+    fun setItems(items: List<Transaction>) {
+        mValues = items
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = mValues.size

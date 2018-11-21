@@ -13,6 +13,7 @@ import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.networking.TipApiService
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<Wallet?> {
@@ -22,8 +23,10 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
     override var wallet: Wallet? = null
     private var usernameDisposable: Disposable? = null
     private var createAccountDisposable: Disposable? = null
+    private var uploadPhotoDisposable: Disposable? = null
     private var usernameSubject: PublishSubject<String>? = null
     private var tipApiService = TipApiService.instance
+    private var userRepository = UserRepository.instance
 
     private val LOG_TAG = javaClass.canonicalName
 
@@ -66,6 +69,20 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
                 })
     }
 
+    override fun uploadPhoto(imageFile: File) {
+        uploadPhotoDisposable = userRepository.uploadProfilePhoto(imageFile)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe ({ user ->
+                    if (user != null) {
+                        UserRepository.currentUser = user
+                        view?.onPhotoUploaded()
+                    }
+                }, { err ->
+                    view?.onErrorUpdatingUser(err)
+                })
+    }
+
     override fun onChanged(t: Wallet?) {
         this.wallet = t
         if (t == null) {
@@ -75,6 +92,10 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
 
     private fun getNewAuthorization() {
         AuthorizationRepository.getNewAuthorization { authorization, throwable ->
+            // upload photo
+            if (authorization != null) {
+
+            }
             this.view?.onAuthorizationFetched(authorization, throwable)
         }
     }
@@ -104,8 +125,10 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
     private fun stopObserving() {
         createAccountDisposable?.dispose()
         usernameDisposable?.dispose()
+        uploadPhotoDisposable?.dispose()
 
         createAccountDisposable = null
         usernameDisposable = null
+        uploadPhotoDisposable = null
     }
 }

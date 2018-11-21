@@ -1,10 +1,10 @@
 package io.tipblockchain.kasakasa.networking
 
-import com.android.example.github.api.ApiResponse
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.responses.*
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface TipApi {
@@ -24,6 +24,16 @@ interface TipApi {
     @POST("/secure/identity")
     fun createAccount(@Body user: User): Observable<User>
 
+    @GET("/accounts/my")
+    fun getMyAccount(): Observable<User?>
+
+    @GET("/accounts/profile/{username}")
+    fun getAccountByUsername(@Path(value = "username") username: String): Observable<User?>
+
+    @Multipart
+    @POST("/accounts/photos")
+    fun uploadPhoto(@Part image: MultipartBody.Part): Observable<User?>
+
     @GET("/accounts/search")
     fun searchByUsername(@Query(value = "username") username: String): Observable<UserSearchResponse>
 
@@ -32,15 +42,15 @@ interface TipApi {
 
     // Contacts
     @GET(value = "/contacts")
-    fun getContactList(): Observable<ApiResponse<List<User>>>
+    fun getContactList(): Observable<ContactListResponse>
 
     @POST(value = "/contacts")
-    fun addContact(@Body contact: ContactRequest): Observable<ContactListResponse>
+    fun addContact(@Body contact: ContactRequest): Observable<ContactListStringResponse>
 
     @POST(value = "/contacts/multiple")
-    fun addContacts(@Body contactIds: ContactListRequest): Observable<ContactListResponse>
+    fun addContacts(@Body contactIds: ContactListRequest): Observable<ContactListStringResponse>
 
     @DELETE(value = "/contacts")
-    fun deleteContact(contact: User): Observable<ContactListResponse>
+    fun deleteContact(contact: User): Observable<ContactListStringResponse>
 
 }

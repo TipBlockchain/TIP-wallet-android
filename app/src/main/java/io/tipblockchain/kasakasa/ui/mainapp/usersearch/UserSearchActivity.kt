@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_user_search.*
 class UserSearchActivity : BaseActivity(), UserSearch.View {
 
     lateinit var presenter: UserSearchPresenter
-    lateinit var mAdapter: UserSearchAdapter
+    private lateinit var mAdapter: UserSearchAdapter
     private val mOnClickListener: View.OnClickListener
 
     init {

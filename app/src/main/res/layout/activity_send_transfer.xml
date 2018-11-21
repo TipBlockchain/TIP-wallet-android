@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -7,8 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:fitsSystemWindows="true"
-    tools:context=".ui.mainapp.SendTransferActivity">
-
+    tools:context=".ui.mainapp.sendtransfer.SendTransferActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -28,7 +28,10 @@
     <ScrollView
         android:id="@+id/form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -37,40 +40,58 @@
             android:layout_marginTop="100dp"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:layout_weight="0.33">
+                android:layout_height="wrap_content" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/fistnameTv"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_recepient"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@color/colorWhite"
-                    android:textColorHint="@color/colorWhite"
-                    android:textColorLink="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="0.8"
+                    android:textColorHint="@color/colorVeryLightGray"
+                    android:theme="@style/AppTheme.WhiteColorAccent">
 
-            </android.support.design.widget.TextInputLayout>
+                    <AutoCompleteTextView
+                        android:id="@+id/recepientTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_recepient"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHighlight="@color/colorWhite"
+                        android:textColorHint="@color/colorWhite"
+                        android:textColorLink="@color/colorWhite"
+                        android:theme="@style/AppTheme.WhiteEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/scanButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:drawableRight="@drawable/qr_code"
+                    android:padding="5dp" />
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="20dp"
+                android:layout_weight="0.33"
                 android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:layout_weight="0.33">
+                android:theme="@style/AppTheme.WhiteColorAccent">
 
-                <AutoCompleteTextView
-                    android:id="@+id/lastnameTv"
+                <EditText
+                    android:id="@+id/amountTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_amount"
@@ -88,11 +109,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.33"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:textColorHint="@color/colorVeryLightGray">
+                android:textColorHint="@color/colorVeryLightGray"
+                android:theme="@style/AppTheme.WhiteColorAccent">
 
                 <EditText
-                    android:id="@+id/usernameTv"
+                    android:id="@+id/messageTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_message"
@@ -116,14 +137,16 @@
         android:id="@+id/nextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_marginTop="16dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="50dp"
         android:text="@string/next"
         android:textStyle="bold"
         android:theme="@style/AppTheme.PrimaryButton"
         app:layout_anchor="@+id/form"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

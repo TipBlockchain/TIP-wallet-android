@@ -1,16 +1,15 @@
 package io.tipblockchain.kasakasa.app
 
-import android.content.Context
 import android.content.SharedPreferences
 
-class PreferenceHelper (private var context: Context) {
+class PreferenceHelper {
 
     companion object {
 
-        private var instance: PreferenceHelper = PreferenceHelper(App.applicationContext())
+        var instance: PreferenceHelper = PreferenceHelper()
 
         private val PREFS_FILENAME = "io.tipblockchain.kasakasa.preferences"
-        private var prefs: SharedPreferences = instance.context.getSharedPreferences(PREFS_FILENAME, 0)
+        private var prefs: SharedPreferences = App.applicationContext().getSharedPreferences(PREFS_FILENAME, 0)
 
         private val ONBOARDING_COMPLETE = "onboarding_complete"
         private val CURRENT_USER = "current_user"
@@ -51,5 +50,4 @@ class PreferenceHelper (private var context: Context) {
             prefs.edit().remove(CURRENT_USER)
         }
     }
-
 }

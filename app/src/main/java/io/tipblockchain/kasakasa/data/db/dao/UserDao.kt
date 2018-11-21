@@ -10,7 +10,7 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMany(users: List<User>)
 
     @Query("SELECT * FROM users WHERE id = :id")
@@ -25,8 +25,11 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE isContact = 1 ORDER BY lastMessage DESC")
     fun findContacts(): LiveData<List<User>>
 
-    @Query("SELECT * FROM users WHERE username = :username")
-    fun findUserByUsername(username: String): LiveData<User>
+    @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
+    fun findUserById(userId: String): LiveData<User?>
+
+    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
+    fun findUserByUsername(username: String): LiveData<User?>
 
     @Update
     fun updateUser(userToUpdate: User)

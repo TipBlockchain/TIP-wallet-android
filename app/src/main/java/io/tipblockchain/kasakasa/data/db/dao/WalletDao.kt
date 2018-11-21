@@ -16,8 +16,17 @@ interface WalletDao {
     @Query("SELECT * FROM wallets WHERE address = :address LIMIT 1")
     fun findWallet(address: String): LiveData<Wallet?>
 
+    @Query(value = "SELECT * from wallets WHERE currency = :currency")
+    fun findWalletForCurrency(currency: String): LiveData<Wallet?>
+
+    @Query(value = "SELECT * from wallets WHERE address = :address AND currency = :currency")
+    fun findWalletForAddressAndCurrency(address: String, currency: String): LiveData<Wallet?>
+
     @Query("SELECT * FROM wallets")
     fun findAllWallets(): LiveData<List<Wallet>>
+
+    @Update()
+    fun update(wallet: Wallet)
 
     @Delete
     fun  delete(wallet: Wallet)

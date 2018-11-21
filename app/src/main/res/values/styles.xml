@@ -7,19 +7,26 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-
+        <item name="android:spinnerMode">dropdown</item>
+        <!--<item name="android:spinnerStyle">@style/AppTheme.TextViewLightContent</item>-->
+        <item name="android:actionBarWidgetTheme">@style/Theme.AppCompat.Light</item>
+        <item name="actionBarWidgetTheme">@style/Theme.AppCompat.Light</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
     </style>
+
     <style name="AppTheme.ActionBar.NoTitle" parent="AppTheme.ActionBar">
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/gradient</item>
     </style>
@@ -33,7 +40,7 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:fontFamily">@font/advent_pro_medium</item>
+        <item name="android:fontFamily">@font/avenir_ltd_std_medium</item>
         <item name="android:textSize">22sp</item>
         <item name="android:layout_marginLeft">40dp</item>
         <item name="android:layout_marginRight">40dp</item>
@@ -52,8 +59,9 @@
     </style>
 
     <style name="AppTheme.TextViewRowTitle" parent="">
+        <item name="android:fontFamily">@font/avenir_ltd_std_medium</item>
         <item name="android:textColor">@color/darkTextColor</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTheme.TextViewSeedPhrase" parent="">
@@ -62,31 +70,33 @@
     </style>
 
     <style name="AppTheme.TextViewRowSubtitle" parent="">
+        <item name="android:fontFamily">@font/avenir_ltd_std_roman</item>
         <item name="android:textColor">@color/lightTextColor</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AppTheme.TextViewLightTitle" parent="">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/advent_pro_medium</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/avenir_ltd_std_medium</item>
     </style>
 
     <style name="AppTheme.TextViewLightContent" parent="">
+        <item name="android:colorForeground">@color/colorWhite</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:fontFamily">@font/avenir_ltd_std_light</item>
         <item name="android:textSize">22sp</item>
     </style>
 
     <style name="AppTheme.TextViewLightNormal" parent="">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:fontFamily">@font/avenir_ltd_std_roman</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="AppTheme.TextViewDarkNormal" parent="">
         <item name="android:textColor">@color/colorDarkGray</item>
-        <item name="android:fontFamily">@font/advent_pro_light</item>
+        <item name="android:fontFamily">@font/avenir_ltd_std_roman</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -95,14 +105,16 @@
         <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="AppTheme.TextInputLayout.hint">
-       <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textColorHint">@color/colorWhite</item>
         <item name="android:textSize">12sp</item>
         <item name="colorControlNormal">@color/colorWhite</item>
         <item name="colorControlActivated">@color/colorWhite</item>
         <item name="colorControlHighlight">@color/colorWhite</item>
     </style>
+
     <style name="AppTheme.WhiteColorAccent">
         <item name="colorAccent">@color/colorWhite</item>
         <item name="android:textColorHint">@color/colorWhite</item>
@@ -120,11 +132,13 @@
         <item name="colorControlNormal">@color/colorWhite</item>
         <item name="colorControlActivated">@color/colorWhite</item>
     </style>
+
     <style name="AppTheme.TextBox">
         <item name="android:padding">10dp</item>
         <item name="android:colorBackground">@color/colorLightGray</item>
         <item name="android:textAppearance">@style/AppTheme.TextViewDarkNormal</item>
     </style>
+
     <style name="error_appearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:background">@color/colorPink</item>
