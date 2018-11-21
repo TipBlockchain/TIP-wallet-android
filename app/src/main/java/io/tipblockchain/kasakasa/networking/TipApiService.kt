@@ -25,7 +25,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://c22a3df1.ngrok.io"
+        private val baseUrl: String = "https://bbdbb4f4.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -65,6 +65,14 @@ class TipApiService {
 
     fun getCountries(): Observable<List<Country>> {
         return tipApi.getCountries()
+    }
+
+    fun startPhoneVerification(verification: PhoneVerificationRequest): Observable<PhoneVerificationConfirmation?> {
+        return tipApi.startPhoneVerification(verification)
+    }
+
+    fun checkPhoneVerification(verification: PhoneVerificationRequest): Observable<PhoneVerificationResponse?> {
+        return tipApi.checkPhoneVerification(verification)
     }
 
     fun checkUsername(username: String): Observable<UsernameResponse> {

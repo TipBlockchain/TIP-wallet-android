@@ -115,23 +115,23 @@ class ChoosePasswordActivity : AppCompatActivity() {
         // the progress spinner.
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        password_form.visibility = if (show) View.GONE else View.VISIBLE
-        password_form.animate()
+        passwordForm.visibility = if (show) View.GONE else View.VISIBLE
+        passwordForm.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        password_form.visibility = if (show) View.GONE else View.VISIBLE
+                        passwordForm.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
-        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-        login_progress.animate()
+        progressLayout.visibility = if (show) View.VISIBLE else View.GONE
+        progressLayout.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 1 else 0).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+                        progressLayout.visibility = if (show) View.VISIBLE else View.GONE
                     }
                 })
     }

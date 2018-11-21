@@ -17,6 +17,12 @@ interface TipApi {
     fun getCountry(@Path("countrycode") code: String): Observable<Country>
 
 
+    @POST("/phones/verificationStart")
+    fun startPhoneVerification(@Body verification: PhoneVerificationRequest): Observable<PhoneVerificationConfirmation?>
+
+    @POST("/phones/verificationCheck")
+    fun checkPhoneVerification(@Body verification: PhoneVerificationRequest): Observable<PhoneVerificationResponse?>
+
     // Accounts
     @GET("/accounts/check")
     fun checkUsername(@Query("username") username: String): Observable<UsernameResponse>

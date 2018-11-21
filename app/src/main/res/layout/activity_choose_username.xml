@@ -50,7 +50,7 @@
                 android:textColorHint="@color/colorVeryLightGray"
                 android:theme="@style/AppTheme.WhiteColorAccent">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/fistnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                 android:textColorHint="@color/colorVeryLightGray"
                 android:theme="@style/AppTheme.WhiteColorAccent">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/lastnameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -122,8 +122,8 @@
         android:id="@+id/nextBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:layout_marginBottom="16dp"
         android:text="@string/next"
         android:textStyle="bold"

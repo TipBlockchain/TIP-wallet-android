@@ -100,17 +100,17 @@
     <string name="prompt_lastname">Lastname</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_passwords_dont_match">The passwords do not match</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_username_unavailable">This username is not available</string>
-    <string name="error_username_empty">Your usernane can not be empty</string>
-    <string name="error_firstname_empty">Your firstname can not be empty</string>
+    <string name="error_invalid_email">This email address is invalid.</string>
+    <string name="error_invalid_password">This password is too short.</string>
+    <string name="error_passwords_dont_match">The passwords do not match.</string>
+    <string name="error_incorrect_password">This password is incorrect.</string>
+    <string name="error_username_unavailable">This username is not available.</string>
+    <string name="error_username_empty">Your usernane can not be empty.</string>
+    <string name="error_firstname_empty">Your firstname can not be empty.</string>
+    <string name="error_phone_empty">Your phone umber can not be empty.</string>
+    <string name="error_invalid_phone">The phone number entered is not valid.</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
     <string name="title_activity_choose_password">Choose your password</string>
     <string name="title_activity_backup_info">BackupInfoActivity</string>
     <string name="title_activity_main_tab">MainTabActivity</string>
@@ -189,6 +189,10 @@
     <string name="error_setting_up_search">Error setting up search: \n%s</string>
     <string name="error_sending_transaction">Error sending transaction: \n%s</string>
     <string name="error_copying_address">Could not copy your address</string>
+    <string name="error_sending_verification_text">Error sending verification SMS: %s</string>
+    <string name="error_verifying_phone_try_again">Please check your number and try again</string>
+    <string name="error_verifying_phone">Error verifying your phone number: %s</string>
+    <string name="verification_started">Verification SMS sent</string>
     <string name="could_not_unlock_wallet">Your wallet could not be unlocked. Please check your password and try again.</string>
     <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
     <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
@@ -215,4 +219,11 @@
     <string name="eth">ETH</string>
     <string name="sending">Sending transaction...</string>
     <string name="no_contacts">You do not have any contacts yet. Click the Plus button to find people.</string>
+    <string name="onboarding_enter_password">Enter a secure password. This password will be used to secure your account. You will need to enter it in order to send transactions.</string>
+    <string name="saving">Saving...</string>
+    <string name="placeholder_country_code">+00</string>
+    <string name="plus_plus_country_code">+%s</string>
+    <string name="tip_social_connect">Tip is a social platform.\nYour phone number helps you connect with other people on the network.</string>
+    <string name="message_verification_code">Verification code should arrive with a few minutes.</string>
+    <string name="enter_verification_code">Enter the verification code.</string>
 </resources>
