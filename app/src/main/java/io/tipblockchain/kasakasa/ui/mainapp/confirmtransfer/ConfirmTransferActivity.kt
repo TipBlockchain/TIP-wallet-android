@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
@@ -35,7 +36,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
         presenter = ConfirmTransferPresenter()
         presenter?.attach(this)
-        pendingTransaction = intent.getSerializableExtra("transaction") as PendingTransaction
+        pendingTransaction = intent.getSerializableExtra(AppConstants.EXTRA_TRANSACTION) as PendingTransaction
         Log.d(LOG_TAG, "tx = $pendingTransaction")
         presenter?.validateTransaction(pendingTransaction!!)
         presenter?.getTransactionFee(pendingTransaction!!)
@@ -107,7 +108,6 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
     private fun navigateToTransactionConfirmed() {
         val intent = Intent(this, TransactionConfirmedActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }
 

@@ -8,9 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
+import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.responses.PendingSignup
 import io.tipblockchain.kasakasa.data.responses.PhoneVerificationRequest
 import io.tipblockchain.kasakasa.ui.BaseActivity
-import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
+import io.tipblockchain.kasakasa.ui.onboarding.demoaccount.DemoAccountActivity
 import io.tipblockchain.kasakasa.ui.onboarding.recovery.RecoveryPhraseActivity
 import kotlinx.android.synthetic.main.activity_enter_phone_number.*
 
@@ -25,7 +28,7 @@ class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
         presenter = VerifyPhoneNumberPresenter()
         presenter?.attach(this)
 
-        verificationRequest = intent.getSerializableExtra("phone") as PhoneVerificationRequest
+        verificationRequest = intent.getSerializableExtra(AppConstants.EXTRA_PHONE_NUMBER) as PhoneVerificationRequest?
         if (verificationRequest == null) {
             finish()
         }
@@ -38,13 +41,24 @@ class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
         presenter?.detach()
     }
 
-    override fun onPhoneNumberVerified() {
-        navigateToChoosePassword()
-    }
-
     override fun onPhoneVerificationError(error: Throwable) {
         showProgress(false)
         showMessage(getString(R.string.error_verifying_phone, error.localizedMessage))
+    }
+
+    override fun onPhoneVerifiedWithExistingAccount(account: User) {
+        showProgress(false)
+        navigateToExistingAccount(account)
+    }
+
+    override fun onPhoneVerifiedWithPendingAccount(pendingAccount: PendingSignup) {
+        showProgress(false)
+        navigateToRecoveryPhrase()
+    }
+
+    override fun onPhoneVerifiedWithPendingAndDemoAccount(pendingAccount: PendingSignup, demoAccount: User) {
+        showProgress(false)
+        navigateToDemoAccount(demoAccount)
     }
 
     override fun onUnknownError() {
@@ -57,8 +71,20 @@ class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
         presenter?.verifyPhoneNumber(verificationRequest!!)
     }
 
-    private fun navigateToChoosePassword() {
-        val intent = Intent(this, ChoosePasswordActivity::class.java)
+    private fun navigateToDemoAccount(account: User) {
+        val intent = Intent(this, DemoAccountActivity::class.java)
+        intent.putExtra(AppConstants.EXTRA_DEMO_ACCOUNT_USER, account)
+        startActivity(intent)
+    }
+
+    private fun navigateToExistingAccount(account: User) {
+        val intent = Intent(this, DemoAccountActivity::class.java)
+        intent.putExtra(AppConstants.EXTRA_EXISTING_ACCOUNT_USER, account)
+        startActivity(intent)
+    }
+
+    private fun navigateToRecoveryPhrase() {
+        val intent = Intent(this, RecoveryPhraseActivity::class.java)
         startActivity(intent)
     }
 

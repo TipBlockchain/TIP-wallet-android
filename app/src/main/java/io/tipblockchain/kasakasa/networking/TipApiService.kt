@@ -25,7 +25,7 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://bbdbb4f4.ngrok.io"
+        private val baseUrl: String = "https://84de5aa4.ngrok.io"
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
@@ -80,8 +80,8 @@ class TipApiService {
         return tipApi.checkUsername(username)
     }
 
-    fun createUser(user: User): Observable<User> {
-        return tipApi.createAccount(user)
+    fun createUser(user: User, signupToken: String, claimDemoAccount: Boolean = true): Observable<User> {
+        return tipApi.createAccount(user, token = signupToken, claimDemoAccount = claimDemoAccount)
     }
 
     fun getMyAccount(): Observable<User?> {

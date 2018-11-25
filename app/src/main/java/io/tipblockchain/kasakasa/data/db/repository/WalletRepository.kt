@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
+import io.tipblockchain.kasakasa.crypto.WalletUtils
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.dao.WalletDao
@@ -54,9 +55,9 @@ class WalletRepository {
         }
     }
 
-    fun newWalletWithPassword(password: String): NewWallet? {
+    fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String): NewWallet? {
         val web3Bridge = Web3Bridge()
-        val bip39Wallet = web3Bridge.createBip39Wallet(password)
+        val bip39Wallet = WalletUtils.getnerateBip39WalletFromMnemonic(mnemonic = mnemonic, password = password, destinationDirectory = FileUtils().walletsDir())
         val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)

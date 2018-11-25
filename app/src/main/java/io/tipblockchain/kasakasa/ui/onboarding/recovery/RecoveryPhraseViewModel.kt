@@ -8,14 +8,7 @@ class RecoveryPhraseViewModel: AndroidViewModel {
     var recoveryPhrase: String? = null
     var isBackedUp: Boolean = false
 
-    private var walletRepository: WalletRepository = WalletRepository.instance
 
     constructor(application: Application): super(application) {
-    }
-
-    fun createNewWallet(password: String)    {
-        val newWallet = walletRepository.newWalletWithPassword(password)
-
-        recoveryPhrase = newWallet?.mnemonic
     }
 }

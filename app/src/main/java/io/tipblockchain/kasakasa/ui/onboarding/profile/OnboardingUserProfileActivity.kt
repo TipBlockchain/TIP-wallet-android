@@ -22,7 +22,9 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
+import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.data.responses.Authorization
 import io.tipblockchain.kasakasa.databinding.ActivityOnboardingUserProfileBinding
@@ -30,6 +32,7 @@ import io.tipblockchain.kasakasa.extensions.onTextChange
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
+import io.tipblockchain.kasakasa.ui.onboarding.verifyphone.VerifyPhoneNumberActivity
 import io.tipblockchain.kasakasa.utils.FileUtils
 import io.tipblockchain.kasakasa.utils.KeyboardUtils
 import java.io.File
@@ -43,6 +46,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     private var presenter: OnboardingUserProfile.Presenter? = null
     private val walletRepository = WalletRepository.instance
     private var displayPicFile: File? = null
+    private var demoAccountExists = false
 
     private enum class ActivityRequest(val code: Int) {
         CAMERA(111),
@@ -53,7 +57,6 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding_user_profile)
-        setSupportActionBar(toolbar)
 
         val binding: ActivityOnboardingUserProfileBinding = DataBindingUtil.setContentView(this, R.layout.activity_onboarding_user_profile)
         viewModel = getViewModel()
@@ -69,6 +72,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         presenter = OnboardingUserProfilePresenter()
         presenter?.viewModel = viewModel
         presenter?.attach(this)
+        presenter?.checkForDemoAccount()
 
         walletRepository.primaryWallet().observe(this, Observer {wallet ->
             if (wallet != null) {
@@ -202,12 +206,38 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         this.checkValues()
     }
 
+    override fun onDemoAccountFound(demoUser: User) {
+        demoAccountExists = true
+
+        viewModel.firstname = demoUser.firstname().trim()
+        viewModel.lastname = demoUser.lastname().trim()
+        viewModel.username = demoUser.username.trim()
+
+        usernameTv.isEnabled = false
+        usernameTv.isFocusable = false
+        usernameTv.isCursorVisible = false
+
+        if (demoUser.originalPhotoUrl != null) {
+            Picasso.get().load(demoUser.originalPhotoUrl).into(profileImageView)
+        } else {
+            Picasso.get().load(R.drawable.avatar_placeholder_small).into(profileImageView)
+        }
+    }
+
     override fun onPhotoUploaded() {
         this.showCongratsDialog()
     }
 
     override fun onErrorUpdatingUser(error: Throwable) {
         showOkDialog(getString(R.string.error_updating_user_info, error.localizedMessage))
+    }
+
+    override fun onSignupTokenError() {
+        showOkDialog(getString(R.string.error_session_timeout_reconfirm), onClickListener = object: DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                navigateToConfirmPhoneNumber()
+            }
+        })
     }
 
     override fun onAuthorizationFetched(auth: Authorization?, error: Throwable?) {
@@ -243,10 +273,12 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         usernameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.checkmark_green, 0);
     }
 
-    override fun onUsernameUnavailableError() {
-        usernameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        usernameTv.error = getString(R.string.error_username_unavailable)
-        usernameTv.requestFocus()
+    override fun onUsernameUnavailableError(isDemoAccount: Boolean) {
+        if (!isDemoAccount || (isDemoAccount && !demoAccountExists)) {
+            usernameTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            usernameTv.error = getString(R.string.error_username_unavailable)
+            usernameTv.requestFocus()
+        }
     }
 
     override fun onInvalidUser() {
@@ -294,6 +326,12 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
 
     private fun navigateToMainApp() {
         val intent = Intent(this, MainTabActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToConfirmPhoneNumber() {
+        val intent = Intent(this, VerifyPhoneNumberActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 }

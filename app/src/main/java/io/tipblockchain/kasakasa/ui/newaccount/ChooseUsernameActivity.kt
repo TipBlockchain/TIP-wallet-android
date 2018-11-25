@@ -217,7 +217,6 @@ class ChooseUsernameActivity : AppCompatActivity() {
 
     fun goToChoosePassword() {
         val intent = Intent(this, ChoosePasswordActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }
 

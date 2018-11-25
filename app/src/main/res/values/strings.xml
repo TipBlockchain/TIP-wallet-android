@@ -180,6 +180,7 @@
     <string name="recovery_phrase_copied">Recovery phrase copied.</string>
     <string name="address_copied">Address copied</string>
     <string name="placeholder_seed_phrase">one two three four five six seven eight nine ten eleven twelve</string>
+    <string name="placeholder_seed_phrase_missing">one two three ______ five six seven eight nine ten ______ twelve</string>
     <string name="recovery_phrase_must_be_copied">The recovery phrase must be backed up to proceed.</string>
     <string name="title_activity_onboarding_user_profile">Profile Details</string>
     <string name="title_allow_camera_access">Allow camera access</string>
@@ -192,13 +193,16 @@
     <string name="error_sending_verification_text">Error sending verification SMS: %s</string>
     <string name="error_verifying_phone_try_again">Please check your number and try again</string>
     <string name="error_verifying_phone">Error verifying your phone number: %s</string>
+    <string name="error_verifying_recovery_phrase">The words entered do not match recovery phrase.</string>
     <string name="verification_started">Verification SMS sent</string>
+    <string name="error_empty_field">This field can not be empty</string>
     <string name="could_not_unlock_wallet">Your wallet could not be unlocked. Please check your password and try again.</string>
     <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
     <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
     <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>
     <string name="congrats_account_created">Congrats!\nYou successfully created a TIP account.\nWelcome to TIP.</string>
     <string name="generic_error">Sorry, the operation could not be completed due to an error.</string>
+    <string name="generic_error_with_param">Sorry, an error occured: %s.</string>
     <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
     <string name="invalid_transaction">Invalid transaction: %s</string>
     <string name="invalid_transaction_value">Invalid transaction value</string>
@@ -208,6 +212,7 @@
     <string name="scan_cancelled">Scan cancelled.</string>
     <string name="enter_password_unlock">Enter your password to unlock your wallet and send this transaction.</string>
     <string name="total">Total</string>
+    <string name="error_session_timeout_reconfirm">Your session has timed out. You will need to confirm your phone number again to continue</string>
     <string name="title_activity_receive_transfer">Receive TIP or ETH</string>
     <string name="placeholder_eth_address">0x0000000000000000000000000000000000000000</string>
     <string name="address_info">You can receive both TIP and ETH at this address.</string>
@@ -226,4 +231,20 @@
     <string name="tip_social_connect">Tip is a social platform.\nYour phone number helps you connect with other people on the network.</string>
     <string name="message_verification_code">Verification code should arrive with a few minutes.</string>
     <string name="enter_verification_code">Enter the verification code.</string>
+    <string name="error_invalid_recovery_phrase">Invalid recovery phrase</string>
+    <string name="error_invalid_recovery_phrase_length">Your recovery phrase does not have the right length.</string>
+    <string name="error_empty_recovery_phrase">Your recovery phrase can not be empty.</string>
+    <string name="enter_missing_words">Enter the words missing from the recovery phrase below.</string>
+    <string name="enter_first_missing_word">Enter first missing word</string>
+    <string name="enter_second_missing_word">Enter second missing word</string>
+    <string name="recovery_phrase_verified">Recovery phrase verified</string>
+    <string name="welcome_to_tip_kasakasa">Welcome to TIP Kasakasa</string>
+    <string name="error_address_not_matching_account">The restored wallet address does not match the address for %s. Please enter the same recovery phrase and password used to create the account.</string>
+    <string name="restore_wallet">Restore Wallet</string>
+    <string name="restore_wallet_with_phrase">You will have to restore your wallet using the recovery phrase you used to create it.</string>
+    <string name="welcome_back_to_tip_kasakasa">Welcome back to TIP Kasakasa</string>
+    <string name="message_create_wallet">You will now create a wallet on your device so you can send and receive TIP and ETH.</string>
+    <string name="message_wallet_restored">Hooray!\nYour account has been restored. You can start tipping again.</string>
+    <string name="create_wallet">Create Wallet</string>
+    <string name="text_enter_recovery_phrase">Enter your recovery phrase below. This must be the same phrase you received when you created your account. \n\nThis phrase is used to restore your account on your device. It is never sent over the network.</string>
 </resources>

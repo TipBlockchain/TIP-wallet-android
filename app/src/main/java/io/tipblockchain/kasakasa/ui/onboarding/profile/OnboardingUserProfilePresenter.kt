@@ -8,6 +8,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
@@ -27,12 +28,19 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
     private var usernameSubject: PublishSubject<String>? = null
     private var tipApiService = TipApiService.instance
     private var userRepository = UserRepository.instance
+    private var signupToken: String? = null
+    private var demoAccountFound = false
 
     private val LOG_TAG = javaClass.canonicalName
 
     override fun attach(view: OnboardingUserProfile.View) {
         super.attach(view)
-        setupUsernameSubject()
+        signupToken = PreferenceHelper.pendingSignupToken
+        if (signupToken != null) {
+            setupUsernameSubject()
+        } else {
+            view?.onSignupTokenError()
+        }
     }
 
     override fun detach() {
@@ -50,8 +58,13 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
             return
         }
 
+        if (signupToken == null) {
+            view?.onSignupTokenError()
+            return
+        }
+
         val user = User(id = "", name = viewModel.name, username = viewModel.username!!, address = wallet!!.address)
-        createAccountDisposable = tipApiService.createUser(user)
+        createAccountDisposable = tipApiService.createUser(user, signupToken = signupToken!!, claimDemoAccount = demoAccountFound)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe ( {newUser ->
@@ -81,6 +94,14 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
                 }, { err ->
                     view?.onErrorUpdatingUser(err)
                 })
+    }
+
+    override fun checkForDemoAccount() {
+        val demoAccount = UserRepository.demoAccountUser
+        if (demoAccount != null) {
+            demoAccountFound = true
+            view?.onDemoAccountFound(demoAccount)
+        }
     }
 
     override fun onChanged(t: Wallet?) {
@@ -115,7 +136,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
                     if (it.isAvailable) {
                         view?.onUsernameAvailable()
                     } else {
-                        view?.onUsernameUnavailableError()
+                        view?.onUsernameUnavailableError(it.isDemoAccount)
                     }
                 }, {
                     view?.onGenericError(it)

@@ -16,16 +16,19 @@ interface OnboardingUserProfile {
         fun checkUsername(username: String)
         fun createAccount()
         fun uploadPhoto(imageFile: File)
+        fun checkForDemoAccount()
     }
 
     interface View: BaseView {
+        fun onDemoAccountFound(demoUser: User)
         fun onPhotoUploaded()
         fun onErrorUpdatingUser(error: Throwable)
         fun onWalletNotSetupError()
         fun onGenericError(error: Throwable)
+        fun onSignupTokenError()
         fun onInvalidUser()
         fun onUsernameAvailable()
-        fun onUsernameUnavailableError()
+        fun onUsernameUnavailableError(isDemoAccount: Boolean)
         fun onAuthorizationFetched(auth: Authorization?, error: Throwable?)
     }
 }

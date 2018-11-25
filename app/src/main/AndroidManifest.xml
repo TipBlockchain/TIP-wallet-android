@@ -93,9 +93,10 @@
             android:label="@string/title_activity_recovery_phrase"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.newaccount.VerifyRecoveryPhraseActivity"
+            android:name=".ui.onboarding.verifyrecovery.VerifyRecoveryPhraseActivity"
             android:label="@string/title_activity_verify_recovery_phrase"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.onboarding.profile.OnboardingUserProfileActivity"
             android:label="@string/title_activity_onboarding_user_profile"
@@ -140,10 +141,11 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-        <activity android:name=".ui.onboarding.verifyphone.VerifyPhoneNumberActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" >
-
-        </activity>
+        <activity
+            android:name=".ui.onboarding.verifyphone.VerifyPhoneNumberActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity android:name=".ui.onboarding.demoaccount.DemoAccountActivity" />
+        <activity android:name=".ui.onboarding.restoreaccount.RestoreAccountActivity"></activity>
     </application>
 
 </manifest>

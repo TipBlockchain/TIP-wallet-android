@@ -13,11 +13,12 @@ data class User(
         @ColumnInfo(name = "name") @SerializedName("fullname") var name: String,
         @ColumnInfo(name = "username") @SerializedName("username") var username: String,
         @ColumnInfo(name = "address") @SerializedName("address") var address: String,
+        @ColumnInfo(name = "imageFileKey") var imageFileKey: String? = null,
         @ColumnInfo(name = "pictureUrl") var pictureUrl: String? = null,
         @ColumnInfo(name = "isContact") var isContact: Boolean = false,
         @ColumnInfo(name = "isBlocked") var isBlocked: Boolean = false,
         @ColumnInfo(name = "lastMessage") var lastMessage: Date? = null
-    ) {
+    ): java.io.Serializable {
 
     @Ignore @SerializedName("photos") var photos: UserPhotos? = null
     set(value) {
@@ -39,6 +40,22 @@ data class User(
 
     fun isValid(): Boolean {
         return !(this.username.isEmpty() || this.id.isEmpty() || this.address.isEmpty())
+    }
+
+    fun firstname(): String {
+        val names = name.split(" ")
+        if (names.size > 0) {
+            return names.first()
+        }
+        return ""
+    }
+
+    fun lastname(): String {
+        val names = name.split(" ")
+        if (names.size > 1) {
+            return names.slice(1..names.size-1).joinToString(" ")
+        }
+        return ""
     }
 
     override fun toString(): String {

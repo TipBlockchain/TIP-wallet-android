@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dc5b52b7a7166feca631ee929f29d726",
+    "identityHash": "f4edc00ef626d2b58809b149d0c76b9d",
     "entities": [
       {
         "tableName": "transactions",
@@ -197,7 +197,7 @@
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `imageFileKey` TEXT, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "smallPhotoUrl",
@@ -240,6 +240,12 @@
             "columnName": "address",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "imageFileKey",
+            "columnName": "imageFileKey",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "pictureUrl",
@@ -383,7 +389,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"dc5b52b7a7166feca631ee929f29d726\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f4edc00ef626d2b58809b149d0c76b9d\")"
     ]
   }
 }

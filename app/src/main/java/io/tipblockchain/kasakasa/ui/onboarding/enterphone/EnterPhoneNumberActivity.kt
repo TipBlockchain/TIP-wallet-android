@@ -15,6 +15,7 @@ import com.heetch.countrypicker.CountryPickerDialog
 import com.heetch.countrypicker.Utils
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.responses.PhoneVerificationRequest
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.onboarding.verifyphone.VerifyPhoneNumberActivity
@@ -110,7 +111,7 @@ class EnterPhoneNumberActivity : BaseActivity(), EnterPhone.View {
 
     fun navigateToVerifyPhoneNumber() {
         val intent = Intent(this, VerifyPhoneNumberActivity::class.java)
-        intent.putExtra("phone", verificationRequest)
+        intent.putExtra(AppConstants.EXTRA_PHONE_NUMBER, verificationRequest)
         startActivity(intent)
     }
 

@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter
 import com.google.zxing.client.android.Intents
 import com.google.zxing.integration.android.IntentIntegrator
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
@@ -46,7 +47,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
         setupSpinner()
-        var username = intent.getStringExtra("user")
+        var username = intent.getStringExtra(AppConstants.TRANSACTION_RECIPIENT)
         if (username  != null) {
             recepientTv.setText(username)
         }
@@ -136,7 +137,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
 
     fun  navigateToConfirmWithTransaction(tx: PendingTransaction) {
         val intent = Intent(this, ConfirmTransferActivity::class.java)
-        intent.putExtra("transaction", tx)
+        intent.putExtra(AppConstants.EXTRA_TRANSACTION, tx)
         startActivity(intent)
     }
 
