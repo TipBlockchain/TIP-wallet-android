@@ -9,7 +9,7 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
     private var walletRepository = WalletRepository.instance
     private var existingUser: User? = null
 
-    override fun setExistingUser(user: User) {
+    override fun setExistingUser(user: User?) {
         existingUser = user
     }
 
@@ -19,6 +19,7 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
             if (newWallet != null) {
                 if (existingUser != null) {
                     if (existingUser!!.address != newWallet!!.wallet.address) {
+                        walletRepository.delete(newWallet.wallet.address)
                         view?.onWalletNotMatchingExistingError()
                     } else {
                         view?.onWalletRestored()

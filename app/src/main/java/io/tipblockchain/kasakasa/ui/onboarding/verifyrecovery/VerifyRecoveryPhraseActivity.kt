@@ -6,29 +6,28 @@ import android.os.Handler
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.ui.BaseActivity
-import io.tipblockchain.kasakasa.ui.newaccount.ChooseUsernameActivity
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
-import io.tipblockchain.kasakasa.ui.onboarding.profile.OnboardingUserProfileActivity
 
 import kotlinx.android.synthetic.main.activity_verify_recovery_phrase.*
 
 class VerifyRecoveryPhraseActivity : BaseActivity(), VerifyRecoveryPhrase.View {
 
     private var presenter: VerifyRecoveryPhrase.Presenter? = null
-    private var recoveryPhrase: String = ""
+    private var originalRecoveryPhrase: String = ""
+    private var modifiedRecoveryPhrase: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_recovery_phrase)
 
-        val recoveryPhrase = intent.getStringExtra(AppConstants.EXTRA_RECOVERY_PHRASE)
+        originalRecoveryPhrase = intent.getStringExtra(AppConstants.EXTRA_RECOVERY_PHRASE)
 
         verifyBtn.setOnClickListener { verifyRecoveryPhrase() }
-        if (recoveryPhrase == null || recoveryPhrase.isEmpty()) {
+        if (originalRecoveryPhrase.isEmpty()) {
             finish()
         }
 
-        setupPresenter(recoveryPhrase!!)
+        setupPresenter(originalRecoveryPhrase!!)
     }
 
     override fun onDestroy() {
@@ -36,7 +35,7 @@ class VerifyRecoveryPhraseActivity : BaseActivity(), VerifyRecoveryPhrase.View {
         super.onDestroy()
     }
     override fun onWordsRemoved(phrase: String, firstIndex: Int, secondIndex: Int) {
-        recoveryPhrase = phrase
+        modifiedRecoveryPhrase = phrase
         seedPhraseTv.text = phrase
     }
 
@@ -77,7 +76,7 @@ class VerifyRecoveryPhraseActivity : BaseActivity(), VerifyRecoveryPhrase.View {
     }
 
     private fun verifyRecoveryPhrase() {
-        if (recoveryPhrase.isEmpty()) {
+        if (modifiedRecoveryPhrase.isEmpty()) {
             showMessage(getString(R.string.error_invalid_recovery_phrase))
         }
 
@@ -85,13 +84,13 @@ class VerifyRecoveryPhraseActivity : BaseActivity(), VerifyRecoveryPhrase.View {
             verifyBtn.isEnabled = false
             val word1 = missingWord1Tv.text.toString()
             val word2 = missingWord2Tv.text.toString()
-            presenter?.verifyRecoveryPhrase(recoveryPhrase, word1, word2)
+            presenter?.verifyRecoveryPhrase(modifiedRecoveryPhrase, word1, word2)
         }
     }
 
     private fun navigateToChoosePasswordSCreen() {
        val intent = Intent(this, ChoosePasswordActivity::class.java)
-        intent.putExtra(AppConstants.EXTRA_RECOVERY_PHRASE, recoveryPhrase)
+        intent.putExtra(AppConstants.EXTRA_RECOVERY_PHRASE, originalRecoveryPhrase)
         startActivity(intent)
     }
 

@@ -43,7 +43,7 @@ class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
         val binding: ActivityChoosePasswordBinding = DataBindingUtil.setContentView(this, R.layout.activity_choose_password)
 
         recoveryPhrase = intent.getStringExtra(AppConstants.EXTRA_RECOVERY_PHRASE)
-        existingUser = intent.getSerializableExtra(AppConstants.EXTRA_EXISTING_ACCOUNT_USER) as User
+        existingUser = intent.getSerializableExtra(AppConstants.EXTRA_EXISTING_ACCOUNT_USER) as User?
 
         // Set up the password form.
         passwordTv.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
@@ -63,6 +63,7 @@ class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
 
         presenter = ChoosePasswordPresenter()
         presenter?.attach(this)
+        presenter?.setExistingUser(existingUser)
 
         nextBtn.setOnClickListener { checkPassword() }
         viewModel = getViewModel()

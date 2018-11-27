@@ -33,19 +33,19 @@ class MainTabActivity : BaseActivity() {
 
         when (item.itemId) {
 
-            R.id.navigation_home -> {
+            R.id.navigation_contacts -> {
                 mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
 //                supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_contacts)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_wallet -> {
 //                supportActionBar?.hide()
                 supportActionBar?.setTitle(R.string.title_wallet)
                 mSectionsPagerAdapter?.replaceFragment(WalletFragment.newInstance(1))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.navigation_account -> {
                 supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_my_account)
                 mSectionsPagerAdapter?.replaceFragment(MyAccountFragment())

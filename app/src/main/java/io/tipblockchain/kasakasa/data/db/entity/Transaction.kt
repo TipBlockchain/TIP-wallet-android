@@ -13,29 +13,15 @@ import java.math.BigInteger
             Index(value = ["to"]),
             Index(value = ["currency"]),
             Index(value = ["from", "currency"]),
-            Index(value = ["toTipUserId"]),
-            Index(value = ["fromTipUserId"])
-        ],
-        foreignKeys = [
-                ForeignKey(
-                        entity = User::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("fromTipUserId"),
-                        onDelete = SET_NULL),
-                ForeignKey(
-                        entity = User::class,
-                        parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("toTipUserId"),
-                        onDelete = SET_NULL)
+            Index(value = ["from_id"]),
+            Index(value = ["to_id"])
         ])
 
-class Transaction(
+data class Transaction(
         @PrimaryKey @ColumnInfo(name = "hash") val hash: String,
         @ColumnInfo(name = "blockHash") val blockHash: String,
         @ColumnInfo (name = "from") val from: String,
         @ColumnInfo (name = "to") val to: String,
-        @ColumnInfo (name = "fromTipUserId") var fromTipUserId: String?,
-        @ColumnInfo (name = "toTipUserId") var toTipUserId: String?,
         @ColumnInfo (name = "currency") var currency: String,
         @ColumnInfo (name = "value") val value: BigInteger,
         @ColumnInfo (name = "timestamp") @SerializedName("timeStamp") val time: String,
@@ -45,6 +31,7 @@ class Transaction(
         @ColumnInfo (name = "nonce") val nonce: Int,
         @ColumnInfo (name = "message") var message: String?,
         @ColumnInfo (name = "tokenSymbol") var tokenSymbol: String?,
-        @ColumnInfo (name = "txReceiptStatus") @SerializedName("txreceipt_status") var receiptStatus: String?) {
-}
+        @ColumnInfo (name = "txReceiptStatus") @SerializedName("txreceipt_status") var receiptStatus: String?,
+        @Embedded (prefix = "from_") var fromUser: User?,
+        @Embedded (prefix = "to_") var toUser: User?)
 

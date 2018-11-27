@@ -3,6 +3,7 @@ package io.tipblockchain.kasakasa.data.db.repository
 import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
+import android.util.Log
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
@@ -55,6 +56,24 @@ class WalletRepository {
         }
     }
 
+    fun delete(address: String) {
+        Schedulers.io().scheduleDirect {
+            dao.delete(address)
+        }
+    }
+
+    fun delete(wallet: Wallet) {
+        Schedulers.io().scheduleDirect {
+            dao.delete(wallet)
+        }
+    }
+
+    fun deleteAll() {
+        Schedulers.io().scheduleDirect {
+            dao.deleteAll()
+        }
+    }
+
     fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String): NewWallet? {
         val web3Bridge = Web3Bridge()
         val bip39Wallet = WalletUtils.getnerateBip39WalletFromMnemonic(mnemonic = mnemonic, password = password, destinationDirectory = FileUtils().walletsDir())
@@ -72,7 +91,13 @@ class WalletRepository {
         return null
     }
 
+    fun deleteAllWallets() {
+
+    }
+
     companion object {
+
+        const val LOG_TAG = "WalletRepository"
 
         val instance = WalletRepository(App.application())
 

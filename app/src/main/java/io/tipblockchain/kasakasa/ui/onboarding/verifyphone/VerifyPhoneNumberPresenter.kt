@@ -4,6 +4,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.PreferenceHelper
+import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.data.responses.PhoneVerificationRequest
 import io.tipblockchain.kasakasa.networking.TipApiService
@@ -17,6 +18,8 @@ class VerifyPhoneNumberPresenter: VerifyPhoneNumber.Presenter {
     override var view: VerifyPhoneNumber.View? = null
 
     override fun verifyPhoneNumber(verificationRequest: PhoneVerificationRequest) {
+        UserRepository.demoAccountUser = null
+
         disposable = tipApiService.checkPhoneVerification(verificationRequest)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -27,6 +30,7 @@ class VerifyPhoneNumberPresenter: VerifyPhoneNumber.Presenter {
                     }
 
                     if (response.authorization != null && response.account != null) {
+                        AuthorizationRepository.currentAuthorization = response.authorization
                         view?.onPhoneVerifiedWithExistingAccount(response.account!!)
                     } else if (response.demoAccount != null && response.pendingSignup != null) {
                         UserRepository.demoAccountUser = response.demoAccount!!

@@ -4,6 +4,8 @@ import android.util.Log
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
+import io.tipblockchain.kasakasa.app.AppConstants
+import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.User
@@ -25,13 +27,14 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://84de5aa4.ngrok.io"
+        private val baseUrl: String = AppProperties.get(AppConstants.CONFIG_API_URL)
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
         val instance: TipApiService = TipApiService()
 
         init {
+            Log.i("TipApiService", "baseURL = $baseUrl")
             val okHttpClientBuilder = OkHttpClient()
                     .newBuilder()
 

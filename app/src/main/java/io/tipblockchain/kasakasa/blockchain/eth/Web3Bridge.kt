@@ -1,5 +1,6 @@
 package io.tipblockchain.kasakasa.blockchain.eth
 
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.blockchain.smartcontracts.TipToken
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.utils.FileUtils
@@ -23,7 +24,7 @@ import org.web3j.tx.ClientTransactionManager
 
 class Web3Bridge {
 
-    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get("ether_node_url")))
+    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get(AppConstants.CONFIG_ETH_NODE_URL)))
     private var readOnlyTipToken: TipToken? = null
 
     private var defaultGasPrice = 21_000_000L
@@ -38,7 +39,7 @@ class Web3Bridge {
 
     private fun loadTipSmartContract(wallet: Wallet) {
         readOnlyTipToken = TipToken.load(
-                AppProperties.get("tip_contract_address"),
+                AppProperties.get(AppConstants.CONFIG_TIP_CONTRACT_ADDRESS),
                 web3,
                 ClientTransactionManager(web3, wallet.address),
                 BigInteger.valueOf(defaultGasPrice),
@@ -48,7 +49,7 @@ class Web3Bridge {
     private fun loadTipTokenWithCredentials(credentials: Credentials): TipToken {
         val gasPrice = BigInteger.valueOf(defaultGasPrice)
         return TipToken.load(
-                AppProperties.get("tip_contract_address"),
+                AppProperties.get(AppConstants.CONFIG_TIP_CONTRACT_ADDRESS),
                 web3,
                 credentials,
                 gasPrice,

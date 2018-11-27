@@ -74,7 +74,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         presenter?.attach(this)
         presenter?.checkForDemoAccount()
 
-        walletRepository.primaryWallet().observe(this, Observer {wallet ->
+        walletRepository.primaryWallet().observe(this, Observer { wallet ->
             if (wallet != null) {
                 presenter?.wallet = wallet
             } else {

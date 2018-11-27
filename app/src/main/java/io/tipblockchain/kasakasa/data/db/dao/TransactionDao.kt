@@ -21,7 +21,7 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions ORDER BY timestamp DESC")
     fun findAllTransactions(): LiveData<List<Transaction>>
 
-    @Query("SELECT * FROM transactions as t JOIN users as u on u.id in (t.fromTipUserId, t.toTipUserId)")
+    @Query("SELECT * FROM transactions as t JOIN users as u on u.id in (t.from_id, t.to_id)")
     fun findAllTransactionsWithUsers(): LiveData<List<UserTransaction>>
 
     @Query("SELECT * FROM transactions WHERE currency = :currency ORDER BY timestamp DESC")
