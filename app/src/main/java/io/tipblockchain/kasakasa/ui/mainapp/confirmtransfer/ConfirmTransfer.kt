@@ -14,7 +14,9 @@ interface ConfirmTransfer {
         fun onInvalidTransactionError(error: Throwable)
         fun onInvalidPasswordError()
         fun onTransactionSent()
+        fun onTransactionPosted()
         fun onTransactionError(error: Throwable)
+        fun onUnhandledError()
     }
 
     interface Presenter: BasePresenter<View> {

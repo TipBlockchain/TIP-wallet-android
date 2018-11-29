@@ -85,7 +85,7 @@ class WalletPresenter: WalletInterface.Presenter {
         val c: Currency = Currency.valueOf(wallet.currency)
         when (c) {
             Currency.TIP -> {
-                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
+                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
                     wallet.blockNumber = latestBlock
                     walletRepository.update(wallet)
                     if (txlist != null) {
@@ -98,7 +98,7 @@ class WalletPresenter: WalletInterface.Presenter {
                 })
             }
             Currency.ETH -> {
-                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.blockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
+                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
                     this.loadTransactions(wallet)
                     if (txlist != null) {
 //                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)

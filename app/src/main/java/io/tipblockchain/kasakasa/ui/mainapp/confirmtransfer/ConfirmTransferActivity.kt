@@ -22,6 +22,7 @@ import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.TransactionConfirmedActivity
 
 import kotlinx.android.synthetic.main.activity_confirm_transaction.*
+import java.lang.Error
 import java.math.BigDecimal
 
 class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
@@ -29,6 +30,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     private var pendingTransaction: PendingTransaction? = null
     private var presenter: ConfirmTransfer.Presenter? = null
     private var userRepository = UserRepository.instance
+    private var transactionSent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,13 +80,28 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onTransactionSent() {
+        transactionSent = true
+    }
+
+    override fun onTransactionPosted() {
         showProgress(false)
-        navigateToTransactionConfirmed()
+        if (transactionSent) {
+            navigateToTransactionConfirmed()
+        }
+    }
+
+    override fun onUnhandledError() {
+        this.onTransactionError(Error(getString(R.string.unknown_error)))
     }
 
     override fun onTransactionError(error: Throwable) {
         showProgress(false)
-        showOkDialog(getString(R.string.error_sending_transaction, error.localizedMessage))
+        // error might have been triggered after tx was sent, but during posting to server
+        if (!transactionSent) {
+            showOkDialog(getString(R.string.error_sending_transaction, error.localizedMessage))
+        } else {
+            navigateToTransactionConfirmed()
+        }
     }
 
     private fun updateViewWithTransaction() {

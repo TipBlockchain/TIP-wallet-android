@@ -14,7 +14,10 @@ import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
+import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.networking.EtherscanApiService
+import io.tipblockchain.kasakasa.networking.TipApiService
+import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.math.BigInteger
 
 enum class Currency {
@@ -28,10 +31,12 @@ class TransactionRepository {
 
     private var dao: TransactionDao
     private var allTransactions: LiveData<List<Transaction>>
+    private var tipApiService = TipApiService.instance
     private var etherscanApiService = EtherscanApiService.instance
 
     private var tipTxDisposable: Disposable? = null
     private var ethTxDisposable: Disposable? = null
+    private var mergeTxDisposable: Disposable? = null
 
     private constructor(context: Context) {
         val db = TipRoomDatabase.getDatabase(context)
@@ -50,8 +55,22 @@ class TransactionRepository {
     fun loadTransactions(currency: Currency): LiveData<List<Transaction>> {
         return dao.findTransactions(currency = currency.name)
     }
+
     fun loadTransactions_notLive(currency: Currency): Flowable<List<Transaction>> {
         return dao.findTransactions_notLive(currency = currency.name)
+    }
+
+    fun postTransaction(pendingTransaction: PendingTransaction, txrReceipt: TransactionReceipt): Observable<Transaction?> {
+        val tx = Transaction.from(pendingTransaction, txReceipt = txrReceipt)
+        return tipApiService.addTransaction(tx)
+    }
+
+    fun insert(tx: Transaction) {
+        dao.insert(tx)
+    }
+
+    fun add(tx: Transaction) {
+        insertAsyncTask(dao).execute(tx)
     }
 
     // TODO: rename to fetchNewTipTransactions()
@@ -61,19 +80,18 @@ class TransactionRepository {
         tipTxDisposable = etherscanApiService.getTipTransactions(address = address, startBlock = startBlock, endBlock = endBlock)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
-//                .onErrorReturn { EtherscanTxListResponse(status = "-1", message = "Error", result = listOf()) }
                 .subscribe ({ response ->
-                    Log.i("TX", "status = ${response.status}")
-                    Log.i("TIP TX", "txlist = ${response.result}")
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {
                         var cleanedList = txlist.map { it.currency = Currency.TIP.name
                         it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
-                        dao.insertAll(cleanedList)
-                    }
-                    AndroidSchedulers.mainThread().scheduleDirect {
-                        callback(txlist, null)
+                        mergeTransactions(cleanedList) { mergedList ->
+                            dao.insertAll(mergedList)
+                            AndroidSchedulers.mainThread().scheduleDirect {
+                                callback(mergedList, null)
+                            }
+                        }
                     }
 
         }, {
@@ -98,10 +116,12 @@ class TransactionRepository {
                         var cleanedList = txlist.map { it.currency = Currency.ETH.name
                             it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
-                        dao.insertAll(cleanedList)
-                    }
-                    AndroidSchedulers.mainThread().scheduleDirect {
-                        callback(txlist, null)
+                        mergeTransactions(cleanedList) { mergedList ->
+                            dao.insertAll(mergedList)
+                            AndroidSchedulers.mainThread().scheduleDirect {
+                                callback(mergedList, null)
+                            }
+                        }
                     }
 
                 }, {
@@ -110,6 +130,19 @@ class TransactionRepository {
                     it.printStackTrace(System.err)
                     callback(null, it)
                 })
+    }
+
+    private fun mergeTransactions(txlist: List<Transaction>, callback: (updatedList: List<Transaction>) -> Unit) {
+        mergeTxDisposable?.dispose()
+        val hashlist = txlist.map { it.hash }
+        mergeTxDisposable = tipApiService.getTransactionsByHashes(txHashList = hashlist).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribe { updatedList ->
+            var listToReturn: MutableList<Transaction> = mutableListOf()
+            for (tx in txlist) {
+                val matchingTx = updatedList.find { it.hash == tx.hash }
+                listToReturn.add(matchingTx ?: tx)
+            }
+            callback(updatedList)
+        }
     }
 
     companion object {

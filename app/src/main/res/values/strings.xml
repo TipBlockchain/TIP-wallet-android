@@ -206,7 +206,7 @@
     <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
     <string name="invalid_transaction">Invalid transaction: %s</string>
     <string name="invalid_transaction_value">Invalid transaction value</string>
-    <string name="placeholder_zero_tip_amount">0.0000</string>
+    <string name="placeholder_zero_tip_amount">0</string>
     <string name="unlock_wallet">Unlock your wallet</string>
     <string name="scan_address">Scan destination address</string>
     <string name="scan_cancelled">Scan cancelled.</string>
@@ -246,5 +246,6 @@
     <string name="message_create_wallet">You will now create a wallet on your device so you can send and receive TIP and ETH.</string>
     <string name="message_wallet_restored">Hooray!\nYour account has been restored. You can start tipping again.</string>
     <string name="create_wallet">Create Wallet</string>
+    <string name="unknown_error">An unknown error occurred.</string>
     <string name="text_enter_recovery_phrase">Enter your recovery phrase below. This must be the same phrase you used to create your account. \n\nThis phrase is used to restore your account on your device. It is never sent over the network.</string>
 </resources>

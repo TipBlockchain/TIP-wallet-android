@@ -4,6 +4,12 @@ import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import android.util.Log
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.internal.operators.flowable.FlowableFlatMapSingle
+import io.reactivex.internal.operators.flowable.FlowableSingle
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
@@ -38,8 +44,8 @@ class WalletRepository {
         return dao.findWallet( address)
     }
 
-    fun findWalletForAddressAndCurrency(address: String, currency: Currency): LiveData<Wallet?> {
-        return dao.findWalletForAddressAndCurrency(address, currency = currency.name)
+    fun findWalletForAddressAndCurrency(address: String, currency: Currency): Observable<Wallet?> {
+        return dao.findWalletForAddressAndCurrency(address, currency = currency.name).toObservable()
     }
 
     fun findWalletForCurrency(currency: Currency): LiveData<Wallet?> {
@@ -81,9 +87,9 @@ class WalletRepository {
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
             val blockNumber = web3Bridge.latestBlock()
-            val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber)
+            val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(tipWallet)
-            val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber)
+            val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(ethWallet)
             return NewWallet(bip39Wallet.mnemonic, tipWallet)
         }

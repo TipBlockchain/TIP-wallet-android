@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.networking
 
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.MultipartBody
@@ -59,5 +60,20 @@ interface TipApi {
 
     @DELETE(value = "/contacts")
     fun deleteContact(contact: User): Observable<ContactListStringResponse>
+
+    @POST("/transactions")
+    fun addTransaction(@Body transaction: Transaction): Observable<Transaction?>
+
+    @GET("/transactions")
+    fun getTransaction(@Query("hash") hash: String): Observable<Transaction>
+
+    @GET("/transactions")
+    fun getTransactions(@Query("address") address: String): Observable<List<Transaction>>
+
+    @GET("/transactions")
+    fun getTransactions(@Query("address") address: String, @Query("currency") currency: String): Observable<List<Transaction>>
+
+    @GET("/transactions")
+    fun getTransactionsByHashes(@Query("hashes")txHashList: String): Observable<List<Transaction>>
 
 }

@@ -8,8 +8,10 @@ import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
+import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -126,5 +128,25 @@ class TipApiService {
 
     fun removeContact(contact: User): Observable<ContactListStringResponse> {
         return tipApi.deleteContact(contact)
+    }
+
+    fun addTransaction(transaction: Transaction): Observable<Transaction?> {
+        return tipApi.addTransaction(transaction)
+    }
+
+    fun getTransaction(hash: String): Observable<Transaction> {
+        return tipApi.getTransaction(hash)
+    }
+
+    fun getTransactions(address: String): Observable<List<Transaction>> {
+        return tipApi.getTransactions(address)
+    }
+
+    fun getTransactions(address: String, currency: Currency): Observable<List<Transaction>> {
+        return tipApi.getTransactions(address = address, currency = currency.name)
+    }
+
+    fun getTransactionsByHashes(txHashList: List<String>): Observable<List<Transaction>> {
+        return tipApi.getTransactionsByHashes(txHashList = txHashList.joinToString(","))
     }
 }
