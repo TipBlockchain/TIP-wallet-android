@@ -15,6 +15,7 @@ class TipProcessor: TransactionProcessor {
     constructor(wallet: Wallet) {
         web3Bridge = Web3Bridge(wallet)
     }
+
     override fun getBalance(address: String): BigInteger? {
         return web3Bridge.getTipBalanceAsync(address)
     }

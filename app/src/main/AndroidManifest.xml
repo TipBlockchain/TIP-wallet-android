@@ -18,11 +18,14 @@
         android:name=".app.App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="758595895f8ec55dacb56630b620a9de997a77b0" />
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
             android:label="@string/app_name"

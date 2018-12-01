@@ -68,12 +68,15 @@ interface TipApi {
     fun getTransaction(@Query("hash") hash: String): Observable<Transaction>
 
     @GET("/transactions")
-    fun getTransactions(@Query("address") address: String): Observable<List<Transaction>>
+    fun getTransactions(@Query("address") address: String): Observable<TransactionListResponse?>
 
     @GET("/transactions")
-    fun getTransactions(@Query("address") address: String, @Query("currency") currency: String): Observable<List<Transaction>>
+    fun getTransactions(@Query("address") address: String, @Query("currency") currency: String): Observable<TransactionListResponse?>
 
     @GET("/transactions")
-    fun getTransactionsByHashes(@Query("hashes")txHashList: String): Observable<List<Transaction>>
+    fun getTransactionsByHashes(@Query("hashes")txHashList: String): Observable<TransactionListResponse?>
+
+    @POST("/transactions/fill")
+    fun fillTransactions(@Body txList: List<Transaction>): Observable<TransactionListResponse?>
 
 }

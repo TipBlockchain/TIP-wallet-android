@@ -12,7 +12,9 @@ import io.reactivex.internal.operators.flowable.FlowableFlatMapSingle
 import io.reactivex.internal.operators.flowable.FlowableSingle
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
+import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.crypto.WalletUtils
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
@@ -86,7 +88,7 @@ class WalletRepository {
         val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
-            val blockNumber = web3Bridge.latestBlock()
+            val blockNumber = AppProperties.get(AppConstants.APP_START_BLOCK).toBigInteger()
             val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(tipWallet)
             val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
@@ -95,10 +97,6 @@ class WalletRepository {
         }
 
         return null
-    }
-
-    fun deleteAllWallets() {
-
     }
 
     companion object {

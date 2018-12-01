@@ -1,15 +1,19 @@
 package io.tipblockchain.kasakasa.ui.mainapp.usersearch
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_user_search.*
@@ -23,7 +27,6 @@ class UserSearchActivity : BaseActivity(), UserSearch.View {
     init {
         mOnClickListener = View.OnClickListener { v ->
             val item = v.tag as User
-            Log.d(LOG_TAG, "user is ${item}")
             showAddToContactsDialog(user = item)
         }
     }
@@ -68,7 +71,12 @@ class UserSearchActivity : BaseActivity(), UserSearch.View {
     }
 
     override fun onContactAdded(contact: User) {
+        val intent = Intent()
+        intent.action = AppConstants.ACTION_CONTACT_ADDED
+        intent.putExtra(AppConstants.EXTRA_CONTACT_ADDED, contact)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         showMessage(getString(R.string.message_added_to_contacts, contact.username))
+        Log.d(LOG_TAG, "Contact added broadcast: $contact")
     }
 
     override fun onContactAddError(err: Throwable) {
@@ -86,6 +94,7 @@ class UserSearchActivity : BaseActivity(), UserSearch.View {
 
     private fun setupRecyclerView() {
         recyclerView.setHasFixedSize(true)
+        recyclerView.setEmptyView(findViewById(R.id.emptyView))
         mAdapter = UserSearchAdapter(mOnClickListener)
         recyclerView.adapter = mAdapter
         val attrs = intArrayOf(android.R.attr.listDivider)

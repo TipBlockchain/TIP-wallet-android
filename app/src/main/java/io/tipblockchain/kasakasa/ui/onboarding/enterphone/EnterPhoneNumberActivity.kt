@@ -58,16 +58,19 @@ class EnterPhoneNumberActivity : BaseActivity(), EnterPhone.View {
 
     override fun onEmptyPhoneNumberError() {
         showProgress(false)
+        verifyPhoneBtn.isEnabled = true
         verificationCodeTv.error = getString(R.string.error_creating_account)
     }
 
     override fun onInvalidPhoneNumberError() {
         showProgress(false)
+        verifyPhoneBtn.isEnabled = true
         verificationCodeTv.error = getString(R.string.error_creating_account)
     }
 
     override fun onVerificationError(error: Throwable) {
         showProgress(false)
+        verifyPhoneBtn.isEnabled = true
         verificationCodeTv.error = getString(R.string.error_sending_verification_text, error.localizedMessage)
     }
 
@@ -89,6 +92,7 @@ class EnterPhoneNumberActivity : BaseActivity(), EnterPhone.View {
 
     private fun startPhoneVerification() {
         showProgress(true)
+        verifyPhoneBtn.isEnabled = false
         verificationRequest = PhoneVerificationRequest(countryCode = countryCodeTv.text.toString(), phoneNumber = verificationCodeTv.text.toString())
         presenter?.validatePhoneNumber(verificationRequest!!)
     }

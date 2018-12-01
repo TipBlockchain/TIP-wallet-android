@@ -44,6 +44,7 @@ class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
     override fun onPhoneVerificationError(error: Throwable) {
         showProgress(false)
         showMessage(getString(R.string.error_verifying_phone, error.localizedMessage))
+        verifyPhoneBtn.isEnabled = true
     }
 
     override fun onPhoneVerifiedWithExistingAccount(account: User) {
@@ -64,9 +65,11 @@ class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
     override fun onUnknownError() {
         showProgress(false)
         showMessage(getString(R.string.error_verifying_phone, getString(R.string.error_verifying_phone)))
+        verifyPhoneBtn.isEnabled = true
     }
 
     private fun verifyPhoneNumber() {
+        verifyPhoneBtn.isEnabled = false
         verificationRequest!!.verificationCode = verificationCodeTv.text.toString()
         presenter?.verifyPhoneNumber(verificationRequest!!)
     }

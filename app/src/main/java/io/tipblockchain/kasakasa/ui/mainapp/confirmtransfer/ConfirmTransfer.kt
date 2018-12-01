@@ -23,5 +23,6 @@ interface ConfirmTransfer {
         fun getTransactionFee(transaction: PendingTransaction)
         fun validateTransaction(transaction: PendingTransaction)
         fun sendTransactionWithPassword(transaction: PendingTransaction, password: String)
+        fun sendTransactionAsync(transaction: PendingTransaction, password: String)
     }
 }

@@ -21,6 +21,11 @@
 #-renamesourcefileattribute SourceFile
 
 # UCrop
+-ignorewarnings
+
+-keep class * {
+    public private *;
+}
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }

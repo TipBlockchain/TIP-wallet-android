@@ -7,7 +7,23 @@
     android:layout_height="match_parent"
     tools:context="io.tipblockchain.kasakasa.ui.mainapp.usersearch.UserSearchActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/no_search_results"
+        android:textAlignment="center"
+        style="@style/AppTheme.EmptyText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <io.tipblockchain.kasakasa.ui.views.EmptyRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

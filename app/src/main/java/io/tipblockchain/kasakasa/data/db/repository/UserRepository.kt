@@ -43,6 +43,9 @@ class UserRepository {
 //        fetchMyAccount()
     }
 
+    init {
+        fetchCurrentUser()
+    }
     fun insert(user: User) {
         insertAsyncTask(dao).execute(user)
     }

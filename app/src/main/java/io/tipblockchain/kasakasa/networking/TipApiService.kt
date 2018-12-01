@@ -138,15 +138,19 @@ class TipApiService {
         return tipApi.getTransaction(hash)
     }
 
-    fun getTransactions(address: String): Observable<List<Transaction>> {
+    fun getTransactions(address: String): Observable<TransactionListResponse?> {
         return tipApi.getTransactions(address)
     }
 
-    fun getTransactions(address: String, currency: Currency): Observable<List<Transaction>> {
+    fun getTransactions(address: String, currency: Currency): Observable<TransactionListResponse?> {
         return tipApi.getTransactions(address = address, currency = currency.name)
     }
 
-    fun getTransactionsByHashes(txHashList: List<String>): Observable<List<Transaction>> {
+    fun getTransactionsByHashes(txHashList: List<String>): Observable<TransactionListResponse?> {
         return tipApi.getTransactionsByHashes(txHashList = txHashList.joinToString(","))
+    }
+
+    fun fillTransactions(txList: List<Transaction>): Observable<TransactionListResponse?> {
+        return tipApi.fillTransactions(txList)
     }
 }

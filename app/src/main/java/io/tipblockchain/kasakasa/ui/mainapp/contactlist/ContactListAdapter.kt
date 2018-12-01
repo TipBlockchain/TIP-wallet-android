@@ -55,6 +55,10 @@ class ContactListAdapter (
             notifyDataSetChanged()
         }
 
+        fun getResults(): List<User> {
+            return mValues.toList()
+        }
+
         fun addContact(contact: User) {
             mValues.add(contact)
             notifyItemInserted(mValues.size -1)

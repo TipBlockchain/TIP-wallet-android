@@ -67,7 +67,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
         createAccountDisposable = tipApiService.createUser(user, signupToken = signupToken!!, claimDemoAccount = demoAccountFound)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe ( {newUser ->
+                .subscribe ( { newUser ->
                     if (newUser.isValid() ) {
                         UserRepository.currentUser = newUser
                         getNewAuthorization()
@@ -87,8 +87,10 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({ user ->
-                    if (user != null) {
+                    if (user != null && user.isValid()) {
                         UserRepository.currentUser = user
+                        view?.onPhotoUploaded()
+                    } else {
                         view?.onPhotoUploaded()
                     }
                 }, { err ->

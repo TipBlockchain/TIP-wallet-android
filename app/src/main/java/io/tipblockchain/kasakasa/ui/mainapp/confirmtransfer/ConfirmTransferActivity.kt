@@ -42,6 +42,14 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         Log.d(LOG_TAG, "tx = $pendingTransaction")
         presenter?.validateTransaction(pendingTransaction!!)
         presenter?.getTransactionFee(pendingTransaction!!)
+
+        if (pendingTransaction?.currency == Currency.ETH) {
+            additionalTxFeeTv.visibility = View.GONE
+        } else {
+            totalAmountLabelTv.visibility = View.GONE
+            totalAmountValueTv.visibility = View.GONE
+            additionalTxFeeTv.visibility = View.GONE
+        }
     }
 
     override fun onDestroy() {
@@ -55,7 +63,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onTransactionFeeCalculated(txFee: BigDecimal) {
-        transactionFeeTv.text = getString(R.string.amount_and_currency, txFee, "ETH")
+        transactionFeeTv.text = getString(R.string.plus_amount_and_currency, txFee, "ETH")
         if (pendingTransaction?.currency == Currency.ETH) {
             additionalTxFeeTv.visibility = View.GONE
             val totalAmount = pendingTransaction?.value?.plus(txFee)
@@ -65,6 +73,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
             additionalTxFeeTv.text = getString(R.string.plus_amount_and_currency, txFee, "ETH")
             totalAmountLabelTv.visibility = View.GONE
             totalAmountValueTv.visibility = View.GONE
+            additionalTxFeeTv.visibility = View.GONE
         }
     }
 
@@ -81,6 +90,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
     override fun onTransactionSent() {
         transactionSent = true
+        navigateToTransactionConfirmed()
     }
 
     override fun onTransactionPosted() {
@@ -91,11 +101,13 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onUnhandledError() {
+        confirmBtn.isEnabled = true
         this.onTransactionError(Error(getString(R.string.unknown_error)))
     }
 
     override fun onTransactionError(error: Throwable) {
         showProgress(false)
+        confirmBtn.isEnabled = true
         // error might have been triggered after tx was sent, but during posting to server
         if (!transactionSent) {
             showOkDialog(getString(R.string.error_sending_transaction, error.localizedMessage))
@@ -142,7 +154,6 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
             sendTransaction(password)
         }
 
-
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
         }
@@ -153,7 +164,8 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
     private fun sendTransaction(password: String) {
         showProgress(true)
-        presenter?.sendTransactionWithPassword(pendingTransaction!!, password)
+        confirmBtn.isEnabled = false
+        presenter?.sendTransactionAsync(pendingTransaction!!, password)
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -163,6 +175,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         // the progress spinner.
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
+        confirmBtn.isEnabled = show
         contentConstraingLayout.visibility = if (show) View.GONE else View.VISIBLE
         contentConstraingLayout.animate()
                 .setDuration(shortAnimTime)

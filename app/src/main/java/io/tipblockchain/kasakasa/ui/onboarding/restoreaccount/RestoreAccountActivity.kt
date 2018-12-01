@@ -52,7 +52,7 @@ class RestoreAccountActivity : BaseActivity(), RestoreAccount.View {
     }
 
     private fun nextButtonPressed() {
-        recoveryPhrase = seedPhraseTv.text.toString()
+        recoveryPhrase = seedPhraseTv.text.toString().trim()
         presenter?.checkRecoveryPhrase(recoveryPhrase ?: "")
     }
 

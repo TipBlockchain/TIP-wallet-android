@@ -5,6 +5,7 @@
     <string name="background_content_desc">background</string>
     <string name="welcome_to_tip">Welcome to TIP</string>
     <string name="search_and_discovery">Search and Discovery</string>
+    <string name="search">Search</string>
     <string name="p2p_instant_messaging">Peer-to-peer Instant Messaging</string>
     <string name="smart_addresses">Smart Addresses</string>
     <string name="discovery_on_blockchain">Discovery on the blockchain.</string>
@@ -109,6 +110,10 @@
     <string name="error_firstname_empty">Your firstname can not be empty.</string>
     <string name="error_phone_empty">Your phone umber can not be empty.</string>
     <string name="error_invalid_phone">The phone number entered is not valid.</string>
+    <string name="error_username_has_space">Your username can not contain spaces.</string>
+    <string name="error_username_invalid_length">Your username must be between 2 and 16 characters.</string>
+    <string name="error_username_too_short">Username is too short</string>
+    <string name="error_username_too_long">Username is too long</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
     <string name="title_activity_choose_password">Choose your password</string>
@@ -125,6 +130,8 @@
     <string name="title_activity_backup_account">Back up your account</string>
     <string name="title_button_backup_your_account">Back up your account</string>
     <string name="title_button_backup_account">Back up account</string>
+    <string name="title_transactions">Transactions</string>
+    <string name="title_send_transfer">Enter transaction details below.\nYou can send either using a username or an address.</string>
     <string name="backup_account">Back up account</string>
     <string name="backup_account_description">You\'ll need to back up your keystore in case you delete this app. Your account keys are never sent to our servers. Thus, this backup is the only way you can restore your account.</string>
     <string name="yes_i_made_backup">Yes, i made a backup</string>
@@ -137,7 +144,7 @@
     <string name="placeholder_amount">0.00 TIP</string>
     <string name="placeholder_tx_fee">+ 0.000000 ETH</string>
     <string name="amount_and_currency">%s %s</string>
-    <string name="plus_amount_and_currency">+ %s %s</string>
+    <string name="plus_amount_and_currency"> +%s %s</string>
     <string name="placeholder_tipamount">5420.75 TIP</string>
     <string name="placeholder_txTime">Mon 11:47 pm</string>
     <string name="title_activity_confirm_payment">Confirm Transfer</string>
@@ -223,7 +230,10 @@
     <string name="tip">TIP</string>
     <string name="eth">ETH</string>
     <string name="sending">Sending transaction...</string>
-    <string name="no_contacts">You do not have any contacts yet. Click the Plus button to find people.</string>
+    <string name="no_contacts">You do not have any contacts yet. Click the plus button to find people.</string>
+    <string name="no_search_results">Find other users on the network to transact with by typing in the search field above.</string>
+    <string name="no_transactions">You do not have any transactions.\nTap on the receive button to start using your wallet.</string>
+    <string name="transaction_queued_message">Your transaction has been queued for sending. It may take a couple minutes to show up in your transaction list.</string>
     <string name="onboarding_enter_password">Enter a secure password. This password will be used to secure your account. You will need to enter it in order to send transactions.</string>
     <string name="saving">Saving...</string>
     <string name="placeholder_country_code">+00</string>
@@ -248,4 +258,7 @@
     <string name="create_wallet">Create Wallet</string>
     <string name="unknown_error">An unknown error occurred.</string>
     <string name="text_enter_recovery_phrase">Enter your recovery phrase below. This must be the same phrase you used to create your account. \n\nThis phrase is used to restore your account on your device. It is never sent over the network.</string>
+    <string name="onboarding_profile_prompt">Fill out your profile so that your friends can find you easily.</string>
+    <string name="please_wait_for_tx">Please wait for your transaction to be processed.</string>
+    <string name="transaction_queued">Transaction Queued</string>
 </resources>

@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 
@@ -53,19 +55,34 @@ class TransactionRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transaction = mValues[position]
 
-        val fromName = transaction.from
-        val toName = transaction.to
+        val fromAddress = transaction.from
         var addressToShow: String
-        var outgoing = false
 
-        if (currentUser?.address == fromName) {
-            addressToShow = toName
+        var otherUser: User? = null
+        if (currentUser?.address == fromAddress) {
+            if (transaction.toUser != null) {
+                otherUser = transaction.toUser
+                addressToShow = transaction.toUser!!.username
+            } else {
+                addressToShow = transaction.to
+            }
             holder.mAmountView.setTextColor(ContextCompat.getColor(mContext, R.color.sentRed))
         } else {
-            addressToShow = fromName
+            if (transaction.fromUser != null) {
+                otherUser = transaction.fromUser
+                addressToShow = transaction.fromUser!!.username
+            } else {
+                addressToShow = transaction.from
+            }
             holder.mAmountView.setTextColor(ContextCompat.getColor(mContext, R.color.receivedGreen))
         }
-//        val otherUser: User = transaction.from
+
+        val photoUrl = otherUser?.originalPhotoUrl
+        if (photoUrl != null) {
+            Picasso.get().load(photoUrl).into(holder.mAvartarIv)
+        } else {
+            Picasso.get().load(R.drawable.avatar_placeholder_small).into(holder.mAvartarIv)
+        }
         holder.mUsernameView.text = addressToShow
         holder.mMessageTv.text = transaction.message
         val valueInEth =  Convert.fromWei(transaction.value.toBigDecimal(), Convert.Unit.ETHER)
@@ -73,7 +90,6 @@ class TransactionRecyclerViewAdapter(
         holder.mAmountView.text = "${valueInEth.setScale(4, RoundingMode.HALF_UP)} ${transaction.currency}"
         val timestamp = transaction.time.toLong() * 1000
         holder.mTimeTv.text = SimpleDateFormat("MM/dd/yy hh':'mm").format(Date(timestamp))
-//        Picasso.get().load(otherUser.pictureUrl).into(holder.mAvartarIv)
 
         with(holder.mView) {
             tag = transaction

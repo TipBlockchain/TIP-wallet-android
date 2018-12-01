@@ -5,7 +5,8 @@ import android.content.Context
 import android.support.multidex.MultiDex
 import com.facebook.stetho.Stetho
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
-
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 class App : Application() {
 
@@ -34,7 +35,7 @@ class App : Application() {
         Stetho.initializeWithDefaults(this)
         TipRoomDatabase.getDatabase(instance.applicationContext)
         PreferenceHelper.placehoderValue = "Some random value"
-
+        Fabric.with(this, Crashlytics())
         // Use ApplicationContext.
         // example: SharedPreferences etc...
     }

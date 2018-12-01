@@ -54,11 +54,12 @@ class WalletPresenter: WalletInterface.Presenter {
         }
         if (currentWallet != null) {
             val balanceChanged = fetchBalance(currentWallet!!)
-            if (balanceChanged) {
-                fetchTransactions(currentWallet!!)
-            } else {
-                loadTransactions(wallet = currentWallet!!)
-            }
+            fetchTransactions(currentWallet!!)
+//            if (balanceChanged) {
+//                fetchTransactions(currentWallet!!)
+//            } else {
+//                loadTransactions(wallet = currentWallet!!)
+//            }
         }
     }
 
@@ -90,7 +91,7 @@ class WalletPresenter: WalletInterface.Presenter {
                     walletRepository.update(wallet)
                     if (txlist != null) {
                         // TODO: Fetch transactions iff new transactions or balance is different, else just load transactions
-//                        view?.onTransactionsFetched(wallet.address, Currency.TIP, txlist)
+                        view?.onTransactionsFetched(wallet.address, Currency.TIP, txlist)
                     } else {
                         view?.onTransactionsFetchError(err, Currency.TIP)
                     }
@@ -101,7 +102,7 @@ class WalletPresenter: WalletInterface.Presenter {
                 txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
                     this.loadTransactions(wallet)
                     if (txlist != null) {
-//                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)
+                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)
                     } else {
                         view?.onTransactionsFetchError(err, Currency.ETH)
                     }
@@ -152,12 +153,14 @@ class WalletPresenter: WalletInterface.Presenter {
             walletRepository.findWalletForCurrency(Currency.ETH).observe(view!!, Observer { wallet ->
                 if (wallet != null) {
                     ethWallet = wallet
+                    view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
                 }
             })
         }
         if (tipWallet == null) {
             walletRepository.findWalletForCurrency(Currency.TIP).observe(view!!, Observer { wallet ->
                 if (wallet != null && tipWallet == null) {
+                    view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
                     tipWallet = wallet
                     if(tipProcessor == null) {
                         tipProcessor = TipProcessor(wallet)

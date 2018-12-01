@@ -8,6 +8,9 @@ class ContactListPresenter: ContactList.Presenter {
     private val userRepository: UserRepository = UserRepository.instance
 
     override fun fetchContactList() {
+        if (view == null) {
+            return
+        }
         userRepository.loadContacts(view!!) { contacts, error ->
             if (contacts != null) {
                 view?.onContactsFetched(contacts)
@@ -40,5 +43,6 @@ class ContactListPresenter: ContactList.Presenter {
            }
        }
     }
+
     override var view: ContactList.View? = null
 }

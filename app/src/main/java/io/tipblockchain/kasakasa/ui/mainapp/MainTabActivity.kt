@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,11 @@ class MainTabActivity : BaseActivity() {
         supportActionBar?.setTitle(R.string.title_contacts)
 
         this.addStartingFragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(LOG_TAG, "OnResume: Empty Contact")
     }
 
     private fun addStartingFragment() {

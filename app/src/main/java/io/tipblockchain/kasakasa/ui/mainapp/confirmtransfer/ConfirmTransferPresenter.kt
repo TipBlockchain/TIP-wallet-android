@@ -69,6 +69,24 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
         }
     }
 
+    override fun sendTransactionAsync(transaction: PendingTransaction, password: String) {
+        val walletRequest = walletRepository.findWalletForAddressAndCurrency(transaction.from, transaction.currency)
+        txDisposable?.dispose()
+        txDisposable = walletRequest.observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ wallet ->
+                    if (wallet != null) {
+                        val credentials = web3Bridge.loadCredentialsForWalletWithPassword(wallet, password)
+                        if (credentials != null) {
+                            txRepository.sendTransaction(transaction, credentials)
+                            view?.onTransactionSent()
+                        }
+                    }
+                }, {
+                    view?.onTransactionError(it)
+                })
+    }
+
     override fun sendTransactionWithPassword(transaction: PendingTransaction, password: String) {
         val walletRequest = walletRepository.findWalletForAddressAndCurrency(transaction.from, transaction.currency)
 
@@ -78,11 +96,13 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                 var txReceipt: TransactionReceipt? = null
                 if (credentials != null) {
                     when (transaction.currency) {
-                        Currency.TIP -> txReceipt = web3Bridge.sendTipTransaction(transaction.to, transaction.value, credentials)
-                        Currency.ETH -> txReceipt = web3Bridge.sendEthTransaction(transaction.to, transaction.value, credentials)
+                        Currency.TIP -> txReceipt = web3Bridge.sendTipTransactionAsync(transaction.to, transaction.value, credentials)
+                        Currency.ETH -> txReceipt = web3Bridge.sendEthTransactionAsync(transaction.to, transaction.value, credentials)
                     }
                     if (txReceipt != null) {
-                        view?.onTransactionSent()
+                        AndroidSchedulers.mainThread().scheduleDirect {
+                            view?.onTransactionSent()
+                        }
                         return@flatMap txRepository.postTransaction(pendingTransaction = transaction, txrReceipt = TransactionReceipt())
                     } else {
                         AndroidSchedulers.mainThread().scheduleDirect {
@@ -93,6 +113,11 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                 }
                 return@flatMap null
             } catch (e: CipherException) {
+                AndroidSchedulers.mainThread().scheduleDirect {
+                    view?.onTransactionError(e)
+                }
+                return@flatMap null
+            } catch (e: InterruptedException) {
                 AndroidSchedulers.mainThread().scheduleDirect {
                     view?.onTransactionError(e)
                 }
@@ -111,40 +136,10 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                         view?.onUnhandledError()
                     }
                 }, {
-                    view?.onTransactionError(it)
+                    AndroidSchedulers.mainThread().scheduleDirect {
+//                        view?.onTransactionError(it) // decryption error sent from observer
+                    }
                 })
-//        val observer = walletRepository.findWalletForAddressAndCurrency(transaction.from, transaction.currency).observe(view!!, Observer { wallet ->
-//            if (wallet == null) {
-//                view?.onInvalidTransactionError(Error("Error loading your wallet."))
-//                return@Observer
-//            }
-//
-//            Schedulers.io().scheduleDirect {
-//                try {
-//                    val credentials = web3Bridge.loadCredentialsForWalletWithPassword(wallet, password)
-//                    var txReceipt: TransactionReceipt? = null
-//                    if (credentials != null) {
-//                        when (transaction.currency) {
-//                            Currency.TIP -> txReceipt = web3Bridge.sendTipTransaction(transaction.to, transaction.value, credentials)
-//                            Currency.ETH -> txReceipt = web3Bridge.sendEthTransaction(transaction.to, transaction.value, credentials)
-//                        }
-//                        if (txReceipt != null) {
-//                            AndroidSchedulers.mainThread().scheduleDirect {
-//                                view?.onTransactionSent()
-//                            }
-//                        } else {
-//                            AndroidSchedulers.mainThread().scheduleDirect {
-//                                view?.onTransactionError(Error("Transaction failed."))
-//                            }
-//                        }
-//                    }
-//                } catch (e: CipherException) {
-//                    AndroidSchedulers.mainThread().scheduleDirect {
-//                        view?.onTransactionError(e)
-//                    }
-//                }
-//            }
-//        })
     }
 
     override fun getTransactionFee(transaction: PendingTransaction) {

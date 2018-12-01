@@ -1,5 +1,6 @@
 package io.tipblockchain.kasakasa.ui.onboarding.password
 
+import android.util.Log
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import java.lang.Error
@@ -8,6 +9,12 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
 
     private var walletRepository = WalletRepository.instance
     private var existingUser: User? = null
+
+    override fun attach(view: ChoosePassword.View) {
+        super.attach(view)
+        walletRepository.deleteAll()
+        Log.d("ChoosePassword", "Attaching to presenter - deleting wallets")
+    }
 
     override fun setExistingUser(user: User?) {
         existingUser = user

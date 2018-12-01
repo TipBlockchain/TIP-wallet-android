@@ -4,7 +4,6 @@ import android.util.Log
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
-import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 
 class SplashPresenter: SplashScreenContract.Presenter {
 
@@ -26,6 +25,7 @@ class SplashPresenter: SplashScreenContract.Presenter {
     }
 
     override fun walletFetched(wallet: Wallet?) {
+        Log.d(LOG_TAG, "CurrentUser=$currentUser, address=${currentUser?.address ?: "null"}, wallet = $wallet, ")
         if (currentUser == null || wallet == null || currentUser?.address != wallet.address) {
             view?.gotoOnboarding()
         } else {

@@ -33,9 +33,11 @@ class MyAccountPresenter:MyAccount.Presenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({ user ->
-                    if (user != null) {
+                    if (user != null && user.isValid()) {
                         UserRepository.currentUser = user
                          view?.updateUser(user)
+                    } else {
+                        view?.onErrorUpdatingUser(Error())
                     }
                 }, { err ->
                     view?.onErrorUpdatingUser(err)

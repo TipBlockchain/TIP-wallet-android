@@ -17,7 +17,6 @@ class TransactionOptionsDialogFragment: DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         username = arguments?.getString("user")
-        Log.d("TX", "Got user: $username")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

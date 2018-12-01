@@ -8,14 +8,13 @@ import android.content.DialogInterface
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import io.tipblockchain.kasakasa.R
-import kotlinx.android.synthetic.main.activity_onboarding_user_profile.*
 import kotlinx.android.synthetic.main.content_onboarding_user_profile.*
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.support.v7.app.AlertDialog
-import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -35,6 +34,8 @@ import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
 import io.tipblockchain.kasakasa.ui.onboarding.verifyphone.VerifyPhoneNumberActivity
 import io.tipblockchain.kasakasa.utils.FileUtils
 import io.tipblockchain.kasakasa.utils.KeyboardUtils
+import io.tipblockchain.kasakasa.utils.TextUtils
+import kotlinx.android.synthetic.main.fragment_contact_list.*
 import java.io.File
 import java.lang.Exception
 
@@ -89,6 +90,11 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         super.onDestroy()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(LOG_TAG, "updating state")
+        recyclerView?.updateState()
+    }
 
     private fun navigateToCreateWallet() {
         val intent = Intent(this, ChoosePasswordActivity::class.java)
@@ -302,6 +308,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
 
         var focusView: View? = null
         var cancel = false
+        val usernameLength = viewModel.username?.length ?: 0
 
         if (TextUtils.isEmpty(viewModel.firstname)) {
             focusView = firstnameTv
@@ -310,6 +317,15 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         } else if (TextUtils.isEmpty(viewModel.username)) {
             focusView = usernameTv
             usernameTv.error = getString(R.string.error_username_empty)
+            cancel = true
+        } else if (TextUtils.containsSpace(viewModel.username)) {
+            usernameTv.error = getString(R.string.error_username_has_space)
+            cancel = true
+        } else if (usernameLength < 2) {
+            usernameTv.error = getString(R.string.error_username_too_short)
+            cancel = true
+        } else if (usernameLength > 16) {
+            usernameTv.error = getString(R.string.error_username_too_long)
             cancel = true
         }
 

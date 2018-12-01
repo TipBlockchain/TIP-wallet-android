@@ -2,7 +2,7 @@
 <resources>
     <string-array name="transaction_options">
         <item>Send Transaction</item>
-        <item>Request Payment</item>
+        <!--<item>Request Payment</item>-->
     </string-array>
     <string-array name="currency_options">
         <item>TIP</item>

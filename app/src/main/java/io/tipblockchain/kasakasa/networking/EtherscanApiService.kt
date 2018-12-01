@@ -3,6 +3,7 @@ package io.tipblockchain.kasakasa.networking
 import io.reactivex.Observable
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
@@ -18,13 +19,13 @@ class EtherscanApiService {
     private lateinit var ethApi: EtherscanApi
     private constructor()
 
-    var apiKey: String
-    get() = AppProperties.get("etherscan_api_key")
+    private var apiKey: String
+    get() = AppProperties.get(AppConstants.ETHERSCAN_API_KEY)
     private set(_) {}
 
 
     companion object {
-        private val baseUrl: String = "https://rinkeby.etherscan.io"
+        private val baseUrl: String = AppProperties.get(AppConstants.ETHERSCAN_BASE_URL)
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 

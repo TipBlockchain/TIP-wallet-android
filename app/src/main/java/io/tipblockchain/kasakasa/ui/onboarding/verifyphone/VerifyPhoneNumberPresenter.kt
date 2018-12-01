@@ -31,6 +31,7 @@ class VerifyPhoneNumberPresenter: VerifyPhoneNumber.Presenter {
 
                     if (response.authorization != null && response.account != null) {
                         AuthorizationRepository.currentAuthorization = response.authorization
+                        UserRepository.currentUser = response.account
                         view?.onPhoneVerifiedWithExistingAccount(response.account!!)
                     } else if (response.demoAccount != null && response.pendingSignup != null) {
                         UserRepository.demoAccountUser = response.demoAccount!!

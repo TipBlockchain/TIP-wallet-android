@@ -20,6 +20,7 @@ import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.tx.ClientTransactionManager
+import java.util.concurrent.Future
 
 
 class Web3Bridge {
@@ -75,7 +76,15 @@ class Web3Bridge {
     }
 
     fun sendEthTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).send()
+    }
+
+    fun sendEthTransactionAsync(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
         return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).sendAsync().get()
+    }
+
+    fun sendEthTransactionAsyncForFuture(to: String, value: BigDecimal, credentials: Credentials):Future<TransactionReceipt>? {
+        return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).sendAsync()
     }
 
     fun latestBlock(): BigInteger {
@@ -85,7 +94,19 @@ class Web3Bridge {
     fun sendTipTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
         val tipToken = loadTipTokenWithCredentials(credentials)
         val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        return tipToken.transfer(to, valueInWei)?.send()
+    }
+
+    fun sendTipTransactionAsync(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        val tipToken = loadTipTokenWithCredentials(credentials)
+        val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
         return tipToken.transfer(to, valueInWei)?.sendAsync()?.get()
+    }
+
+    fun sendTipTransactionAsyncForFuture(to: String, value: BigDecimal, credentials: Credentials): Future<TransactionReceipt>? {
+        val tipToken = loadTipTokenWithCredentials(credentials)
+        val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        return tipToken.transfer(to, valueInWei)?.sendAsync()
     }
 
     fun getEthBalance(address: String): BigInteger {
