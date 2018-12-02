@@ -1,5 +1,6 @@
 package io.tipblockchain.kasakasa.blockchain.eth
 
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.blockchain.smartcontracts.TipToken
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.utils.FileUtils
@@ -19,11 +20,12 @@ import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.tx.ClientTransactionManager
+import java.util.concurrent.Future
 
 
 class Web3Bridge {
 
-    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get("ether_node_url")))
+    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get(AppConstants.CONFIG_ETH_NODE_URL)))
     private var readOnlyTipToken: TipToken? = null
 
     private var defaultGasPrice = 21_000_000L
@@ -38,7 +40,7 @@ class Web3Bridge {
 
     private fun loadTipSmartContract(wallet: Wallet) {
         readOnlyTipToken = TipToken.load(
-                AppProperties.get("tip_contract_address"),
+                AppProperties.get(AppConstants.CONFIG_TIP_CONTRACT_ADDRESS),
                 web3,
                 ClientTransactionManager(web3, wallet.address),
                 BigInteger.valueOf(defaultGasPrice),
@@ -48,7 +50,7 @@ class Web3Bridge {
     private fun loadTipTokenWithCredentials(credentials: Credentials): TipToken {
         val gasPrice = BigInteger.valueOf(defaultGasPrice)
         return TipToken.load(
-                AppProperties.get("tip_contract_address"),
+                AppProperties.get(AppConstants.CONFIG_TIP_CONTRACT_ADDRESS),
                 web3,
                 credentials,
                 gasPrice,
@@ -74,7 +76,15 @@ class Web3Bridge {
     }
 
     fun sendEthTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).send()
+    }
+
+    fun sendEthTransactionAsync(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
         return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).sendAsync().get()
+    }
+
+    fun sendEthTransactionAsyncForFuture(to: String, value: BigDecimal, credentials: Credentials):Future<TransactionReceipt>? {
+        return Transfer.sendFunds(web3, credentials, to, value, Convert.Unit.ETHER).sendAsync()
     }
 
     fun latestBlock(): BigInteger {
@@ -84,7 +94,19 @@ class Web3Bridge {
     fun sendTipTransaction(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
         val tipToken = loadTipTokenWithCredentials(credentials)
         val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        return tipToken.transfer(to, valueInWei)?.send()
+    }
+
+    fun sendTipTransactionAsync(to: String, value: BigDecimal, credentials: Credentials): TransactionReceipt? {
+        val tipToken = loadTipTokenWithCredentials(credentials)
+        val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
         return tipToken.transfer(to, valueInWei)?.sendAsync()?.get()
+    }
+
+    fun sendTipTransactionAsyncForFuture(to: String, value: BigDecimal, credentials: Credentials): Future<TransactionReceipt>? {
+        val tipToken = loadTipTokenWithCredentials(credentials)
+        val valueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        return tipToken.transfer(to, valueInWei)?.sendAsync()
     }
 
     fun getEthBalance(address: String): BigInteger {

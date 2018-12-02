@@ -1,8 +1,6 @@
 package io.tipblockchain.kasakasa.ui.onboarding
 
-import android.arch.lifecycle.Observer
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -20,14 +18,9 @@ import io.tipblockchain.kasakasa.R
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding.view.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.util.Log
 import android.widget.Button
-import io.tipblockchain.kasakasa.app.App
-import io.tipblockchain.kasakasa.data.db.entity.User
-import io.tipblockchain.kasakasa.data.db.repository.UserRepository
-import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.ui.BaseActivity
-import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
+import io.tipblockchain.kasakasa.ui.onboarding.enterphone.EnterPhoneNumberActivity
 
 
 class OnboardingActivity : BaseActivity() {
@@ -107,8 +100,7 @@ class OnboardingActivity : BaseActivity() {
     }
 
     fun startAccountCreation() {
-        val intent = Intent(this, ChoosePasswordActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
+        val intent = Intent(this, EnterPhoneNumberActivity::class.java)
         startActivity(intent)
     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.tipblockchain.kasakasa.ui.newaccount.VerifyRecoveryPhraseActivity"
+    tools:context="io.tipblockchain.kasakasa.ui.onboarding.verifyrecovery.VerifyRecoveryPhraseActivity"
     tools:showIn="@layout/activity_verify_recovery_phrase">
 
 </android.support.constraint.ConstraintLayout>

@@ -4,10 +4,14 @@ import android.util.Log
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
 import io.reactivex.Observable
+import io.tipblockchain.kasakasa.app.AppConstants
+import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
+import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,13 +29,14 @@ class TipApiService {
 
 
     companion object {
-        private val baseUrl: String = "https://c22a3df1.ngrok.io"
+        private val baseUrl: String = AppProperties.get(AppConstants.CONFIG_API_URL)
         private val rxAdapter: RxJava2CallAdapterFactory = RxJava2CallAdapterFactory.create()
         private var retrofit: Retrofit
 
         val instance: TipApiService = TipApiService()
 
         init {
+            Log.i("TipApiService", "baseURL = $baseUrl")
             val okHttpClientBuilder = OkHttpClient()
                     .newBuilder()
 
@@ -67,13 +72,21 @@ class TipApiService {
         return tipApi.getCountries()
     }
 
+    fun startPhoneVerification(verification: PhoneVerificationRequest): Observable<PhoneVerificationConfirmation?> {
+        return tipApi.startPhoneVerification(verification)
+    }
+
+    fun checkPhoneVerification(verification: PhoneVerificationRequest): Observable<PhoneVerificationResponse?> {
+        return tipApi.checkPhoneVerification(verification)
+    }
+
     fun checkUsername(username: String): Observable<UsernameResponse> {
         Log.d("TIPApi", "Making network request with username: $username")
         return tipApi.checkUsername(username)
     }
 
-    fun createUser(user: User): Observable<User> {
-        return tipApi.createAccount(user)
+    fun createUser(user: User, signupToken: String, claimDemoAccount: Boolean = true): Observable<User> {
+        return tipApi.createAccount(user, token = signupToken, claimDemoAccount = claimDemoAccount)
     }
 
     fun getMyAccount(): Observable<User?> {
@@ -115,5 +128,29 @@ class TipApiService {
 
     fun removeContact(contact: User): Observable<ContactListStringResponse> {
         return tipApi.deleteContact(contact)
+    }
+
+    fun addTransaction(transaction: Transaction): Observable<Transaction?> {
+        return tipApi.addTransaction(transaction)
+    }
+
+    fun getTransaction(hash: String): Observable<Transaction> {
+        return tipApi.getTransaction(hash)
+    }
+
+    fun getTransactions(address: String): Observable<TransactionListResponse?> {
+        return tipApi.getTransactions(address)
+    }
+
+    fun getTransactions(address: String, currency: Currency): Observable<TransactionListResponse?> {
+        return tipApi.getTransactions(address = address, currency = currency.name)
+    }
+
+    fun getTransactionsByHashes(txHashList: List<String>): Observable<TransactionListResponse?> {
+        return tipApi.getTransactionsByHashes(txHashList = txHashList.joinToString(","))
+    }
+
+    fun fillTransactions(txList: List<Transaction>): Observable<TransactionListResponse?> {
+        return tipApi.fillTransactions(txList)
     }
 }

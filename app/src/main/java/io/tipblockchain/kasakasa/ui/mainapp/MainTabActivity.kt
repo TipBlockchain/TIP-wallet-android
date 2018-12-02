@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,19 +34,19 @@ class MainTabActivity : BaseActivity() {
 
         when (item.itemId) {
 
-            R.id.navigation_home -> {
+            R.id.navigation_contacts -> {
                 mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
 //                supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_contacts)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
+            R.id.navigation_wallet -> {
 //                supportActionBar?.hide()
                 supportActionBar?.setTitle(R.string.title_wallet)
                 mSectionsPagerAdapter?.replaceFragment(WalletFragment.newInstance(1))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.navigation_account -> {
                 supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_my_account)
                 mSectionsPagerAdapter?.replaceFragment(MyAccountFragment())
@@ -69,6 +70,11 @@ class MainTabActivity : BaseActivity() {
         supportActionBar?.setTitle(R.string.title_contacts)
 
         this.addStartingFragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(LOG_TAG, "OnResume: Empty Contact")
     }
 
     private fun addStartingFragment() {

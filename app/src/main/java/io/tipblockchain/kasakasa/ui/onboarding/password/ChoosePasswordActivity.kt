@@ -11,27 +11,39 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.DialogInterface
 import android.content.Intent
 import android.databinding.DataBindingUtil
 
 import kotlinx.android.synthetic.main.activity_choose_password.*
 
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
+import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.databinding.ActivityChoosePasswordBinding
+import io.tipblockchain.kasakasa.ui.BaseActivity
+import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
+import io.tipblockchain.kasakasa.ui.onboarding.profile.OnboardingUserProfileActivity
 import io.tipblockchain.kasakasa.ui.onboarding.recovery.RecoveryPhraseActivity
 
 /**
  * A login screen that offers login via email/password.
  */
-class ChoosePasswordActivity : AppCompatActivity() {
+class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    lateinit private var viewModel: ChoosePasswordViewModel
+    private lateinit var viewModel: ChoosePasswordViewModel
+    private var presenter: ChoosePassword.Presenter? = null
+    private var recoveryPhrase: String? = null
+    private var existingUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityChoosePasswordBinding = DataBindingUtil.setContentView(this, R.layout.activity_choose_password)
+
+        recoveryPhrase = intent.getStringExtra(AppConstants.EXTRA_RECOVERY_PHRASE)
+        existingUser = intent.getSerializableExtra(AppConstants.EXTRA_EXISTING_ACCOUNT_USER) as User?
 
         // Set up the password form.
         passwordTv.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
@@ -49,9 +61,48 @@ class ChoosePasswordActivity : AppCompatActivity() {
             false
         })
 
+        presenter = ChoosePasswordPresenter()
+        presenter?.attach(this)
+        presenter?.setExistingUser(existingUser)
+
         nextBtn.setOnClickListener { checkPassword() }
         viewModel = getViewModel()
         binding.viewModel = viewModel
+    }
+
+    override fun onDestroy() {
+        presenter?.detach()
+        super.onDestroy()
+    }
+
+    override fun onWalletRestored() {
+        showProgress(false)
+        showOkDialog(getString(R.string.message_wallet_restored), onClickListener = object: DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                navigateToMainApp()
+            }
+        })
+    }
+
+    override fun onWalletCreated() {
+        showProgress(false)
+        navigateToUserProfile()
+    }
+
+    override fun onWalletNotMatchingExistingError() {
+        showProgress(false)
+        if (existingUser != null) {
+            showOkDialog(getString(R.string.error_address_not_matching_account, existingUser!!.username), onClickListener = object: DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    finish()
+                }
+            })
+        }
+    }
+
+    override fun onWalletCreationError(error: Throwable) {
+        showProgress(false)
+        showMessage(getString(R.string.generic_error_with_param, error.localizedMessage))
     }
 
     private fun getViewModel() = ViewModelProviders.of(this).get(ChoosePasswordViewModel::class.java)
@@ -101,7 +152,7 @@ class ChoosePasswordActivity : AppCompatActivity() {
         } else {
             // Show a progress spinner, and proceed to next screen
 //            showProgress(true)
-            goToAccountBackup()
+            presenter?.generateWalletFromMnemonicAndPassword(mnemonic = recoveryPhrase!!, password = viewModel.password)
         }
     }
 
@@ -113,32 +164,38 @@ class ChoosePasswordActivity : AppCompatActivity() {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
+        nextBtn.isEnabled = !show
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        password_form.visibility = if (show) View.GONE else View.VISIBLE
-        password_form.animate()
+        passwordForm.visibility = if (show) View.GONE else View.VISIBLE
+        passwordForm.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        password_form.visibility = if (show) View.GONE else View.VISIBLE
+                        passwordForm.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
-        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-        login_progress.animate()
+        progressLayout.visibility = if (show) View.VISIBLE else View.GONE
+        progressLayout.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 1 else 0).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+                        progressLayout.visibility = if (show) View.VISIBLE else View.GONE
                     }
                 })
     }
 
-    fun goToAccountBackup() {
-        val intent = Intent(this, RecoveryPhraseActivity::class.java)
-        intent.putExtra("password", viewModel.password)
+    fun navigateToUserProfile() {
+        val intent = Intent(this, OnboardingUserProfileActivity::class.java)
+        intent.putExtra(AppConstants.EXTRA_PASSWORD, viewModel.password)
+        startActivity(intent)
+    }
+
+    fun navigateToMainApp() {
+        val intent = Intent(this, MainTabActivity::class.java)
         startActivity(intent)
     }
 }

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:fitsSystemWindows="true"
-    tools:context=".ui.newaccount.EnterPhoneNumberActivity">
+    tools:context=".ui.onboarding.enterphone.EnterPhoneNumberActivity">
 
     <!-- Login progress -->
 
@@ -19,126 +19,162 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/shapes_background" />
 
+    <ImageView
+        android:id="@+id/iconIv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/common_full_open_on_phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ProgressBar
-        android:id="@+id/login_progress"
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconIv" />
 
     <ScrollView
         android:id="@+id/form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="150dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconIv">
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:showDividers="none">
 
-            <Spinner
-                android:id="@+id/spinner2"
+            <TextView
+                android:id="@+id/titleTv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:gravity="left|center_vertical"
+                android:text="@string/prompt_enter_phone"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/colorWhite"
+                android:theme="@style/AppTheme.WhiteText.Title" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
-
-                <AutoCompleteTextView
-                    android:id="@+id/fistnameTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_select_country"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/lastnameTv"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
-
-                <io.tipblockchain.kasakasa.widgets.PrefixEditText
-                    android:id="@+id/lastnameTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_enter_phone"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/usernameTv"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <Button
-                android:id="@+id/verifyPhoneBtn"
-                style="@style/AppTheme.SecondaryButton"
+            <TextView
+                android:id="@+id/subtitleTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/verify_phone"
-                android:textStyle="bold"
-                android:theme="@style/AppTheme.PrimaryButton"
-                app:layout_anchor="@+id/form"
-                app:layout_anchorGravity="bottom|center" />
+                android:layout_weight="1"
+                android:text="@string/tip_social_connect"
+                android:textAlignment="center"
+                android:theme="@style/AppTheme.WhiteText.Subtitle" />
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
+                android:id="@+id/selectCountryLinearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:showDividers="none">
 
-                <EditText
-                    android:id="@+id/usernameTv"
+                <ImageView
+                    android:id="@+id/flagIv"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    app:srcCompat="@mipmap/ad_flag" />
+
+                <TextView
+                    android:id="@+id/selectCountryTv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_enter_verification"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/nextBtn"
-                    android:singleLine="true"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/prompt_select_country"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
+                    android:textSize="18sp"
+                    android:theme="@style/AppTheme.WhiteText" />
 
-            </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="?android:attr/listDivider"
+                android:foreground="@android:color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:textColorHint="@color/colorVeryLightGray"
+                    android:theme="@style/AppTheme.WhiteColorAccent">
+
+                    <EditText
+                        android:id="@+id/countryCodeTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/verificationCodeTv"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@color/colorWhite"
+                        android:theme="@style/AppTheme.WhiteEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:textColorHint="@color/colorVeryLightGray"
+                    android:theme="@style/AppTheme.WhiteColorAccent">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/verificationCodeTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_enter_phone"
+                        android:inputType="phone"
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/verifyPhoneBtn"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@color/colorWhite"
+                        android:theme="@style/AppTheme.WhiteEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
     <Button
-        android:id="@+id/nextBtn"
+        android:id="@+id/verifyPhoneBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"

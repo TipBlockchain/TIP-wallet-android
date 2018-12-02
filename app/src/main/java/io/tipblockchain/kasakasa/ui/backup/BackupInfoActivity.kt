@@ -21,7 +21,6 @@ class BackupInfoActivity : AppCompatActivity() {
 
     private fun goToMainBackup() {
         val intent = Intent(this, BackupAccountActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }
 

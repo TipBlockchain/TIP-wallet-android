@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
+import com.android.example.github.AppExecutors
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,8 +15,15 @@ import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.dao.TransactionDao
+import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.networking.EtherscanApiService
+import io.tipblockchain.kasakasa.networking.TipApiService
+import org.web3j.crypto.Credentials
+import org.web3j.protocol.core.methods.response.TransactionReceipt
+import java.lang.Exception
 import java.math.BigInteger
+import java.util.concurrent.Executor
+import java.util.concurrent.Future
 
 enum class Currency {
     TIP,
@@ -28,14 +36,19 @@ class TransactionRepository {
 
     private var dao: TransactionDao
     private var allTransactions: LiveData<List<Transaction>>
+    private var tipApiService = TipApiService.instance
     private var etherscanApiService = EtherscanApiService.instance
+    private var web3Bridge = Web3Bridge()
+    private var executor: Executor? = null
 
     private var tipTxDisposable: Disposable? = null
     private var ethTxDisposable: Disposable? = null
+    private var mergeTxDisposable: Disposable? = null
 
     private constructor(context: Context) {
         val db = TipRoomDatabase.getDatabase(context)
         dao = db.transactionDao()
+        executor = AppExecutors().diskIO()
         allTransactions = dao.findAllTransactions()
     }
 
@@ -50,8 +63,47 @@ class TransactionRepository {
     fun loadTransactions(currency: Currency): LiveData<List<Transaction>> {
         return dao.findTransactions(currency = currency.name)
     }
+
     fun loadTransactions_notLive(currency: Currency): Flowable<List<Transaction>> {
         return dao.findTransactions_notLive(currency = currency.name)
+    }
+
+    fun postTransaction(pendingTransaction: PendingTransaction, txrReceipt: TransactionReceipt): Observable<Transaction?> {
+        val tx = Transaction.from(pendingTransaction, txReceipt = txrReceipt)
+        return tipApiService.addTransaction(tx)
+    }
+
+    fun insert(tx: Transaction) {
+        dao.insert(tx)
+    }
+
+    fun add(tx: Transaction) {
+        insertAsyncTask(dao).execute(tx)
+    }
+
+    fun sendTransaction(transaction: PendingTransaction, credentials: Credentials, completion: ((txr: TransactionReceipt?, err: Throwable?) -> Unit)? = null) {
+        try {
+            executor!!.execute {
+                var txReceipt: TransactionReceipt?
+                var future: Future<TransactionReceipt>?
+                if (credentials != null) {
+                    when (transaction.currency) {
+                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(transaction.to, transaction.value, credentials)
+                        Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(transaction.to, transaction.value, credentials)
+                    }
+                    if (future == null) {
+                        return@execute
+                    }
+                    while (!future.isDone) {}
+                    txReceipt = future.get()
+                    postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
+                    completion?.invoke(txReceipt, null)
+                }
+            }
+
+        } catch (e: Exception) {
+            completion?.invoke(null, e)
+        }
     }
 
     // TODO: rename to fetchNewTipTransactions()
@@ -61,19 +113,18 @@ class TransactionRepository {
         tipTxDisposable = etherscanApiService.getTipTransactions(address = address, startBlock = startBlock, endBlock = endBlock)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
-//                .onErrorReturn { EtherscanTxListResponse(status = "-1", message = "Error", result = listOf()) }
                 .subscribe ({ response ->
-                    Log.i("TX", "status = ${response.status}")
-                    Log.i("TIP TX", "txlist = ${response.result}")
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {
                         var cleanedList = txlist.map { it.currency = Currency.TIP.name
                         it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
-                        dao.insertAll(cleanedList)
-                    }
-                    AndroidSchedulers.mainThread().scheduleDirect {
-                        callback(txlist, null)
+                        fillTransactions(cleanedList) { mergedList, err ->
+                            dao.insertAll(mergedList)
+                            AndroidSchedulers.mainThread().scheduleDirect {
+                                callback(mergedList, null)
+                            }
+                        }
                     }
 
         }, {
@@ -98,10 +149,12 @@ class TransactionRepository {
                         var cleanedList = txlist.map { it.currency = Currency.ETH.name
                             it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
-                        dao.insertAll(cleanedList)
-                    }
-                    AndroidSchedulers.mainThread().scheduleDirect {
-                        callback(txlist, null)
+                        fillTransactions(cleanedList) { mergedList, err ->
+                            dao.insertAll(mergedList)
+                            AndroidSchedulers.mainThread().scheduleDirect {
+                                callback(mergedList, null)
+                            }
+                        }
                     }
 
                 }, {
@@ -110,6 +163,48 @@ class TransactionRepository {
                     it.printStackTrace(System.err)
                     callback(null, it)
                 })
+    }
+
+    private fun mergeTransactions(txlist: List<Transaction>, callback: (updatedList: List<Transaction>, error: Throwable?) -> Unit) {
+        mergeTxDisposable?.dispose()
+        val hashlist = txlist.map { it.hash }
+        mergeTxDisposable = tipApiService.getTransactionsByHashes(txHashList = hashlist).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribe ({ response ->
+            if (response != null) {
+                val updatedList = response.transactions
+                var listToReturn: MutableList<Transaction> = mutableListOf()
+
+                for (tx in txlist) {
+                    val matchingTx = updatedList.find { it.hash == tx.hash }
+                    listToReturn.add(matchingTx ?: tx)
+                }
+                callback(listToReturn, null)
+
+            }
+        }, {
+            Log.e("TXRepo", "Error fetching tx from backend: $it")
+            callback(listOf(), it)
+        })
+    }
+
+    private fun fillTransactions(txlist: List<Transaction>, callback: (updatedList: List<Transaction>, error: Throwable?) -> Unit) {
+        mergeTxDisposable?.dispose()
+        val hashlist = txlist.map { it.hash }
+        mergeTxDisposable = tipApiService.fillTransactions(txList = txlist).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribe ({ response ->
+            if (response != null) {
+                val updatedList = response.transactions
+                var listToReturn: MutableList<Transaction> = mutableListOf()
+
+//                for (tx in txlist) {
+//                    val matchingTx = updatedList.find { it.hash == tx.hash }
+//                    listToReturn.add(matchingTx ?: tx)
+//                }
+                callback(updatedList, null)
+
+            }
+        }, {
+            Log.e("TXRepo", "Error fetching tx from backend: $it")
+            callback(listOf(), it)
+        })
     }
 
     companion object {

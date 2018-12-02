@@ -160,7 +160,6 @@ class BackupAccountActivity : AppCompatActivity() {
 
     private fun goToBackupFinished() {
         val intent = Intent(this, BackupFinishedActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }
 

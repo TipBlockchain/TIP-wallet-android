@@ -12,6 +12,15 @@ import org.spongycastle.util.encoders.Hex
 class TextUtils {
 
     companion object {
+
+        fun isEmpty(str: String?): Boolean {
+            return str == null || str.isEmpty()
+        }
+
+        fun containsSpace(str: String?): Boolean {
+            return str != null && str.indexOf(" ") >= 0
+        }
+
         fun isUsername(username: String): Boolean {
             val specialCharsRegex = "[ !@#\$%^&*()€£`~+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]/\n".toRegex()
 

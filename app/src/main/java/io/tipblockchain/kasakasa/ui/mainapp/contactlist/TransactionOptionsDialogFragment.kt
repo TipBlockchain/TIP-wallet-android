@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 
 class TransactionOptionsDialogFragment: DialogFragment() {
@@ -16,7 +17,6 @@ class TransactionOptionsDialogFragment: DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         username = arguments?.getString("user")
-        Log.d("TX", "Got user: $username")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -41,7 +41,7 @@ class TransactionOptionsDialogFragment: DialogFragment() {
     fun showRequestPaymentScreen() {
         val intent = Intent(activity, SendTransferActivity::class.java)
         if (username != null) {
-            intent.putExtra("user", username)
+            intent.putExtra(AppConstants.TRANSACTION_RECIPIENT, username)
         }
         startActivity(intent)
     }
@@ -49,7 +49,7 @@ class TransactionOptionsDialogFragment: DialogFragment() {
     fun showSendPaymentScreen() {
         val intent = Intent(activity, SendTransferActivity::class.java)
         if (username != null) {
-            intent.putExtra("user", username)
+            intent.putExtra(AppConstants.TRANSACTION_RECIPIENT, username)
         }
         startActivity(intent)
     }

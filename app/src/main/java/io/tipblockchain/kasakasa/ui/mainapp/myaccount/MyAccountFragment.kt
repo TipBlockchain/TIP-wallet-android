@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
 
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
+import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.BaseFragment
@@ -72,6 +74,7 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
         super.onViewCreated(view, savedInstanceState)
         presenter?.loadUser()
         cameraImageButton.setOnClickListener { checkPermissions() }
+        buyTipBtn.setOnClickListener { openBuyTipUrl() }
     }
 
     override fun onResume() {
@@ -202,6 +205,13 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
     private fun pickPhotoFromGallery() {
         val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(pickPhotoIntent , ActivityRequest.GALLERY.code)
+    }
+
+    private fun openBuyTipUrl() {
+        val url = AppProperties.get(AppConstants.BUY_TIP_URL)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
     }
 
     /**

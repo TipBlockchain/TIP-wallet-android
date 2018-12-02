@@ -13,7 +13,6 @@ import android.view.MenuItem
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.ui.BaseActivity
 
-import kotlinx.android.synthetic.main.activity_receive_transfer.*
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.squareup.picasso.Picasso

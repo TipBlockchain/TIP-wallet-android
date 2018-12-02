@@ -3,15 +3,9 @@ package io.tipblockchain.kasakasa.data.db.repository
 import android.app.Application
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.Observer
 import android.os.AsyncTask
 import android.util.Log
-import com.android.example.github.AppExecutors
-import com.android.example.github.api.ApiResponse
-import com.android.example.github.repository.NetworkBoundResource
-import com.android.example.github.vo.Resource
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -25,7 +19,6 @@ import io.tipblockchain.kasakasa.data.responses.ContactListResponse
 import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
 import kotlinx.serialization.json.JSON
-import retrofit2.Response
 import java.io.File
 import java.lang.Exception
 
@@ -50,6 +43,9 @@ class UserRepository {
 //        fetchMyAccount()
     }
 
+    init {
+        fetchCurrentUser()
+    }
     fun insert(user: User) {
         insertAsyncTask(dao).execute(user)
     }
@@ -203,6 +199,24 @@ class UserRepository {
                 saveCurrentUser()
             }
             get() = _currentUser
+
+        var demoAccountUser: User?
+            get() {
+                val userjson = PreferenceHelper.demoAccountUser
+                if (userjson != null) {
+                    val user: User = JSON.parse(userjson)
+                    return user
+                }
+                return null
+            }
+            set(value) {
+                if (value != null) {
+                    val userJson = JSON.stringify(value)
+                    PreferenceHelper.demoAccountUser = userJson
+                } else {
+                    PreferenceHelper.demoAccountUser = null
+                }
+            }
 
         private fun fetchCurrentUser(): User? {
             if (_currentUser == null) {

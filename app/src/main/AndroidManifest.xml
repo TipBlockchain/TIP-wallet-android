@@ -18,23 +18,24 @@
         android:name=".app.App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="758595895f8ec55dacb56630b620a9de997a77b0" />
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.mainapp.MainTabActivity"
             android:label="@string/title_activity_main_tab"
-            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -43,38 +44,32 @@
         <activity
             android:name=".ui.newaccount.ChooseUsernameActivity"
             android:label="@string/title_activity_choose_username"
-            android:windowSoftInputMode="stateVisible|adjustResize"
             android:screenOrientation="portrait"
-            />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".ui.onboarding.password.ChoosePasswordActivity"
             android:label="@string/title_activity_choose_password"
-            android:windowSoftInputMode="stateVisible|adjustResize"
             android:screenOrientation="portrait"
-            />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".ui.backup.BackupInfoActivity"
             android:label="@string/title_activity_backup_info"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.backup.BackupFinishedActivity"
             android:label="@string/title_activity_backup_info"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.backup.BackupAccountActivity"
             android:label="@string/title_activity_backup_account"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mainapp.sendtransfer.SendTransferActivity"
             android:label="@string/send_payment"
-            android:windowSoftInputMode="stateVisible|adjustResize"
             android:screenOrientation="portrait"
-            >
+            android:windowSoftInputMode="stateVisible|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.mainapp.MainTabActivity" />
@@ -82,48 +77,43 @@
         <activity
             android:name=".ui.mainapp.confirmtransfer.ConfirmTransferActivity"
             android:label="@string/title_activity_confirm_payment"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.mainapp.sendtransfer.SendTransferActivity" />
         </activity>
         <activity
             android:name=".ui.mainapp.TransactionConfirmedActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.newaccount.EnterPhoneNumberActivity"
+            android:name=".ui.onboarding.enterphone.EnterPhoneNumberActivity"
             android:label="@string/title_activity_enter_phone_number"
             android:screenOrientation="portrait"
-            />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.onboarding.recovery.RecoveryPhraseActivity"
             android:label="@string/title_activity_recovery_phrase"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.newaccount.VerifyRecoveryPhraseActivity"
+            android:name=".ui.onboarding.verifyrecovery.VerifyRecoveryPhraseActivity"
             android:label="@string/title_activity_verify_recovery_phrase"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.onboarding.profile.OnboardingUserProfileActivity"
             android:label="@string/title_activity_onboarding_user_profile"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:theme="@style/AppTheme.Launcher"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -133,9 +123,8 @@
         <activity
             android:name=".ui.mainapp.usersearch.UserSearchActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.ActionBar"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/AppTheme.ActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.mainapp.MainTabActivity" />
@@ -147,8 +136,7 @@
         <activity
             android:name=".ui.mainapp.receivetransfer.ReceiveTransferActivity"
             android:label="@string/title_activity_receive_transfer"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.mainapp.MainTabActivity" />
@@ -156,8 +144,12 @@
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
-            tools:replace="screenOrientation"
-            />
+            tools:replace="screenOrientation" />
+        <activity
+            android:name=".ui.onboarding.verifyphone.VerifyPhoneNumberActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity android:name=".ui.onboarding.demoaccount.DemoAccountActivity" />
+        <activity android:name=".ui.onboarding.restoreaccount.RestoreAccountActivity"></activity>
     </application>
 
 </manifest>

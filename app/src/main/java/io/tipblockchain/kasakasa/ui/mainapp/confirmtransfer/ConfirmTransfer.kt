@@ -14,12 +14,15 @@ interface ConfirmTransfer {
         fun onInvalidTransactionError(error: Throwable)
         fun onInvalidPasswordError()
         fun onTransactionSent()
+        fun onTransactionPosted()
         fun onTransactionError(error: Throwable)
+        fun onUnhandledError()
     }
 
     interface Presenter: BasePresenter<View> {
         fun getTransactionFee(transaction: PendingTransaction)
         fun validateTransaction(transaction: PendingTransaction)
         fun sendTransactionWithPassword(transaction: PendingTransaction, password: String)
+        fun sendTransactionAsync(transaction: PendingTransaction, password: String)
     }
 }

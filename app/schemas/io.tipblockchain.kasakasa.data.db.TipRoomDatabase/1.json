@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dc5b52b7a7166feca631ee929f29d726",
+    "identityHash": "4c2e21b3ad1e18919218d33b4099ab0e",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `fromTipUserId` TEXT, `toTipUserId` TEXT, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `gasPrice` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `tokenSymbol` TEXT, `txReceiptStatus` TEXT, PRIMARY KEY(`hash`), FOREIGN KEY(`fromTipUserId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`toTipUserId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `txReceiptStatus` TEXT, `from_smallPhoto` TEXT, `from_originalPhoto` TEXT, `from_mediumPhoto` TEXT, `from_id` TEXT, `from_name` TEXT, `from_username` TEXT, `from_address` TEXT, `from_imageFileKey` TEXT, `from_pictureUrl` TEXT, `from_isContact` INTEGER, `from_isBlocked` INTEGER, `from_lastMessage` INTEGER, `to_smallPhoto` TEXT, `to_originalPhoto` TEXT, `to_mediumPhoto` TEXT, `to_id` TEXT, `to_name` TEXT, `to_username` TEXT, `to_address` TEXT, `to_imageFileKey` TEXT, `to_pictureUrl` TEXT, `to_isContact` INTEGER, `to_isBlocked` INTEGER, `to_lastMessage` INTEGER, PRIMARY KEY(`hash`))",
         "fields": [
           {
             "fieldPath": "hash",
@@ -33,18 +33,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "fromTipUserId",
-            "columnName": "fromTipUserId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "toTipUserId",
-            "columnName": "toTipUserId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "currency",
             "columnName": "currency",
             "affinity": "TEXT",
@@ -69,12 +57,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "gasPrice",
-            "columnName": "gasPrice",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "confirmations",
             "columnName": "confirmations",
             "affinity": "TEXT",
@@ -93,15 +75,153 @@
             "notNull": false
           },
           {
-            "fieldPath": "tokenSymbol",
-            "columnName": "tokenSymbol",
+            "fieldPath": "receiptStatus",
+            "columnName": "txReceiptStatus",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "receiptStatus",
-            "columnName": "txReceiptStatus",
+            "fieldPath": "fromUser.smallPhotoUrl",
+            "columnName": "from_smallPhoto",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.originalPhotoUrl",
+            "columnName": "from_originalPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.mediumPhotoUrl",
+            "columnName": "from_mediumPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.id",
+            "columnName": "from_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.name",
+            "columnName": "from_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.username",
+            "columnName": "from_username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.address",
+            "columnName": "from_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.imageFileKey",
+            "columnName": "from_imageFileKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.pictureUrl",
+            "columnName": "from_pictureUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.isContact",
+            "columnName": "from_isContact",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.isBlocked",
+            "columnName": "from_isBlocked",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.lastMessage",
+            "columnName": "from_lastMessage",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.smallPhotoUrl",
+            "columnName": "to_smallPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.originalPhotoUrl",
+            "columnName": "to_originalPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.mediumPhotoUrl",
+            "columnName": "to_mediumPhoto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.id",
+            "columnName": "to_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.name",
+            "columnName": "to_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.username",
+            "columnName": "to_username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.address",
+            "columnName": "to_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.imageFileKey",
+            "columnName": "to_imageFileKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.pictureUrl",
+            "columnName": "to_pictureUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.isContact",
+            "columnName": "to_isContact",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.isBlocked",
+            "columnName": "to_isBlocked",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.lastMessage",
+            "columnName": "to_lastMessage",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -154,50 +274,27 @@
             "createSql": "CREATE  INDEX `index_transactions_from_currency` ON `${TABLE_NAME}` (`from`, `currency`)"
           },
           {
-            "name": "index_transactions_toTipUserId",
+            "name": "index_transactions_from_id",
             "unique": false,
             "columnNames": [
-              "toTipUserId"
+              "from_id"
             ],
-            "createSql": "CREATE  INDEX `index_transactions_toTipUserId` ON `${TABLE_NAME}` (`toTipUserId`)"
+            "createSql": "CREATE  INDEX `index_transactions_from_id` ON `${TABLE_NAME}` (`from_id`)"
           },
           {
-            "name": "index_transactions_fromTipUserId",
+            "name": "index_transactions_to_id",
             "unique": false,
             "columnNames": [
-              "fromTipUserId"
+              "to_id"
             ],
-            "createSql": "CREATE  INDEX `index_transactions_fromTipUserId` ON `${TABLE_NAME}` (`fromTipUserId`)"
+            "createSql": "CREATE  INDEX `index_transactions_to_id` ON `${TABLE_NAME}` (`to_id`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "users",
-            "onDelete": "SET NULL",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "fromTipUserId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "users",
-            "onDelete": "SET NULL",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "toTipUserId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `imageFileKey` TEXT, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "smallPhotoUrl",
@@ -240,6 +337,12 @@
             "columnName": "address",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "imageFileKey",
+            "columnName": "imageFileKey",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "pictureUrl",
@@ -302,7 +405,7 @@
       },
       {
         "tableName": "wallets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `filePath` TEXT, `created` INTEGER NOT NULL, `balance` TEXT NOT NULL, `currency` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, `blockNumber` TEXT NOT NULL, `lastSynced` INTEGER NOT NULL, PRIMARY KEY(`address`, `currency`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `filePath` TEXT, `created` INTEGER NOT NULL, `balance` TEXT NOT NULL, `currency` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, `blockNumber` TEXT NOT NULL, `startBlockNumber` TEXT NOT NULL, `lastSynced` INTEGER NOT NULL, PRIMARY KEY(`address`, `currency`))",
         "fields": [
           {
             "fieldPath": "address",
@@ -347,6 +450,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "startBlockNumber",
+            "columnName": "startBlockNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "lastSynced",
             "columnName": "lastSynced",
             "affinity": "INTEGER",
@@ -383,7 +492,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"dc5b52b7a7166feca631ee929f29d726\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4c2e21b3ad1e18919218d33b4099ab0e\")"
     ]
   }
 }

@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -60,24 +61,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        recyclerView.addItemDecoration(DividerItemDecoration(context,
-                DividerItemDecoration.VERTICAL))
-
-        if (recyclerView is RecyclerView) {
-            with(recyclerView) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-            }
-        } else {
-            Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${recyclerView}")
-        }
-        listener = ListFragmentInteractionListener()
-        adapter = TransactionRecyclerViewAdapter(context!!, listOf(), listener)
-        recyclerView.adapter = adapter
-
+        setupRecyclerView()
         sendBtn.setOnClickListener {
             val intent = Intent(activity, SendTransferActivity::class.java)
             startActivity(intent)
@@ -104,10 +88,42 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         var menuAdapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
         spinner.adapter = menuAdapter
         spinner.dropDownVerticalOffset = getActionBarHeight()
+        spinner.backgroundTintList
         spinner.dropDownHorizontalOffset = 0
         spinner.onItemSelectedListener = this
     }
 
+    private fun setupRecyclerView() {
+        recyclerView.setEmptyView(view!!.findViewById(R.id.emptyView))
+
+        if (recyclerView is RecyclerView) {
+            with(recyclerView) {
+                layoutManager = when {
+                    columnCount <= 1 -> LinearLayoutManager(context)
+                    else -> GridLayoutManager(context, columnCount)
+                }
+            }
+        } else {
+            Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${recyclerView}")
+        }
+        listener = ListFragmentInteractionListener()
+        adapter = TransactionRecyclerViewAdapter(context!!, listOf(), listener)
+        recyclerView.adapter = adapter
+
+        val attrs = intArrayOf(android.R.attr.listDivider)
+
+        val a = context!!.obtainStyledAttributes(attrs)
+        val divider = a.getDrawable(0)
+        val leftInset = resources.getDimensionPixelSize(R.dimen.list_divider_large_margin)
+        val rightInset = resources.getDimensionPixelSize(R.dimen.list_divider_small_margin)
+
+        val insetDivider = InsetDrawable(divider, leftInset, 0, rightInset, 0)
+        a.recycle()
+
+        val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        itemDecoration.setDrawable(insetDivider)
+        recyclerView.addItemDecoration(itemDecoration)
+    }
 
     private fun getActionBarHeight(): Int {
         val styledAttributes = context!!.theme.obtainStyledAttributes(
@@ -196,8 +212,10 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     }
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
-        balanceTv.text = NumberFormat.getInstance().format( balance.setScale(4, RoundingMode.CEILING))
-        currencyTv.setText(currency.name)
+        if (lastCurrency == currency) {
+            balanceTv.text = NumberFormat.getInstance().format( balance.setScale(4, RoundingMode.CEILING))
+            currencyTv.setText(currency.name)
+        }
     }
 
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {

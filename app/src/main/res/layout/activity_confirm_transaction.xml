@@ -41,17 +41,17 @@
         android:id="@+id/progressLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sentIv">
 
         <ProgressBar
-            android:id="@+id/login_progress"
+            android:id="@+id/progress"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +60,8 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="186dp" />
+            tools:layout_editor_absoluteY="186dp"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/textView3"
@@ -68,7 +69,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/sending" />
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:text="@string/please_wait_for_tx"
+            android:textAlignment="center" />
     </LinearLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -79,7 +83,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/confirmBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -177,11 +181,10 @@
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:gravity="bottom|end"
                     android:lines="1"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
+                    android:paddingEnd="5dp"
                     android:text="@string/placeholder_amount"
                     app:autoSizeMaxTextSize="28sp"
                     app:autoSizeMinTextSize="20sp"
@@ -193,13 +196,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.4"
                     android:gravity="bottom|start"
                     android:lines="1"
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:text="@string/placeholder_tx_fee"
-                    app:autoSizeMaxTextSize="16sp"
+                    app:autoSizeMaxTextSize="14sp"
                     app:autoSizeMinTextSize="12sp"
                     app:autoSizeTextType="uniform" />
 

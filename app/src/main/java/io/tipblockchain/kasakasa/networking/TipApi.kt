@@ -2,9 +2,11 @@ package io.tipblockchain.kasakasa.networking
 
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
+import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.MultipartBody
+import org.web3j.abi.datatypes.Bool
 import retrofit2.http.*
 
 interface TipApi {
@@ -17,12 +19,18 @@ interface TipApi {
     fun getCountry(@Path("countrycode") code: String): Observable<Country>
 
 
+    @POST("/phones/verificationStart")
+    fun startPhoneVerification(@Body verification: PhoneVerificationRequest): Observable<PhoneVerificationConfirmation?>
+
+    @POST("/phones/verificationCheck")
+    fun checkPhoneVerification(@Body verification: PhoneVerificationRequest): Observable<PhoneVerificationResponse?>
+
     // Accounts
     @GET("/accounts/check")
-    fun checkUsername(@Query("username") username: String): Observable<UsernameResponse>
+    fun checkUsername(@Query("username") username: String, @Query("checkDemo") checkDemoAccounts: Boolean = true): Observable<UsernameResponse>
 
     @POST("/secure/identity")
-    fun createAccount(@Body user: User): Observable<User>
+    fun createAccount(@Body user: User, @Header("X-Signup-Token") token: String, @Header("X-Claim-Demo-Account") claimDemoAccount: Boolean = false): Observable<User>
 
     @GET("/accounts/my")
     fun getMyAccount(): Observable<User?>
@@ -52,5 +60,23 @@ interface TipApi {
 
     @DELETE(value = "/contacts")
     fun deleteContact(contact: User): Observable<ContactListStringResponse>
+
+    @POST("/transactions")
+    fun addTransaction(@Body transaction: Transaction): Observable<Transaction?>
+
+    @GET("/transactions")
+    fun getTransaction(@Query("hash") hash: String): Observable<Transaction>
+
+    @GET("/transactions")
+    fun getTransactions(@Query("address") address: String): Observable<TransactionListResponse?>
+
+    @GET("/transactions")
+    fun getTransactions(@Query("address") address: String, @Query("currency") currency: String): Observable<TransactionListResponse?>
+
+    @GET("/transactions")
+    fun getTransactionsByHashes(@Query("hashes")txHashList: String): Observable<TransactionListResponse?>
+
+    @POST("/transactions/fill")
+    fun fillTransactions(@Body txList: List<Transaction>): Observable<TransactionListResponse?>
 
 }

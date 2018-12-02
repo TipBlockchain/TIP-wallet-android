@@ -19,6 +19,8 @@ class AuthorizationRepository {
                 field = value
                 if (field != null) {
                     saveCurrentAuthorization(field!!)
+                } else {
+                    clearCurrentAuthorization()
                 }
             }
 
@@ -61,6 +63,10 @@ class AuthorizationRepository {
         private fun saveCurrentAuthorization(authorization: Authorization) {
             val authString = JSON.stringify(authorization)
             PreferenceHelper.authorization = authString
+        }
+
+        private fun clearCurrentAuthorization() {
+            PreferenceHelper.authorization = null
         }
     }
 }
