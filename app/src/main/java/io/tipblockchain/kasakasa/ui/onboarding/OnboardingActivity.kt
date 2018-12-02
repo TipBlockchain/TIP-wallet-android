@@ -1,8 +1,6 @@
 package io.tipblockchain.kasakasa.ui.onboarding
 
 import android.content.Intent
-import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -21,10 +19,11 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.fragment_onboarding.view.*
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.widget.Button
-import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
+import io.tipblockchain.kasakasa.ui.BaseActivity
+import io.tipblockchain.kasakasa.ui.onboarding.enterphone.EnterPhoneNumberActivity
 
 
-class OnboardingActivity : AppCompatActivity() {
+class OnboardingActivity : BaseActivity() {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -41,7 +40,6 @@ class OnboardingActivity : AppCompatActivity() {
     internal var pageDescriptions = arrayOf(String())
     internal var viewPager: ViewPager? = null
     internal var createButton: Button? = null
-    internal var sharedPrefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,20 +74,11 @@ class OnboardingActivity : AppCompatActivity() {
             }
         })
 
-        sharedPrefs = applicationContext.getSharedPreferences(getString(R.string.default_prefs_file), 0)
-//        val setupComplete: Boolean = sharedPrefs!!.getBoolean(getString(R.string.prefs_setup_complete), false)
-//        if (setupComplete) {
-//            val intent = Intent(this, MainTabActivity::class.java)
-//
-//            startActivity(intent)
-//        }
-
         createButton?.setOnClickListener {
             this.startAccountCreation()
         }
 
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -111,11 +100,9 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     fun startAccountCreation() {
-        val intent = Intent(this, ChoosePasswordActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
+        val intent = Intent(this, EnterPhoneNumberActivity::class.java)
         startActivity(intent)
     }
-
 
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to

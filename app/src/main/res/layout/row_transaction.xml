@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/avatarIv"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -13,7 +13,12 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="10dp"
-        app:srcCompat="@drawable/avatar_placeholder" />
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/avatar_placeholder"
+        app:riv_border_color="@color/colorLightGray"
+        app:riv_border_width="1dp"
+        app:riv_corner_radius="30dp"
+        app:riv_mutate_background="true"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -24,6 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -45,8 +51,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
-                android:layout_marginRight="@dimen/text_margin"
                 android:layout_marginTop="@dimen/text_margin"
+                android:layout_marginRight="@dimen/text_margin"
                 android:layout_weight="0.4"
                 android:gravity="right|center_vertical"
                 android:lines="1"

@@ -92,6 +92,25 @@ object MnemonicUtils {
         return (gen.generateDerivedParameters(SEED_KEY_SIZE) as KeyParameter).key
     }
 
+    fun isValidSeedPhrase(mnemonic: String): Boolean {
+        val cleanedMnemonic = mnemonic.replace("\\s+", " ")
+        val wordList = cleanedMnemonic.split(" ")
+        if (wordList.size != 12) {
+            return false
+        }
+        val wordSet = wordList.toSet()
+        if (wordSet.size != wordList.size) {
+            return false
+        }
+
+        for (word in wordList) {
+            if (!WORD_LIST.contains(word)) {
+                return false
+            }
+        }
+        return true
+    }
+
     private fun validateMnemonic(mnemonic: String?) {
         if (mnemonic == null || mnemonic.trim { it <= ' ' }.isEmpty()) {
             throw IllegalArgumentException("Mnemonic is required to generate a seed")

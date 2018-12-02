@@ -20,7 +20,6 @@ class BackupFinishedActivity : AppCompatActivity() {
 
     private fun goToMainApp() {
         val intent = Intent(this, MainTabActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
 
         val prefs = this.getSharedPreferences(getString(R.string.default_prefs_file), 0)

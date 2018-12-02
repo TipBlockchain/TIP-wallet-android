@@ -19,3 +19,24 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# UCrop
+-ignorewarnings
+
+-keep class * {
+    public private *;
+}
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
+
+# Kotlinx Serialization
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.SerializationKt
+-keep,includedescriptorclasses class com.yourcompany.yourpackage.**$$serializer { *; } # <-- change package name to your app's
+-keepclassmembers class io.tipblockchain.kasakasa.** { # <-- change package name to your app's
+    *** Companion;
+}
+-keepclasseswithmembers class io.tipblockchain.kasakasa.** { # <-- change package name to your app's
+    kotlinx.serialization.KSerializer serializer(...);
+}

@@ -107,7 +107,26 @@ object WalletUtils {
         val seed = MnemonicUtils.generateSeed(mnemonic, password)
         val privateKey = ECKeyPair.create(sha256(seed))
 
-        val walletFile = generateWalletFile(password, privateKey, destinationDirectory, false)
+        val walletFile = generateWalletFile(password, privateKey, destinationDirectory, useFullScrypt = false)
+
+        return Bip39Wallet(walletFile, mnemonic)
+    }
+
+    @Throws(CipherException::class, IOException::class)
+    fun generateBip39Mnemonic(): String {
+        val initialEntropy = ByteArray(16)
+        secureRandom.nextBytes(initialEntropy)
+
+        val mnemonic = MnemonicUtils.generateMnemonic(initialEntropy)
+        return mnemonic
+    }
+
+    @Throws(CipherException::class, IOException::class)
+    fun getnerateBip39WalletFromMnemonic(mnemonic: String, password: String, destinationDirectory: File): Bip39Wallet {
+        val seed = MnemonicUtils.generateSeed(mnemonic, password)
+        val privateKey = ECKeyPair.create(sha256(seed))
+
+        val walletFile = generateWalletFile(password, privateKey, destinationDirectory, useFullScrypt = false)
 
         return Bip39Wallet(walletFile, mnemonic)
     }

@@ -7,6 +7,8 @@
     <color name="colorLightPink">#D46AB0</color>
     <color name="colorAppPurple">#341E7D</color>
     <color name="colorAppDarkPurple">#26144B</color>
+    <color name="colorGray">#888888</color>
+    <color name="colorTipGray">#888999</color>
     <color name="colorLightGray">#CCCCCC</color>
     <color name="colorVeryLightGray">#EEEEEE</color>
     <color name="colorDarkGray">#333333</color>

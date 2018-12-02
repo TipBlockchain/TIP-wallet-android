@@ -39,9 +39,20 @@ class FileUtils {
         val file = File(walletsDir(), filename)
         if (file.exists()) {
             return file
-        } else {
-            return null
         }
+        return null
+    }
+
+    fun fileFromPath(path: String): File? {
+        val file = File(path)
+        if (file.exists()) {
+            return file
+        }
+        return null
+    }
+
+    fun imageFileWithName(filename: String): File? {
+        return File(App.applicationContext().cacheDir, filename)
     }
 
     fun deleteFile(file: File) : Boolean {

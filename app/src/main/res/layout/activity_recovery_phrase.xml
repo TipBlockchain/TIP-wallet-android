@@ -21,22 +21,18 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/subtitleTv"
-                style="@style/AppTheme.TextViewLightContent"
+                style="@style/AppTheme.WhiteText.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -62,8 +58,8 @@
                 android:id="@+id/copyBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/clear"
                 android:text="@string/copy_to_clipboard"
                 android:textColor="@color/colorWhite" />
@@ -100,10 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="50dp"
                 android:text="@string/verify_recovery_phrase"
                 android:theme="@style/AppTheme.PrimaryButton"
                 app:layout_constraintBottom_toBottomOf="parent"

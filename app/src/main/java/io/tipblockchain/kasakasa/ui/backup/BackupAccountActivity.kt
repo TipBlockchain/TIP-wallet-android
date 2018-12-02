@@ -39,6 +39,11 @@ class BackupAccountActivity : AppCompatActivity() {
         })
 
         nextBtn.setOnClickListener { attemptLogin() }
+        nextBtn.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(v: View?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
     }
 
     /**
@@ -95,13 +100,13 @@ class BackupAccountActivity : AppCompatActivity() {
         // the progress spinner.
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        login_form.visibility = if (show) View.GONE else View.VISIBLE
-        login_form.animate()
+        form.visibility = if (show) View.GONE else View.VISIBLE
+        form.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                        form.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 
@@ -155,7 +160,6 @@ class BackupAccountActivity : AppCompatActivity() {
 
     private fun goToBackupFinished() {
         val intent = Intent(this, BackupFinishedActivity::class.java)
-        intent.putExtra("keyIdentifier", "value")
         startActivity(intent)
     }
 
