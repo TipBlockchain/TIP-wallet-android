@@ -36,6 +36,11 @@ class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
         verifyPhoneBtn.setOnClickListener { verifyPhoneNumber() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        verifyPhoneBtn.isEnabled = true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter?.detach()

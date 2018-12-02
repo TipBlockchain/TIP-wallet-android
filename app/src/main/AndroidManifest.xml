@@ -104,7 +104,8 @@
             android:name=".ui.onboarding.profile.OnboardingUserProfileActivity"
             android:label="@string/title_activity_onboarding_user_profile"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

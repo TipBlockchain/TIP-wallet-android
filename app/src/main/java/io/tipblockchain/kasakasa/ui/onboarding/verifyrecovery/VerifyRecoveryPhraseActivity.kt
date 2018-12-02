@@ -82,8 +82,8 @@ class VerifyRecoveryPhraseActivity : BaseActivity(), VerifyRecoveryPhrase.View {
 
         if (validateForm()) {
             verifyBtn.isEnabled = false
-            val word1 = missingWord1Tv.text.toString()
-            val word2 = missingWord2Tv.text.toString()
+            val word1 = missingWord1Tv.text.toString().trim()
+            val word2 = missingWord2Tv.text.toString().trim()
             presenter?.verifyRecoveryPhrase(modifiedRecoveryPhrase, word1, word2)
         }
     }

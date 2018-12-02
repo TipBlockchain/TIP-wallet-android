@@ -50,6 +50,11 @@ class EnterPhoneNumberActivity : BaseActivity(), EnterPhone.View {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        verifyPhoneBtn.isEnabled = true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter?.detach()
@@ -79,7 +84,7 @@ class EnterPhoneNumberActivity : BaseActivity(), EnterPhone.View {
         showMessage(getString(R.string.verification_started))
         Handler().postDelayed({
             navigateToVerifyPhoneNumber()
-        }, 2000)
+        }, 1000)
     }
 
     private fun setupCountryPicker() {

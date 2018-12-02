@@ -164,6 +164,7 @@ class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
+        nextBtn.isEnabled = !show
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
         passwordForm.visibility = if (show) View.GONE else View.VISIBLE

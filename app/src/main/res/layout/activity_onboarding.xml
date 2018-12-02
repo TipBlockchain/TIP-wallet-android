@@ -26,20 +26,6 @@
     </android.support.v4.view.ViewPager>
 
 
-    <Button
-        android:id="@+id/createAccountButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="50dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:text="@string/create_account"
-        android:theme="@style/AppTheme.PrimaryButton"
-        android:visibility="invisible"
-        app:layout_anchor="@id/container"
-        app:layout_anchorGravity="bottom|center" />
-
     <com.rd.PageIndicatorView
         android:id="@+id/pageIndicatorView"
         android:layout_width="wrap_content"
@@ -54,6 +40,20 @@
         app:piv_selectedColor="@color/colorPink"
         app:piv_unselectedColor="@color/colorVeryLightGray"
         app:piv_viewPager="@id/container" />
+
+    <Button
+        android:id="@+id/createAccountButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/create_account"
+        android:theme="@style/AppTheme.PrimaryButton"
+        android:visibility="invisible"
+        app:layout_anchor="@id/container"
+        app:layout_anchorGravity="bottom|center" />
 
 
 </android.support.design.widget.CoordinatorLayout>

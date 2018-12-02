@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.ui.onboarding.demoaccount
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.AppConstants
@@ -39,6 +40,7 @@ class DemoAccountActivity : BaseActivity() {
 
         usernameTv.text = currentUser!!.username
         if (currentUser?.originalPhotoUrl != null) {
+            Log.d(LOG_TAG, "PhotoUrl = ${currentUser!!.originalPhotoUrl}")
             Picasso.get().load(currentUser!!.originalPhotoUrl).into(displayImageView)
         } else {
             Picasso.get().load(R.drawable.avatar_placeholder_small).into(displayImageView)

@@ -82,7 +82,12 @@ class WalletRepository {
         }
     }
 
+    fun deleteAllDirect() {
+       dao.deleteAll()
+    }
+
     fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String): NewWallet? {
+        deleteAllDirect()
         val web3Bridge = Web3Bridge()
         val bip39Wallet = WalletUtils.getnerateBip39WalletFromMnemonic(mnemonic = mnemonic, password = password, destinationDirectory = FileUtils().walletsDir())
         val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)

@@ -1,6 +1,8 @@
 package io.tipblockchain.kasakasa.ui.onboarding.password
 
 import android.util.Log
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import java.lang.Error
@@ -22,25 +24,33 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
 
     override fun generateWalletFromMnemonicAndPassword(mnemonic: String, password: String) {
         try {
-            val newWallet = walletRepository.newWalletWithMnemonicAndPassword(mnemonic = mnemonic, password = password)
-            if (newWallet != null) {
-                if (existingUser != null) {
-                    if (existingUser!!.address != newWallet!!.wallet.address) {
-                        walletRepository.delete(newWallet.wallet.address)
-                        view?.onWalletNotMatchingExistingError()
+            Schedulers.io().scheduleDirect {
+                val newWallet = walletRepository.newWalletWithMnemonicAndPassword(mnemonic = mnemonic, password = password)
+                AndroidSchedulers.mainThread().scheduleDirect {
+                    if (newWallet != null) {
+                        if (existingUser != null) {
+                            if (existingUser!!.address != newWallet!!.wallet.address) {
+                                walletRepository.delete(newWallet.wallet.address)
+                                view?.onWalletNotMatchingExistingError()
+                            } else {
+                                view?.onWalletRestored()
+                            }
+                        } else {
+                            view?.onWalletCreated()
+                        }
                     } else {
-                        view?.onWalletRestored()
+                        view?.onWalletCreationError(Error())
                     }
-                } else {
-                    view?.onWalletCreated()
+
                 }
-            } else {
-                view?.onWalletCreationError(Error())
             }
         } catch (err: Throwable) {
-           view?.onWalletCreationError(err)
+            AndroidSchedulers.mainThread().scheduleDirect {
+                view?.onWalletCreationError(err)
+            }
         }
     }
+
 
     override var view: ChoosePassword.View? = null
 }

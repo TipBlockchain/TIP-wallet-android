@@ -42,7 +42,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         adapter = UserFilterAdapter(this, listOf())
         recepientTv.setAdapter(adapter)
 
-        recepientTv.threshold = 2
+        recepientTv.threshold = 1
         presenter?.fetchContactList()
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
