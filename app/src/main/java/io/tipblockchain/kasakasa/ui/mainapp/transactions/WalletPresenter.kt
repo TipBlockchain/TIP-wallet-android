@@ -64,21 +64,27 @@ class WalletPresenter: WalletInterface.Presenter {
     }
 
     override fun fetchBalance(wallet: Wallet): Boolean {
-        var balanceChanged = false
-        val balance = currentProcessor?.getBalance(wallet.address) ?: BigInteger.ZERO
-        val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
-        if (balance != null) {
-            if (balance != wallet.balance) {
-                wallet.balance = balance
-                wallet.lastSynced = Date()
-                walletRepository.update(wallet)
-                balanceChanged = true
+        try {
+            var balanceChanged = false
+            val balance = currentProcessor?.getBalance(wallet.address) ?: BigInteger.ZERO
+            val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
+            if (balance != null) {
+                if (balance != wallet.balance) {
+                    wallet.balance = balance
+                    wallet.lastSynced = Date()
+                    walletRepository.update(wallet)
+                    balanceChanged = true
+                }
+                view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
+                return balanceChanged
+            } else {
+                view?.onBalanceFetchError()
             }
-            view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
-         } else {
-             view?.onBalanceFetchError()
-         }
-        return balanceChanged
+        } catch (err: Throwable) {
+            view?.onBalanceFetchError()
+        }
+
+        return false
     }
 
     override fun fetchTransactions(wallet: Wallet) {
