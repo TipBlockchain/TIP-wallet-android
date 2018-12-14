@@ -111,8 +111,8 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
             ActivityRequest.GALLERY.code -> if (resultCode == Activity.RESULT_OK) {
                 (imageReturnedIntent!!.data)?.let { showImageCropper(it) }
             }
-            ActivityRequest.CROP.code -> if (resultCode == Activity.RESULT_OK) {
-                val croppedImageUri = UCrop.getOutput(imageReturnedIntent!!)
+            ActivityRequest.CROP.code -> if (resultCode == Activity.RESULT_OK && imageReturnedIntent != null) {
+                val croppedImageUri = UCrop.getOutput(imageReturnedIntent)
                 profileImageView.setImageURI(croppedImageUri)
                 try {
                     displayPicFile = File(croppedImageUri?.path)
