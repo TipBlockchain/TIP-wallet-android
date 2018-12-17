@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/sectionImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:fontFamily="@font/advent_pro_medium"
+        tools:fontFamily="@font/avenir_ltd_std_medium"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
