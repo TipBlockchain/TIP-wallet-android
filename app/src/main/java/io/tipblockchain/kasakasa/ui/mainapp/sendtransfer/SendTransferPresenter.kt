@@ -14,14 +14,14 @@ class SendTransferPresenter: SendTransfer.Presenter {
     private val userRepository = UserRepository.instance
     private val walletRepository = WalletRepository.instance
 
-    override fun fetchContactList() {
-        userRepository.loadContacts(view!!) { contacts, error ->
-            if (contacts != null) {
-                view?.onContactsFetched(contacts)
-            } else if (error != null) {
-                view?.onContactsFetchError(error)
+    override fun loadContactList() {
+        userRepository.loadContactsFromDb().observe(view!!, object : Observer<List<User>> {
+            override fun onChanged(contacts: List<User>?) {
+                if (contacts != null) {
+                    view?.onContactsFetched(contacts)
+                }
             }
-        }
+        })
     }
 
     override fun userSelected(user: User?, address: String) {

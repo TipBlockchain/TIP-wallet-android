@@ -21,7 +21,7 @@ interface SendTransfer {
     }
 
     interface Presenter: BasePresenter<View> {
-        fun fetchContactList()
+        fun loadContactList()
         fun userSelected(user: User?, address: String)
         fun amountEntered(amount: BigDecimal)
         fun currencySelected(currency: Currency)

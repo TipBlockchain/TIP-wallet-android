@@ -95,36 +95,20 @@ class UserRepository {
         return apiService.uploadProfilePhoto(imageFile)
     }
 
-    fun loadContacts(owner: LifecycleOwner, callback: ContactsUpdatedWithResults) {
-        dao.findContacts().observe(owner, object : Observer<List<User>> {
-            override fun onChanged(contacts: List<User>?) {
-
-                if (!contactsFetched) {
-                    fetchContactsDisposable = apiService.getContacts()
-                            .subscribeOn(Schedulers.io())
-                            // Have to observe on Schedulers.io() since we write to database
-                            .observeOn(Schedulers.io())
-                            .onErrorReturn { ContactListResponse() }
-                            .subscribe ({
-                                contactsFetched = true
-                                val itContacts = it.contacts
-                                itContacts.map { it.isContact = true }
-                                dao.insertMany(itContacts)
-                                AndroidSchedulers.mainThread().scheduleDirect {
-                                    callback(itContacts, null)
-                                }
-                            }, {
-                                Log.e(logTag, "Error fetching contacts: $it")
-                                AndroidSchedulers.mainThread().scheduleDirect {
-                                    callback(null, it)
-                                }
-                            })
-                } else {
-                    callback(contacts, null)
-                }
-            }
-        })
-
+    fun fetchContacts() {
+        fetchContactsDisposable = apiService.getContacts()
+                .subscribeOn(Schedulers.io())
+                // Have to observe on Schedulers.io() since we write to database
+                .observeOn(Schedulers.io())
+                .onErrorReturn { ContactListResponse() }
+                .subscribe ({
+                    contactsFetched = true
+                    val itContacts = it.contacts
+                    itContacts.map { it.isContact = true }
+                    dao.insertMany(itContacts)
+                }, {
+                    Log.e(logTag, "Error fetching contacts: $it")
+                })
     }
 
     fun loadContactsFromDb(): LiveData<List<User>> {
@@ -149,7 +133,10 @@ class UserRepository {
     }
 
     fun removeContact(user: User, callback: ContactsUpdated) {
-        val observable = apiService.removeContact(user).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe ({
+        val observable = apiService.removeContact(user)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe ({
             it.let {
                 if (user.id in it.contacts) {
                     user.isContact = true

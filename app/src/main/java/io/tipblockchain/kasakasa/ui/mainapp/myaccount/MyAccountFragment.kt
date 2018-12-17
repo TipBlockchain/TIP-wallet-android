@@ -109,7 +109,7 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
             showOkDialog(getString(R.string.generic_error))
             return
         }
-        
+
         when (requestCode) {
             ActivityRequest.CAMERA.code -> if (resultCode == Activity.RESULT_OK) {
                 (imageReturnedIntent.data)?.let { showImageCropper(it) }

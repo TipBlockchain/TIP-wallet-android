@@ -43,7 +43,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         recepientTv.setAdapter(adapter)
 
         recepientTv.threshold = 1
-        presenter?.fetchContactList()
+        presenter?.loadContactList()
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
         setupSpinner()
