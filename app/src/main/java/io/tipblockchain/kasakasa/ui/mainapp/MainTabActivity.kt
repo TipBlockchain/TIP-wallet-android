@@ -66,6 +66,7 @@ class MainTabActivity : BaseActivity() {
 
         // Set up the ViewPager with the sections adapter.
         viewPager.adapter = mSectionsPagerAdapter
+        viewPager.offscreenPageLimit = 2
 
         supportActionBar?.setTitle(R.string.title_contacts)
 
@@ -97,6 +98,10 @@ class MainTabActivity : BaseActivity() {
         override fun getCount(): Int {
             // Show 3 total pages.
             return 3
+        }
+
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+//            super.destroyItem(container, position, `object`)
         }
 
         fun replaceFragment(newFragment: Fragment) {

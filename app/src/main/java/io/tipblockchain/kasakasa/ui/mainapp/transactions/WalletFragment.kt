@@ -72,13 +72,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // TODO save and reuse last currency selected
-//        currencySelected(lastCurrency)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         Log.d(logTag, "Creating options menu")
         inflater?.inflate(R.menu.menu_currency_options, menu)
@@ -123,6 +116,20 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(insetDivider)
         recyclerView.addItemDecoration(itemDecoration)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("currency", lastCurrency.name)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (savedInstanceState != null) {
+            val currencyString = savedInstanceState.getString("currency", "TIP")
+            lastCurrency = Currency.valueOf(currencyString)
+            currencySelected(lastCurrency)
+        }
     }
 
     private fun getActionBarHeight(): Int {
@@ -183,6 +190,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
+        const val ARG_LAST_CURRENCY = "last_currency"
 
         // TODO: Customize parameter initialization
         @JvmStatic
@@ -190,6 +198,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
                 WalletFragment().apply {
                     arguments = Bundle().apply {
                         putInt(ARG_COLUMN_COUNT, columnCount)
+                        putString(ARG_LAST_CURRENCY, lastCurrency.name)
                     }
                 }
     }
@@ -228,7 +237,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private fun setupPresenter() {
         presenter = WalletPresenter()
         presenter?.attach(this)
-        presenter?.switchCurrency(lastCurrency)
+//        presenter?.switchCurrency(lastCurrency)
         presenter?.loadWallets()
     }
 

@@ -2,6 +2,7 @@ package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -32,6 +33,7 @@ class WalletPresenter: WalletInterface.Presenter {
     private var txDisposable: Disposable? = null
     private var txFound = false
 
+    private val LOG_TAG = javaClass.name
     init {
         currentProcessor = tipProcessor
     }
@@ -53,13 +55,13 @@ class WalletPresenter: WalletInterface.Presenter {
             }
         }
         if (currentWallet != null) {
+            val balance = Convert.fromWei(currentWallet!!.balance.toBigDecimal(), Convert.Unit.ETHER)
+            view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
             val balanceChanged = fetchBalance(currentWallet!!)
-            fetchTransactions(currentWallet!!)
-//            if (balanceChanged) {
-//                fetchTransactions(currentWallet!!)
-//            } else {
-//                loadTransactions(wallet = currentWallet!!)
-//            }
+            loadTransactions(wallet = currentWallet!!)
+            if (balanceChanged) {
+                fetchTransactions(currentWallet!!)
+            }
         }
     }
 
@@ -74,8 +76,11 @@ class WalletPresenter: WalletInterface.Presenter {
                     wallet.lastSynced = Date()
                     walletRepository.update(wallet)
                     balanceChanged = true
+                    Log.d(LOG_TAG, "Balance has changed")
+                } else {
+                    Log.d(LOG_TAG, "Balance still the same")
                 }
-                view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
+//                view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
                 return balanceChanged
             } else {
                 view?.onBalanceFetchError()
@@ -95,21 +100,16 @@ class WalletPresenter: WalletInterface.Presenter {
                 txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
                     wallet.blockNumber = latestBlock
                     walletRepository.update(wallet)
-                    if (txlist != null) {
-                        // TODO: Fetch transactions iff new transactions or balance is different, else just load transactions
-                        view?.onTransactionsFetched(wallet.address, Currency.TIP, txlist)
-                    } else {
+                    this.loadTransactions(wallet)
+                    if (txlist == null) {
                         view?.onTransactionsFetchError(err, Currency.TIP)
                     }
-                    this.loadTransactions(wallet)
                 })
             }
             Currency.ETH -> {
                 txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
                     this.loadTransactions(wallet)
-                    if (txlist != null) {
-                        view?.onTransactionsFetched(wallet.address, Currency.ETH, txlist)
-                    } else {
+                    if (txlist == null) {
                         view?.onTransactionsFetchError(err, Currency.ETH)
                     }
                 })
@@ -139,11 +139,14 @@ class WalletPresenter: WalletInterface.Presenter {
         val currency = Currency.valueOf(wallet.currency)
         txDisposable?.dispose()
 
-        txDisposable = txRepository.loadTransactions_notLive(currency).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe { txlist ->
-            if (currentWallet != null && !txlist.isEmpty()) {
+        txDisposable = txRepository.loadTransactions_notLive(currency)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { txlist ->
+            if (currentWallet != null) {
                 val address = currentWallet!!.address
                 val currentWalletTxList = txlist.filter { tx ->
-                    tx.currency == currentWallet?.currency && (tx.from == address || tx.to == address)
+                    /* tx.currency == currentWallet?.currency && */ (tx.from == address || tx.to == address)
                 }
                 view?.onTransactionsFetched(address, Currency.valueOf(currentWallet!!.currency), currentWalletTxList)
             }
@@ -159,6 +162,7 @@ class WalletPresenter: WalletInterface.Presenter {
             walletRepository.findWalletForCurrency(Currency.ETH).observe(view!!, Observer { wallet ->
                 if (wallet != null) {
                     ethWallet = wallet
+                    Log.d(LOG_TAG, "Updating ETH wallet on change")
                     view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
                 }
             })
@@ -166,6 +170,7 @@ class WalletPresenter: WalletInterface.Presenter {
         if (tipWallet == null) {
             walletRepository.findWalletForCurrency(Currency.TIP).observe(view!!, Observer { wallet ->
                 if (wallet != null && tipWallet == null) {
+                    Log.d(LOG_TAG, "Updating TIP wallet on change")
                     view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
                     tipWallet = wallet
                     if(tipProcessor == null) {

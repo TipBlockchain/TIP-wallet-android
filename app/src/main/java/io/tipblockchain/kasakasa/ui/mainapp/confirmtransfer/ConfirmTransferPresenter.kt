@@ -79,11 +79,15 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                         val credentials = web3Bridge.loadCredentialsForWalletWithPassword(wallet, password)
                         if (credentials != null) {
                             txRepository.sendTransaction(transaction, credentials)
-                            view?.onTransactionSent()
+                            AndroidSchedulers.mainThread().scheduleDirect {
+                                view?.onTransactionSent()
+                            }
                         }
                     }
                 }, {
-                    view?.onTransactionError(it)
+                    AndroidSchedulers.mainThread().scheduleDirect {
+                        view?.onTransactionError(it)
+                    }
                 })
     }
 
