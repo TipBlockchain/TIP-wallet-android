@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.ui.mainapp.receivetransfer.ReceiveTransferActivity
@@ -83,6 +84,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         spinner.dropDownVerticalOffset = getActionBarHeight()
         spinner.backgroundTintList
         spinner.dropDownHorizontalOffset = 0
+        val selectionIndex = if (lastCurrency == Currency.TIP)  0 else 1
+        spinner.setSelection(selectionIndex)
         spinner.onItemSelectedListener = this
     }
 
@@ -125,11 +128,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState != null) {
-            val currencyString = savedInstanceState.getString("currency", "TIP")
-            lastCurrency = Currency.valueOf(currencyString)
-            currencySelected(lastCurrency)
-        }
+        lastCurrency = PreferenceHelper.walletLastSelectedCurrency
+        currencySelected(lastCurrency)
     }
 
     private fun getActionBarHeight(): Int {
@@ -142,6 +142,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     private fun currencySelected(currency: Currency) {
         lastCurrency = currency
+        Log.d(logTag, "Last selected currency is ${currency}")
+        PreferenceHelper.walletLastSelectedCurrency = lastCurrency
         presenter?.switchCurrency(lastCurrency)
     }
 

@@ -120,15 +120,19 @@ class TransactionRepository {
                         it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
                         fillTransactions(cleanedList) { mergedList, err ->
-                            dao.insertAll(mergedList)
+                            var resultList = mergedList
+                            if (mergedList.isEmpty() && ! cleanedList.isEmpty()) {
+                                resultList = cleanedList
+                            }
+                            dao.insertAll(resultList)
                             AndroidSchedulers.mainThread().scheduleDirect {
-                                callback(mergedList, null)
+                                callback(resultList, null)
                             }
                         }
                     }
 
         }, {
-                    Log.e("TX", "Error getting transactinos: $it")
+                    Log.e("TX", "Error getting transactions: $it")
                     Log.e("TX", "Stack: ${it.stackTrace}")
                     it.printStackTrace(System.err)
             callback(null, it)
@@ -150,9 +154,13 @@ class TransactionRepository {
                             it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
                         fillTransactions(cleanedList) { mergedList, err ->
-                            dao.insertAll(mergedList)
+                            var resultList = mergedList
+                            if (mergedList.isEmpty() && ! cleanedList.isEmpty()) {
+                                resultList = cleanedList
+                            }
+                            dao.insertAll(resultList)
                             AndroidSchedulers.mainThread().scheduleDirect {
-                                callback(mergedList, null)
+                                callback(resultList, null)
                             }
                         }
                     }

@@ -57,8 +57,8 @@ class WalletPresenter: WalletInterface.Presenter {
         if (currentWallet != null) {
             val balance = Convert.fromWei(currentWallet!!.balance.toBigDecimal(), Convert.Unit.ETHER)
             view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
-            val balanceChanged = fetchBalance(currentWallet!!)
             loadTransactions(wallet = currentWallet!!)
+            val balanceChanged = fetchBalance(currentWallet!!)
             if (balanceChanged) {
                 fetchTransactions(currentWallet!!)
             }
@@ -97,17 +97,16 @@ class WalletPresenter: WalletInterface.Presenter {
         val c: Currency = Currency.valueOf(wallet.currency)
         when (c) {
             Currency.TIP -> {
-                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
+                txRepository.fetchTipTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = "latest", callback = { txlist, err ->
                     wallet.blockNumber = latestBlock
                     walletRepository.update(wallet)
-                    this.loadTransactions(wallet)
                     if (txlist == null) {
                         view?.onTransactionsFetchError(err, Currency.TIP)
                     }
                 })
             }
             Currency.ETH -> {
-                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = latestBlock.toString(), callback = { txlist, err ->
+                txRepository.fetchEthTransactions(address = wallet.address, startBlock = wallet.startBlockNumber.toString(), endBlock = "latest", callback = { txlist, err ->
                     this.loadTransactions(wallet)
                     if (txlist == null) {
                         view?.onTransactionsFetchError(err, Currency.ETH)
@@ -119,6 +118,7 @@ class WalletPresenter: WalletInterface.Presenter {
             wallet.blockNumber = latestBlock.minus(BigInteger.valueOf(7)).max(wallet.blockNumber)
             walletRepository.update(wallet)
         }
+        this.loadTransactions(wallet)
     }
 
     override var view: WalletInterface.View? = null

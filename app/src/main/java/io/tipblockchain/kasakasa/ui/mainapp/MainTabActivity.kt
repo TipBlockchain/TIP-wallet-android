@@ -32,8 +32,8 @@ class MainTabActivity : BaseActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
+        Log.d(LOG_TAG, "Selecting item with id: ${item.itemId}")
         when (item.itemId) {
-
             R.id.navigation_contacts -> {
                 mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
 //                supportActionBar?.show()
@@ -66,7 +66,7 @@ class MainTabActivity : BaseActivity() {
 
         // Set up the ViewPager with the sections adapter.
         viewPager.adapter = mSectionsPagerAdapter
-        viewPager.offscreenPageLimit = 2
+        viewPager.offscreenPageLimit = 3
 
         supportActionBar?.setTitle(R.string.title_contacts)
 

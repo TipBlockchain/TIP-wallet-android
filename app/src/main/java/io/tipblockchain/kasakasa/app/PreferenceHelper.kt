@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.app
 
 import android.content.SharedPreferences
+import io.tipblockchain.kasakasa.data.db.repository.Currency
 
 class PreferenceHelper {
 
@@ -17,6 +18,7 @@ class PreferenceHelper {
         private const val DEMO_ACCOUNT_USER = "demo_account_user"
         private const val PLACEHOLDER_VALUE = "placeholder_value"
         private const val AUTHORIZATION = "authorization"
+        private const val WALLET_LAST_CURRENCY = "wallet_last_currency"
 
 
         var onboardingComplete: Boolean
@@ -43,6 +45,15 @@ class PreferenceHelper {
         var authorization: String?
             get() = prefs.getString(AUTHORIZATION, null)
             set(value) = prefs.edit().putString(AUTHORIZATION, value).apply()
+
+        var walletLastSelectedCurrency: Currency
+            get() {
+                val value = prefs.getString(WALLET_LAST_CURRENCY, Currency.TIP.name)!!
+                return Currency.valueOf(value)
+            }
+            set(value) {
+                prefs.edit().putString(WALLET_LAST_CURRENCY, value.name).apply()
+            }
 
         private fun removeCurrentUser() {
             prefs.edit().remove(CURRENT_USER).apply()
