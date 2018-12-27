@@ -225,7 +225,7 @@
     <string name="address_info">You can receive both TIP and ETH at this address.</string>
     <string name="qrcode_info">Your wallet address QR code</string>
     <string name="share">Share</string>
-    <string name="share_address">Hey I\'m in TIP. You can send me TIP or ETH either using my TIP username, %s or the old way, to my ETH address: %s</string>
+    <string name="share_address">Hey I\'m on TIP. You can send me TIP or ETH either using my TIP username, %s or the old way, to my ETH address: %s</string>
     <string name="copy_address">Copy Address</string>
     <string name="tip">TIP</string>
     <string name="eth">ETH</string>
