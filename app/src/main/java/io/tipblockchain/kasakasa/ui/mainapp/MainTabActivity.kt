@@ -30,26 +30,32 @@ class MainTabActivity : BaseActivity() {
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
+    private var activeFragment: Fragment? = null
+    private val contactListFragment = ContactListFragment.newInstance(1)
+    private val walletFragment = WalletFragment.newInstance(1)
+    private val accountFragment = MyAccountFragment.newInstance("")
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         Log.d(LOG_TAG, "Selecting item with id: ${item.itemId}")
         when (item.itemId) {
             R.id.navigation_contacts -> {
-                mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
-//                supportActionBar?.show()
+                mSectionsPagerAdapter?.replaceFragment(contactListFragment)
+                activeFragment = contactListFragment
                 supportActionBar?.setTitle(R.string.title_contacts)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_wallet -> {
-//                supportActionBar?.hide()
                 supportActionBar?.setTitle(R.string.title_wallet)
-                mSectionsPagerAdapter?.replaceFragment(WalletFragment.newInstance(1))
+                mSectionsPagerAdapter?.replaceFragment(walletFragment)
+                activeFragment = walletFragment
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_account -> {
-                supportActionBar?.show()
+//                supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_my_account)
-                mSectionsPagerAdapter?.replaceFragment(MyAccountFragment())
+                mSectionsPagerAdapter?.replaceFragment(accountFragment)
+                activeFragment = accountFragment
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -63,6 +69,8 @@ class MainTabActivity : BaseActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+
+
 
         // Set up the ViewPager with the sections adapter.
         viewPager.adapter = mSectionsPagerAdapter
@@ -78,8 +86,18 @@ class MainTabActivity : BaseActivity() {
         Log.d(LOG_TAG, "OnResume: Empty Contact")
     }
 
+    override fun onBackPressed() {
+        if (activeFragment == contactListFragment) {
+            finish()
+        } else {
+            addStartingFragment()
+            navigation.selectedItemId = R.id.navigation_contacts
+        }
+    }
+
     private fun addStartingFragment() {
-        mSectionsPagerAdapter?.replaceFragment(ContactListFragment.newInstance(1))
+        mSectionsPagerAdapter?.replaceFragment(contactListFragment, addToBackStack = false)
+        activeFragment = contactListFragment
     }
 
     /**
@@ -104,13 +122,15 @@ class MainTabActivity : BaseActivity() {
 //            super.destroyItem(container, position, `object`)
         }
 
-        fun replaceFragment(newFragment: Fragment) {
+        fun replaceFragment(newFragment: Fragment, addToBackStack: Boolean = true) {
             val transaction = supportFragmentManager.beginTransaction()
 
 // Replace whatever is in the fragment_container view with this fragment,
 // and add the transaction to the back stack if needed
             transaction.replace(R.id.container, newFragment)
-            transaction.addToBackStack(null)
+            if (addToBackStack) {
+                transaction.addToBackStack(null)
+            }
 
 // Commit the transaction
             transaction.commit()
@@ -149,5 +169,9 @@ class MainTabActivity : BaseActivity() {
                 return fragment
             }
         }
+    }
+
+    interface Resumable {
+        fun resume()
     }
 }

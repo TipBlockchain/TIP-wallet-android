@@ -31,6 +31,10 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     private var presenter: ConfirmTransfer.Presenter? = null
     private var userRepository = UserRepository.instance
     private var transactionSent = false
+    private var gasPriceInGwei = 0
+    private var txFee: BigDecimal? = null
+    private val defaultGasPrice = 11
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +43,15 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         presenter = ConfirmTransferPresenter()
         presenter?.attach(this)
         pendingTransaction = intent.getSerializableExtra(AppConstants.EXTRA_TRANSACTION) as PendingTransaction
+        gasPriceInGwei = intent.getIntExtra(AppConstants.EXTRA_GAS_PRICE, defaultGasPrice)
+        txFee = intent.getSerializableExtra(AppConstants.EXTRA_TRANSACTION_FEE) as BigDecimal
+
+        if (txFee != null) {
+            this.onTransactionFeeCalculated(txFee!!)
+        }
+
         Log.d(LOG_TAG, "tx = $pendingTransaction")
         presenter?.validateTransaction(pendingTransaction!!)
-        presenter?.getTransactionFee(pendingTransaction!!)
 
         if (pendingTransaction?.currency == Currency.ETH) {
             additionalTxFeeTv.visibility = View.GONE
@@ -132,7 +142,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
         fromValueTv.text = pendingTransaction!!.fromUsername
         transactionValueTv.text = getString(R.string.amount_and_currency, pendingTransaction!!.value, pendingTransaction!!.currency.name)
-        totalAmountValueTv.text = getString(R.string.amount_and_currency, pendingTransaction!!.value, pendingTransaction!!.currency.name)
+//        totalAmountValueTv.text = getString(R.string.amount_and_currency, pendingTransaction!!.value, pendingTransaction!!.currency.name)
     }
 
     private fun navigateToTransactionConfirmed() {
@@ -165,7 +175,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     private fun sendTransaction(password: String) {
         showProgress(true)
         confirmBtn.isEnabled = false
-        presenter?.sendTransactionAsync(pendingTransaction!!, password)
+        presenter?.sendTransactionAsync(pendingTransaction!!, password, gasPriceInGwei = gasPriceInGwei)
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)

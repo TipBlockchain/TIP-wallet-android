@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.SeekBar
 import com.google.zxing.client.android.Intents
 import com.google.zxing.integration.android.IntentIntegrator
 import io.tipblockchain.kasakasa.R
@@ -23,6 +24,9 @@ import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.confirmtransfer.ConfirmTransferActivity
 import kotlinx.android.synthetic.main.activity_send_transfer.*
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 
 class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnItemSelectedListener {
     private val REQUEST_READ_CONTACTS = 0
@@ -30,20 +34,22 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     var adapter: UserFilterAdapter? = null
     var selectedCurrency: Currency = Currency.TIP
     val scannerRequestCode = 99
+    private val defaultGasPriceInGwei = 15
+    private var currentGasPriceInGwei = defaultGasPriceInGwei
+    private var transactionFeeInEth: BigDecimal? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_transfer)
 
-        presenter = SendTransferPresenter()
-        presenter?.attach(this)
         // Set up the login form.
         populateAutoComplete()
         adapter = UserFilterAdapter(this, listOf())
         recepientTv.setAdapter(adapter)
 
         recepientTv.threshold = 1
-        presenter?.loadContactList()
+
+
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
         setupSpinner()
@@ -51,6 +57,31 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         if (username  != null) {
             recepientTv.setText(username)
         }
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+
+            override fun onProgressChanged(seekBar: SeekBar, value: Int, b: Boolean) {
+                // Display the current progress of SeekBar
+                setGasPrice(gasPrice = value)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // Do something
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // Do something
+            }
+        })
+        setupPresenter()
+        setGasPrice(defaultGasPriceInGwei)
+    }
+
+    private fun setupPresenter() {
+        presenter = SendTransferPresenter()
+
+        presenter?.attach(this)
+        presenter?.loadContactList()
+        presenter?.loadWallets()
     }
 
     override fun onDestroy() {
@@ -76,6 +107,29 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
             spinner.adapter = adapter
             spinner.onItemSelectedListener = this
         }
+    }
+
+    private fun setGasPrice(gasPrice: Int) {
+        currentGasPriceInGwei = gasPrice
+        if (currentGasPriceInGwei == 0) {
+            currentGasPriceInGwei = 1
+        }
+        presenter?.calculateTransactionFee(currentGasPriceInGwei)
+    }
+
+    override fun onBalanceFetched(balance: BigDecimal, currency: Currency) {
+        if (currency == selectedCurrency) {
+            val rounded = balance.round(MathContext(8, RoundingMode.HALF_EVEN))
+            availableTv.setText(getString(R.string.text_balance_currency, rounded.toString(), currency.name))
+        }
+    }
+
+    override fun onTransactionFeeCalculated(feeInEth: BigDecimal, gasPriceInGwei: Int) {
+        var feeUnit = "ETH"
+        var gasPriceUnit = "GWEI"
+        transactionFeeInEth = feeInEth
+        Log.d(LOG_TAG, "Transaction fee calulated: $transactionFeeInEth")
+        networkFeeTv.text = getString(R.string.network_fee_with_four_variables, transactionFeeInEth.toString(), feeUnit, gasPriceInGwei.toString(), gasPriceUnit)
     }
 
     private fun mayRequestContacts(): Boolean {
@@ -138,6 +192,8 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     fun  navigateToConfirmWithTransaction(tx: PendingTransaction) {
         val intent = Intent(this, ConfirmTransferActivity::class.java)
         intent.putExtra(AppConstants.EXTRA_TRANSACTION, tx)
+        intent.putExtra(AppConstants.EXTRA_GAS_PRICE, currentGasPriceInGwei)
+        intent.putExtra(AppConstants.EXTRA_TRANSACTION_FEE, transactionFeeInEth)
         startActivity(intent)
     }
 
@@ -156,7 +212,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
 
     override fun onInvalidRecipient() {
         showProgress(false)
-        showMessage("Recipient field is not valid. Please enter a valid TIP username or ETH address.")
+        showMessage(getString(R.string.error_invalid_recipient))
     }
 
     override fun onInvalidTransactionValueError() {
@@ -166,17 +222,17 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
 
     override fun onUserNotFound(username: String) {
         showProgress(false)
-        showMessage("User $username not found in your contacts. You can only send transactions by username to users in your contact list. Please add $username to your contacts and try again")
+        showMessage(getString(R.string.error_user_not_in_contacts, username, username))
     }
 
     override fun onWalletError() {
         showProgress(false)
-        showMessage("Failed to load your wallet")
+        showMessage(getString(R.string.error_load_wallet))
     }
 
     override fun onInsufficientBalanceError() {
         showProgress(false)
-        showMessage("Insufficient balance")
+        showMessage(getString(R.string.error_insufficient_balance))
     }
 
     override fun onSendPendingTransaction(tx: PendingTransaction) {
@@ -201,6 +257,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
             0 -> selectedCurrency = Currency.TIP
             1 -> selectedCurrency = Currency.ETH
         }
+        presenter?.currencySelected(selectedCurrency)
     }
 
     /**

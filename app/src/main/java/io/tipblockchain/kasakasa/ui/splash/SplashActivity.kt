@@ -15,6 +15,7 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
 
     private lateinit var presenter: SplashPresenter
     private var mainAppLaunched = false
+    private var onboardingLaunched = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,12 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
     }
 
     override fun gotoOnboarding() {
+        if (onboardingLaunched) {
+            return
+        }
+        onboardingLaunched = true
         val intent = Intent(this, OnboardingActivity::class.java)
+        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
     }
 
@@ -38,6 +44,7 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
         }
         mainAppLaunched = true
         val intent = Intent(this, MainTabActivity::class.java)
+        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
     }
 

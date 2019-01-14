@@ -16,16 +16,19 @@ interface SendTransfer {
         fun onInvalidTransactionValueError()
         fun onWalletError()
         fun onSendPendingTransaction(tx: PendingTransaction)
+        fun onBalanceFetched(balance: BigDecimal, currency: Currency)
         fun onContactsFetched(list: List<User>)
         fun onContactsFetchError(error: Throwable)
+        fun onTransactionFeeCalculated(feeInEth: BigDecimal, gasPriceInGwei: Int)
     }
 
     interface Presenter: BasePresenter<View> {
+        fun loadWallets()
         fun loadContactList()
         fun userSelected(user: User?, address: String)
         fun amountEntered(amount: BigDecimal)
         fun currencySelected(currency: Currency)
         fun validateTransfer(usernameOrAddress: String, value: String, currency: Currency, message: String)
-        fun nextTapped()
+        fun calculateTransactionFee(gasPrice: Int)
     }
 }

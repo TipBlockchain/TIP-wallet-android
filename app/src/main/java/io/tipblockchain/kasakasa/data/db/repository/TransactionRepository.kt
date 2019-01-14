@@ -20,6 +20,7 @@ import io.tipblockchain.kasakasa.networking.EtherscanApiService
 import io.tipblockchain.kasakasa.networking.TipApiService
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.methods.response.TransactionReceipt
+import org.web3j.utils.Convert
 import java.lang.Exception
 import java.math.BigInteger
 import java.util.concurrent.Executor
@@ -81,15 +82,16 @@ class TransactionRepository {
         insertAsyncTask(dao).execute(tx)
     }
 
-    fun sendTransaction(transaction: PendingTransaction, credentials: Credentials, completion: ((txr: TransactionReceipt?, err: Throwable?) -> Unit)? = null) {
+    fun sendTransaction(transaction: PendingTransaction, credentials: Credentials, gasPriceInGwei: Int, completion: ((txr: TransactionReceipt?, err: Throwable?) -> Unit)? = null) {
         try {
             executor!!.execute {
                 var txReceipt: TransactionReceipt?
                 var future: Future<TransactionReceipt>?
                 if (credentials != null) {
+                    val gasPriceInWei = Convert.toWei(gasPriceInGwei.toBigDecimal(), Convert.Unit.GWEI).toBigInteger()
                     when (transaction.currency) {
-                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(transaction.to, transaction.value, credentials)
-                        Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(transaction.to, transaction.value, credentials)
+                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value =  transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                        Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
                     }
                     if (future == null) {
                         return@execute

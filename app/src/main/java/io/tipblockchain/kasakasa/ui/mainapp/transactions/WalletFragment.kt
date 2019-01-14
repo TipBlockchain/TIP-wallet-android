@@ -234,6 +234,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
             return
         }
         adapter?.setItems(transactions)
+        recyclerView.scrollToPosition(0)
     }
 
     private fun setupPresenter() {
