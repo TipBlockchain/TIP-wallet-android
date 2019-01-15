@@ -123,7 +123,7 @@ class TransactionRepository {
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
                         fillTransactions(cleanedList) { mergedList, err ->
                             var resultList = mergedList
-                            if (mergedList.isEmpty() && ! cleanedList.isEmpty()) {
+                            if (mergedList.isEmpty() && !cleanedList.isEmpty()) {
                                 resultList = cleanedList
                             }
                             dao.insertAll(resultList)

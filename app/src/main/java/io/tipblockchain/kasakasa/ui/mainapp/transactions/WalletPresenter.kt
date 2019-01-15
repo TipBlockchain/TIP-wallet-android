@@ -59,9 +59,10 @@ class WalletPresenter: WalletInterface.Presenter {
             view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
             loadTransactions(wallet = currentWallet!!)
             val balanceChanged = fetchBalance(currentWallet!!)
-            if (balanceChanged) {
-                fetchTransactions(currentWallet!!)
-            }
+//            if (balanceChanged) {
+//                fetchTransactions(currentWallet!!)
+//            }
+            fetchTransactions(currentWallet!!)
         }
     }
 
@@ -80,7 +81,7 @@ class WalletPresenter: WalletInterface.Presenter {
                 } else {
                     Log.d(LOG_TAG, "Balance still the same")
                 }
-//                view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
+                view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), balanceInEth)
                 return balanceChanged
             } else {
                 view?.onBalanceFetchError()
