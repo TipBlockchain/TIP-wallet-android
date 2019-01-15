@@ -12,6 +12,7 @@ interface SendTransfer {
     interface View: BaseView, LifecycleOwner {
         fun onUserNotFound(username: String)
         fun onInvalidRecipient()
+        fun onInsufficientEthBalanceError()
         fun onInsufficientBalanceError()
         fun onInvalidTransactionValueError()
         fun onWalletError()
@@ -28,7 +29,7 @@ interface SendTransfer {
         fun userSelected(user: User?, address: String)
         fun amountEntered(amount: BigDecimal)
         fun currencySelected(currency: Currency)
-        fun validateTransfer(usernameOrAddress: String, value: String, currency: Currency, message: String)
+        fun validateTransfer(usernameOrAddress: String, value: BigDecimal, transactionFee: BigDecimal, currency: Currency, message: String)
         fun calculateTransactionFee(gasPrice: Int)
     }
 }

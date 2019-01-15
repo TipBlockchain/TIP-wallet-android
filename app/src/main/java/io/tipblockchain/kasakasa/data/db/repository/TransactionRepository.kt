@@ -90,19 +90,22 @@ class TransactionRepository {
                 if (credentials != null) {
                     val gasPriceInWei = Convert.toWei(gasPriceInGwei.toBigDecimal(), Convert.Unit.GWEI).toBigInteger()
                     when (transaction.currency) {
-                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value =  transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
                         Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
                     }
                     if (future == null) {
                         return@execute
                     }
-                    while (!future.isDone) {}
+                    while (!future.isDone) {
+                    }
                     txReceipt = future.get()
                     postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
                     completion?.invoke(txReceipt, null)
                 }
             }
 
+        } catch (re: RuntimeException) {
+            completion?.invoke(null, re)
         } catch (e: Exception) {
             completion?.invoke(null, e)
         }

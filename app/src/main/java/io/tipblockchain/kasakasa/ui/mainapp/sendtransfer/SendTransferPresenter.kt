@@ -69,10 +69,13 @@ class SendTransferPresenter: SendTransfer.Presenter {
         view?.onTransactionFeeCalculated(priceInEth, gasPrice)
     }
 
-    override fun validateTransfer(usernameOrAddress: String, value: String, currency: Currency, message: String) {
+    override fun validateTransfer(usernameOrAddress: String, value: BigDecimal, transactionFee: BigDecimal, currency: Currency, message: String) {
 
+        if (ethWallet != null && ethWallet!!.balance == BigInteger.ZERO) {
+            view?.onInsufficientEthBalanceError()
+            return
+        }
         var wallet: Wallet? = null
-        val valueAsDecimal = BigDecimal(value)
         when (currency) {
             Currency.TIP -> wallet = tipWallet
             Currency.ETH -> wallet = ethWallet
@@ -86,18 +89,19 @@ class SendTransferPresenter: SendTransfer.Presenter {
             view?.onInvalidRecipient()
             return
         }
-        if (!TextUtils.isNumeric(value)) {
-            view?.onInvalidTransactionValueError()
-            return
-        }
 
-        val txValue = Convert.toWei(valueAsDecimal, Convert.Unit.ETHER).toBigInteger()
+        val txValueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+        val txFeeInWei = Convert.toWei(transactionFee, Convert.Unit.ETHER).toBigInteger()
         val accountBalance = wallet.balance
 
-        if (txValue.max(accountBalance) != accountBalance) {
+        if (txValueInWei + txFeeInWei > accountBalance) {
             // tx value larger -> Error
             view?.onInsufficientBalanceError()
             return
+        }
+
+        if (currency == Currency.TIP && txFeeInWei > accountBalance) {
+            view?.onInsufficientEthBalanceError()
         }
 
         var address: String?
@@ -110,7 +114,7 @@ class SendTransferPresenter: SendTransfer.Presenter {
                     fromUsername = UserRepository.currentUser!!.username,
                     to = address,
                     toUsername = null,
-                    value = valueAsDecimal,
+                    value = value,
                     currency = currency)
             calculateActualTxFee(pending, 21_000_000L.toBigInteger())
             view?.onSendPendingTransaction(tx = pending)
@@ -125,7 +129,7 @@ class SendTransferPresenter: SendTransfer.Presenter {
                             fromUsername = UserRepository.currentUser!!.username,
                             to = user.address,
                             toUsername = user.username,
-                            value = valueAsDecimal,
+                            value = value,
                             currency = currency
                     )
                     calculateActualTxFee(pending, 21_000_000L.toBigInteger())

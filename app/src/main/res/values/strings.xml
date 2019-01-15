@@ -274,4 +274,6 @@
     <string name="error_user_not_in_contacts">"User %s not found in your contacts. You can only send transactions by username to users in your contact list. Please add %s to your contacts and try again"</string>
     <string name="error_load_wallet">Failed to load your wallet</string>
     <string name="error_insufficient_balance">Account balance is not sufficient.</string>
+    <string name="error_insufficient_eth_balance">Insufficient ETH balance: TIP is currently an ERC20 token, thus, ETH is needed to transfer tokens.</string>
+    <string name="error_zero_eth_balance">Insufficient funds to pay for network transaction fee.</string>
 </resources>

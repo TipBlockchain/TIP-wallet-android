@@ -224,7 +224,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
         if (lastCurrency == currency) {
-            balanceTv.text = NumberFormat.getInstance().format( balance.setScale(4, RoundingMode.CEILING))
+            val balanceScale = balance.scale()
+            balanceTv.text = NumberFormat.getInstance().format( balance.setScale(Math.min(balanceScale, 4), RoundingMode.HALF_UP))
             currencyTv.setText(currency.name)
         }
     }

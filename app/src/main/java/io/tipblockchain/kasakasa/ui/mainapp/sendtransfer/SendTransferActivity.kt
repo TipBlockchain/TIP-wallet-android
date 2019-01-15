@@ -23,6 +23,7 @@ import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.confirmtransfer.ConfirmTransferActivity
+import io.tipblockchain.kasakasa.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_send_transfer.*
 import java.math.BigDecimal
 import java.math.MathContext
@@ -207,7 +208,12 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         val amount = amountTv.text.toString()
         val message = messageTv.text.toString()
 
-        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = amount, currency = selectedCurrency, message = message)
+        if (!TextUtils.isNumeric(amount)) {
+            this.onInvalidTransactionValueError()
+            return
+        }
+
+        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = BigDecimal(amount), transactionFee = transactionFeeInEth ?: BigDecimal.ZERO, currency = selectedCurrency, message = message)
     }
 
     override fun onInvalidRecipient() {
@@ -228,6 +234,11 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     override fun onWalletError() {
         showProgress(false)
         showMessage(getString(R.string.error_load_wallet))
+    }
+
+    override fun onInsufficientEthBalanceError() {
+        showProgress(false)
+        showMessage(getString(R.string.error_insufficient_eth_balance))
     }
 
     override fun onInsufficientBalanceError() {

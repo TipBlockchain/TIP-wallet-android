@@ -24,6 +24,8 @@ import io.tipblockchain.kasakasa.ui.mainapp.TransactionConfirmedActivity
 import kotlinx.android.synthetic.main.activity_confirm_transaction.*
 import java.lang.Error
 import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 
 class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
@@ -34,7 +36,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     private var gasPriceInGwei = 0
     private var txFee: BigDecimal? = null
     private val defaultGasPrice = 11
-
+    private val defaultMathContext = MathContext(8, RoundingMode.HALF_UP)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,9 +76,11 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
 
     override fun onTransactionFeeCalculated(txFee: BigDecimal) {
         transactionFeeTv.text = getString(R.string.plus_amount_and_currency, txFee, "ETH")
-        if (pendingTransaction?.currency == Currency.ETH) {
+        if (pendingTransaction != null && pendingTransaction?.currency == Currency.ETH) {
             additionalTxFeeTv.visibility = View.GONE
-            val totalAmount = pendingTransaction?.value?.plus(txFee)
+            var totalAmount = pendingTransaction!!.value?.plus(txFee)
+            val currentScale = totalAmount.scale()
+            totalAmount = totalAmount.setScale(Math.min(currentScale, 6), RoundingMode.HALF_UP)
             totalAmountValueTv.text = getString(R.string.amount_and_currency, totalAmount, pendingTransaction?.currency?.name)
         } else {
             additionalTxFeeTv.visibility = View.VISIBLE
@@ -141,7 +145,9 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         }
 
         fromValueTv.text = pendingTransaction!!.fromUsername
-        transactionValueTv.text = getString(R.string.amount_and_currency, pendingTransaction!!.value, pendingTransaction!!.currency.name)
+        val currentScale = pendingTransaction!!.value.scale()
+        val roundedTxValue = pendingTransaction!!.value.setScale(Math.min(6, currentScale), RoundingMode.HALF_UP)
+        transactionValueTv.text = getString(R.string.amount_and_currency, roundedTxValue, pendingTransaction!!.currency.name)
 //        totalAmountValueTv.text = getString(R.string.amount_and_currency, pendingTransaction!!.value, pendingTransaction!!.currency.name)
     }
 
