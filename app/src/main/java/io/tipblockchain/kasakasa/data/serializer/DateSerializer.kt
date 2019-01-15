@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.data
+package io.tipblockchain.kasakasa.data.serializer
 
 import io.tipblockchain.kasakasa.data.db.Converters
 import kotlinx.serialization.*
