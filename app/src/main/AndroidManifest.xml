@@ -35,11 +35,8 @@
             android:name=".ui.mainapp.MainTabActivity"
             android:label="@string/title_activity_main_tab"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
-
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".ui.newaccount.ChooseUsernameActivity"
@@ -69,7 +66,7 @@
             android:name=".ui.mainapp.sendtransfer.SendTransferActivity"
             android:label="@string/send_payment"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.mainapp.MainTabActivity" />

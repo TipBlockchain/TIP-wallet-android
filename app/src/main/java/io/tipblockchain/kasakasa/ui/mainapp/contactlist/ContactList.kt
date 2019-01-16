@@ -18,6 +18,7 @@ interface ContactList {
     }
 
     interface Presenter: BasePresenter<View> {
+        fun loadContactList()
         fun fetchContactList()
         fun addContact(contact: User)
         fun addContacts(contacts: List<User>)

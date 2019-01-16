@@ -20,8 +20,10 @@ import io.tipblockchain.kasakasa.networking.EtherscanApiService
 import io.tipblockchain.kasakasa.networking.TipApiService
 import org.web3j.crypto.Credentials
 import org.web3j.protocol.core.methods.response.TransactionReceipt
+import org.web3j.utils.Convert
 import java.lang.Exception
 import java.math.BigInteger
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import java.util.concurrent.Future
 
@@ -81,27 +83,34 @@ class TransactionRepository {
         insertAsyncTask(dao).execute(tx)
     }
 
-    fun sendTransaction(transaction: PendingTransaction, credentials: Credentials, completion: ((txr: TransactionReceipt?, err: Throwable?) -> Unit)? = null) {
+    fun sendTransaction(transaction: PendingTransaction, credentials: Credentials, gasPriceInGwei: Int, completion: ((txr: TransactionReceipt?, err: Throwable?) -> Unit)? = null) {
         try {
             executor!!.execute {
                 var txReceipt: TransactionReceipt?
                 var future: Future<TransactionReceipt>?
                 if (credentials != null) {
-                    when (transaction.currency) {
-                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(transaction.to, transaction.value, credentials)
-                        Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(transaction.to, transaction.value, credentials)
+                    val gasPriceInWei = Convert.toWei(gasPriceInGwei.toBigDecimal(), Convert.Unit.GWEI).toBigInteger()
+                    try {
+
+                        when (transaction.currency) {
+                            Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                            Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                        }
+                        if (future == null) {
+                            return@execute
+                        }
+                        while (!future.isDone) {
+                        }
+                        txReceipt = future.get()
+                        postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
+                        completion?.invoke(txReceipt, null)
+                    } catch (e: Exception) {
+                        completion?.invoke(null, e)
                     }
-                    if (future == null) {
-                        return@execute
-                    }
-                    while (!future.isDone) {}
-                    txReceipt = future.get()
-                    postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
-                    completion?.invoke(txReceipt, null)
                 }
             }
 
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             completion?.invoke(null, e)
         }
     }
@@ -120,15 +129,19 @@ class TransactionRepository {
                         it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
                         fillTransactions(cleanedList) { mergedList, err ->
-                            dao.insertAll(mergedList)
+                            var resultList = mergedList
+                            if (mergedList.isEmpty() && !cleanedList.isEmpty()) {
+                                resultList = cleanedList
+                            }
+                            dao.insertAll(resultList)
                             AndroidSchedulers.mainThread().scheduleDirect {
-                                callback(mergedList, null)
+                                callback(resultList, null)
                             }
                         }
                     }
 
         }, {
-                    Log.e("TX", "Error getting transactinos: $it")
+                    Log.e("TX", "Error getting transactions: $it")
                     Log.e("TX", "Stack: ${it.stackTrace}")
                     it.printStackTrace(System.err)
             callback(null, it)
@@ -150,9 +163,13 @@ class TransactionRepository {
                             it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
                         fillTransactions(cleanedList) { mergedList, err ->
-                            dao.insertAll(mergedList)
+                            var resultList = mergedList
+                            if (mergedList.isEmpty() && ! cleanedList.isEmpty()) {
+                                resultList = cleanedList
+                            }
+                            dao.insertAll(resultList)
                             AndroidSchedulers.mainThread().scheduleDirect {
-                                callback(mergedList, null)
+                                callback(resultList, null)
                             }
                         }
                     }

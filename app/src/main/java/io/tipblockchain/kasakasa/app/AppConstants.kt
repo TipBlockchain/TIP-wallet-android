@@ -15,6 +15,8 @@ class AppConstants {
         const val TRANSACTION_RECIPIENT         = "transaction_recipient"
         const val TRANSACTION_REQUEST_TARGET    = "transaction_request_target"
         const val EXTRA_TRANSACTION             = "extra_transaction"
+        const val EXTRA_GAS_PRICE               = "extra_gas_price"
+        const val EXTRA_TRANSACTION_FEE         = "extra_transaction_fee"
         const val EXTRA_PHONE_NUMBER            = "extra_phone_number"
         const val EXTRA_PASSWORD                = "extra_password"
         const val EXTRA_RECOVERY_PHRASE         = "extra_recovery_phrase"

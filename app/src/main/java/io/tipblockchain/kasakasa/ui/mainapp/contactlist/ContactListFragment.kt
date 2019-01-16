@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.fragment_contact_list.*
 import android.graphics.drawable.InsetDrawable
 import android.support.v4.content.LocalBroadcastManager
 import io.tipblockchain.kasakasa.app.AppConstants
+import java.util.*
+import kotlin.concurrent.timerTask
 
 class ContactListFragment: Fragment(), ContactList.View {
 
@@ -184,7 +186,10 @@ class ContactListFragment: Fragment(), ContactList.View {
     private fun setupPresenter(){
         presenter = ContactListPresenter()
         presenter?.attach(this)
-        presenter?.fetchContactList()
+        presenter?.loadContactList()
+        Timer().schedule(timerTask{
+            presenter?.fetchContactList()
+        }, 1000)
     }
 
     private fun setupRecyclerView() {

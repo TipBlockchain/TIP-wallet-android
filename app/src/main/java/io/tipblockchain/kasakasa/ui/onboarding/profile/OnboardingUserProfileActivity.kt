@@ -104,21 +104,26 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageReturnedIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent)
+        if (imageReturnedIntent == null) {
+            showOkDialog(getString(R.string.generic_error))
+            return
+        }
+
         when (requestCode) {
             ActivityRequest.CAMERA.code -> if (resultCode == Activity.RESULT_OK) {
-                (imageReturnedIntent!!.data)?.let { showImageCropper(it) }
+                (imageReturnedIntent.data)?.let { showImageCropper(it) }
             }
             ActivityRequest.GALLERY.code -> if (resultCode == Activity.RESULT_OK) {
-                (imageReturnedIntent!!.data)?.let { showImageCropper(it) }
+                (imageReturnedIntent.data)?.let { showImageCropper(it) }
             }
             ActivityRequest.CROP.code -> if (resultCode == Activity.RESULT_OK) {
-                val croppedImageUri = UCrop.getOutput(imageReturnedIntent!!)
+                val croppedImageUri = UCrop.getOutput(imageReturnedIntent)
                 profileImageView.setImageURI(croppedImageUri)
                 try {
                     displayPicFile = File(croppedImageUri?.path)
                 } catch (e: Exception) {}
             } else {
-                val cropError = UCrop.getError(imageReturnedIntent!!)
+                val cropError = UCrop.getError(imageReturnedIntent)
                 showOkDialog(cropError?.localizedMessage ?: getString(R.string.generic_error))
             }
         }

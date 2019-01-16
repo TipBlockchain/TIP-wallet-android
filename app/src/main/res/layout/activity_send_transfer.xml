@@ -26,7 +26,7 @@
         android:visibility="gone" />
 
     <ScrollView
-        android:id="@+id/form"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
@@ -34,10 +34,12 @@
         android:layout_marginBottom="20dp">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
+            android:id="@+id/layoutForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -51,14 +53,41 @@
                 android:text="@string/title_send_transfer"
                 android:textAppearance="@android:style/TextAppearance.Holo.Large"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
             <Spinner
                 android:id="@+id/spinner"
                 style="@style/AppTheme.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="0.33"
+                android:textColorHint="@color/colorVeryLightGray"
+                android:theme="@style/AppTheme.WhiteColorAccent">
+
+                <EditText
+                    android:id="@+id/availableTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:hint="@string/promptAvailable"
+                    android:inputType="text|number|numberDecimal"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@string/zero_tip"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
+                    android:textColorHint="@color/colorWhite"
+                    android:theme="@style/AppTheme.WhiteEditText" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,9 +106,12 @@
                         android:id="@+id/recepientTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:dropDownHeight="wrap_content"
                         android:hint="@string/prompt_recepient"
                         android:inputType="textPersonName"
                         android:maxLines="1"
+                        android:nextFocusDown="@id/amountTv"
+                        android:nextFocusForward="@id/amountTv"
                         android:singleLine="true"
                         android:textColor="@android:color/white"
                         android:textColorHighlight="@color/colorWhite"
@@ -113,6 +145,8 @@
                     android:hint="@string/prompt_amount"
                     android:inputType="text|number|numberDecimal"
                     android:maxLines="1"
+                    android:nextFocusDown="@id/seekBar"
+                    android:nextFocusForward="@id/seekBar"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textColorHighlight="@android:color/white"
@@ -143,11 +177,57 @@
                     android:textColor="@android:color/white"
                     android:textColorHighlight="@android:color/white"
                     android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
+                    android:theme="@style/AppTheme.WhiteEditText"
+                    android:visibility="gone" />
 
             </android.support.design.widget.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/networkFeeTv"
+                    style="@style/AppTheme.WhiteText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/network_fee_placeholder" />
+
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    style="@style/AppTheme.Seekbar.Light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="30"
+                    android:min="1"
+                    android:progress="15" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/slowTv"
+                        style="@style/AppTheme.WhiteText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/slow"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/fastTv"
+                        style="@style/AppTheme.WhiteText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="19dp"
+                        android:text="@string/fast"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </android.support.constraint.ConstraintLayout>
+
+            </LinearLayout>
         </LinearLayout>
+
     </ScrollView>
 
     <Button
@@ -161,7 +241,7 @@
         android:text="@string/next"
         android:textStyle="bold"
         android:theme="@style/AppTheme.PrimaryButton"
-        app:layout_anchor="@+id/form"
+        app:layout_anchor="@+id/scrollView"
         app:layout_anchorGravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent"
         />

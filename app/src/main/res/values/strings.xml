@@ -6,7 +6,7 @@
     <string name="welcome_to_tip">Welcome to TIP</string>
     <string name="search_and_discovery">Search and Discovery</string>
     <string name="search">Search</string>
-    <string name="p2p_instant_messaging">Peer-to-peer Instant Messaging</string>
+    <string name="p2p_instant_messaging">Encrypted Instant Messaging</string>
     <string name="smart_addresses">Smart Addresses</string>
     <string name="discovery_on_blockchain">Discovery on the blockchain.</string>
     <string name="send_money_to_friends">Send money to friends and family using their username or phone number.</string>
@@ -131,7 +131,7 @@
     <string name="title_button_backup_your_account">Back up your account</string>
     <string name="title_button_backup_account">Back up account</string>
     <string name="title_transactions">Transactions</string>
-    <string name="title_send_transfer">Enter transaction details below.\nYou can send either using a username or an address.</string>
+    <string name="title_send_transfer">Send transfers using a username\n or an address.</string>
     <string name="backup_account">Back up account</string>
     <string name="backup_account_description">You\'ll need to back up your keystore in case you delete this app. Your account keys are never sent to our servers. Thus, this backup is the only way you can restore your account.</string>
     <string name="yes_i_made_backup">Yes, i made a backup</string>
@@ -150,8 +150,8 @@
     <string name="title_activity_confirm_payment">Confirm Transfer</string>
     <string name="prompt_send_or_request">Do you want to:</string>
     <string name="request_payment">Request  Payment</string>
-    <string name="send_payment">Send Payment</string>
-    <string name="confirm_payment">Confirm Payment</string>
+    <string name="send_payment">Send Transfer</string>
+    <string name="confirm_payment">Confirm Transfer</string>
     <string name="confirm_request">Confirm Request</string>
     <string name="placeholdeTo">To</string>
     <string name="placeholderFrom">From</string>
@@ -225,7 +225,7 @@
     <string name="address_info">You can receive both TIP and ETH at this address.</string>
     <string name="qrcode_info">Your wallet address QR code</string>
     <string name="share">Share</string>
-    <string name="share_address">Hey I\'m in TIP. You can send me TIP or ETH either using my TIP username, %s or the old way, to my ETH address: %s</string>
+    <string name="share_address">Hey I\'m on TIP. You can send me TIP or ETH either using my TIP username, %s or the old way, to my ETH address: %s</string>
     <string name="copy_address">Copy Address</string>
     <string name="tip">TIP</string>
     <string name="eth">ETH</string>
@@ -261,4 +261,19 @@
     <string name="onboarding_profile_prompt">Fill out your profile so that your friends can find you easily.</string>
     <string name="please_wait_for_tx">Please wait for your transaction to be processed.</string>
     <string name="transaction_queued">Transaction Queued</string>
+    <string name="text_balance_currency">%s %s</string>
+    <string name="network_fee_placeholder">Network fee: 0.00014 ETH</string>
+    <string name="network_fee_with_variable">Network fee: %s %s</string>
+    <string name="network_fee_with_four_variables">Network fee: %s %s (%s %s)</string>
+    <string name="fast">Fast</string>
+    <string name="slow">Slow</string>
+    <string name="promptAvailable">Available</string>
+    <string name="zero_tip">0.00 TIP</string>
+    <string name="error_invalid_transfer_amount">Transfer amount is invalid.</string>
+    <string name="error_invalid_recipient">Recipient field is not valid. Please enter a valid TIP username or ETH address.</string>
+    <string name="error_user_not_in_contacts">"User %s not found in your contacts. You can only send transactions by username to users in your contact list. Please add %s to your contacts and try again"</string>
+    <string name="error_load_wallet">Failed to load your wallet</string>
+    <string name="error_insufficient_balance">Account balance is not sufficient.</string>
+    <string name="error_insufficient_eth_balance">Insufficient ETH balance: TIP is currently an ERC20 token, thus, ETH is needed to transfer tokens.</string>
+    <string name="error_insufficient_balance_for_fee">Insufficient funds to pay for transfer + network fee.</string>
 </resources>

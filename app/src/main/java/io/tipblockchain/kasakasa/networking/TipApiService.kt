@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.config.AppProperties
+import io.tipblockchain.kasakasa.data.adapter.BigIntegerAdapter
 import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
@@ -20,13 +21,13 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.math.BigInteger
 
 class TipApiService {
 
     private lateinit var tipApi: TipApi
 
     private constructor() {}
-
 
     companion object {
         private val baseUrl: String = AppProperties.get(AppConstants.CONFIG_API_URL)
@@ -56,7 +57,7 @@ class TipApiService {
                 okHttpClientBuilder.addNetworkInterceptor(loggingInterceptor)
 //            }
 
-            val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).create()
+            val gson = GsonBuilder().setDateFormat(Converters.defaultDateFormat).registerTypeAdapter(BigInteger::class.java, BigIntegerAdapter()).create()
             retrofit = Retrofit.Builder()
                     .client(okHttpClientBuilder.build())
                     .baseUrl(baseUrl)

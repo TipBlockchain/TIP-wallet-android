@@ -87,7 +87,8 @@ class TransactionRecyclerViewAdapter(
         holder.mMessageTv.text = transaction.message
         val valueInEth =  Convert.fromWei(transaction.value.toBigDecimal(), Convert.Unit.ETHER)
 
-        holder.mAmountView.text = "${valueInEth.setScale(4, RoundingMode.HALF_UP)} ${transaction.currency}"
+        val currentScale = valueInEth.scale()
+        holder.mAmountView.text = "${valueInEth.setScale(Math.min(currentScale, 4), RoundingMode.HALF_UP)} ${transaction.currency}"
         val timestamp = transaction.time.toLong() * 1000
         holder.mTimeTv.text = SimpleDateFormat("MM/dd/yy hh':'mm").format(Date(timestamp))
 

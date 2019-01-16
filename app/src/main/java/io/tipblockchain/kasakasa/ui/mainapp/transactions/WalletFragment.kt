@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.ui.mainapp.receivetransfer.ReceiveTransferActivity
@@ -72,13 +73,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // TODO save and reuse last currency selected
-//        currencySelected(lastCurrency)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         Log.d(logTag, "Creating options menu")
         inflater?.inflate(R.menu.menu_currency_options, menu)
@@ -90,6 +84,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         spinner.dropDownVerticalOffset = getActionBarHeight()
         spinner.backgroundTintList
         spinner.dropDownHorizontalOffset = 0
+        val selectionIndex = if (lastCurrency == Currency.TIP)  0 else 1
+        spinner.setSelection(selectionIndex)
         spinner.onItemSelectedListener = this
     }
 
@@ -125,6 +121,17 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         recyclerView.addItemDecoration(itemDecoration)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("currency", lastCurrency.name)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lastCurrency = PreferenceHelper.walletLastSelectedCurrency
+        currencySelected(lastCurrency)
+    }
+
     private fun getActionBarHeight(): Int {
         val styledAttributes = context!!.theme.obtainStyledAttributes(
                 intArrayOf(android.R.attr.actionBarSize))
@@ -135,6 +142,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     private fun currencySelected(currency: Currency) {
         lastCurrency = currency
+        Log.d(logTag, "Last selected currency is ${currency}")
+        PreferenceHelper.walletLastSelectedCurrency = lastCurrency
         presenter?.switchCurrency(lastCurrency)
     }
 
@@ -183,6 +192,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
+        const val ARG_LAST_CURRENCY = "last_currency"
 
         // TODO: Customize parameter initialization
         @JvmStatic
@@ -190,6 +200,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
                 WalletFragment().apply {
                     arguments = Bundle().apply {
                         putInt(ARG_COLUMN_COUNT, columnCount)
+                        putString(ARG_LAST_CURRENCY, lastCurrency.name)
                     }
                 }
     }
@@ -213,7 +224,8 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
         if (lastCurrency == currency) {
-            balanceTv.text = NumberFormat.getInstance().format( balance.setScale(4, RoundingMode.CEILING))
+            val balanceScale = balance.scale()
+            balanceTv.text = NumberFormat.getInstance().format( balance.setScale(Math.min(balanceScale, 4), RoundingMode.HALF_UP))
             currencyTv.setText(currency.name)
         }
     }
@@ -223,12 +235,13 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
             return
         }
         adapter?.setItems(transactions)
+        recyclerView.scrollToPosition(0)
     }
 
     private fun setupPresenter() {
         presenter = WalletPresenter()
         presenter?.attach(this)
-        presenter?.switchCurrency(lastCurrency)
+//        presenter?.switchCurrency(lastCurrency)
         presenter?.loadWallets()
     }
 

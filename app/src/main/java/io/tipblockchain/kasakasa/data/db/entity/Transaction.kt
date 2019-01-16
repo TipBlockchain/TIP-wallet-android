@@ -2,7 +2,11 @@ package io.tipblockchain.kasakasa.data.db.entity
 
 import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
+import io.tipblockchain.kasakasa.data.db.Converters
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
+import io.tipblockchain.kasakasa.data.serializer.BigIntegerSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.math.BigInteger
 
@@ -17,6 +21,7 @@ import java.math.BigInteger
             Index(value = ["to_id"])
         ])
 
+@TypeConverters(Converters::class)
 data class Transaction @JvmOverloads constructor (
         @PrimaryKey @ColumnInfo(name = "hash") var hash: String,
         @ColumnInfo(name = "blockHash") var blockHash: String,

@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.confirmtransfer
 
 import android.arch.lifecycle.Observer
+import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -69,7 +70,7 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
         }
     }
 
-    override fun sendTransactionAsync(transaction: PendingTransaction, password: String) {
+    override fun sendTransactionAsync(transaction: PendingTransaction, password: String, gasPriceInGwei: Int) {
         val walletRequest = walletRepository.findWalletForAddressAndCurrency(transaction.from, transaction.currency)
         txDisposable?.dispose()
         txDisposable = walletRequest.observeOn(Schedulers.io())
@@ -78,12 +79,16 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                     if (wallet != null) {
                         val credentials = web3Bridge.loadCredentialsForWalletWithPassword(wallet, password)
                         if (credentials != null) {
-                            txRepository.sendTransaction(transaction, credentials)
-                            view?.onTransactionSent()
+                            txRepository.sendTransaction(transaction, credentials, gasPriceInGwei)
+                            AndroidSchedulers.mainThread().scheduleDirect {
+                                view?.onTransactionSent()
+                            }
                         }
                     }
                 }, {
-                    view?.onTransactionError(it)
+                    AndroidSchedulers.mainThread().scheduleDirect {
+                        view?.onTransactionError(it)
+                    }
                 })
     }
 
@@ -142,23 +147,7 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                 })
     }
 
-    override fun getTransactionFee(transaction: PendingTransaction) {
-        gasDisposable?.dispose()
-        gasDisposable = gasService.getGasInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe ({gasInfo ->
-            var gasPriceInWei = web3Bridge.getGasPrice()
-            if (gasInfo != null) {
-                val infoGasPrice = Convert.toWei(BigDecimal.valueOf(gasInfo.average/10), Convert.Unit.GWEI).toBigInteger()
-                gasPriceInWei = gasPriceInWei.min(infoGasPrice)
-                if (gasPriceInWei == BigInteger.ZERO) {
-                    gasPriceInWei = web3Bridge.getGasPrice()
-                }
-            }
-            this.calculateTxFee(gasPriceInWei)
-        }, {
-            var gasPriceInWei = web3Bridge.getGasPrice()
-            this.calculateTxFee(gasPriceInWei)
-        })
-    }
+
 
     private fun calculateTxFee(gasPrice: BigInteger) {
         val gasLimit = web3Bridge.getGasLimit()

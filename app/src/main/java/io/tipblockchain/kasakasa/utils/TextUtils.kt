@@ -52,7 +52,7 @@ class TextUtils {
         }
 
         fun isNumeric(str: String): Boolean {
-            return str.matches("\\d+(\\.\\d+)?".toRegex())
+            return str.matches("\\d+(\\.?\\d+)?".toRegex())
         }
 
         private fun isChecksumAddress(address: String): Boolean {

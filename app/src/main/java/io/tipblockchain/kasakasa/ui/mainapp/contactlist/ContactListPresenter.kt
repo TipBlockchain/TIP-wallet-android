@@ -1,5 +1,6 @@
 package io.tipblockchain.kasakasa.ui.mainapp.contactlist
 
+import android.arch.lifecycle.Observer
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
@@ -7,17 +8,21 @@ class ContactListPresenter: ContactList.Presenter {
 
     private val userRepository: UserRepository = UserRepository.instance
 
+    override fun loadContactList() {
+        userRepository.loadContactsFromDb().observe(view!!, object : Observer<List<User>> {
+            override fun onChanged(contacts: List<User>?) {
+                if (contacts != null) {
+                    view?.onContactsFetched(contacts)
+                }
+            }
+        })
+    }
+
     override fun fetchContactList() {
         if (view == null) {
             return
         }
-        userRepository.loadContacts(view!!) { contacts, error ->
-            if (contacts != null) {
-                view?.onContactsFetched(contacts)
-            } else if (error != null) {
-                view?.onContactsLoadError(error)
-            }
-        }
+        userRepository.fetchContacts()
     }
 
     override fun addContact(contact: User) {

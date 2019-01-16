@@ -1,6 +1,6 @@
 package io.tipblockchain.kasakasa.data.responses
 
-import io.tipblockchain.kasakasa.data.DateSerializer
+import io.tipblockchain.kasakasa.data.serializer.DateSerializer
 import kotlinx.serialization.Serializable
 import java.util.*
 
