@@ -26,7 +26,7 @@
         android:visibility="gone" />
 
     <ScrollView
-        android:id="@+id/form"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
@@ -34,10 +34,10 @@
         android:layout_marginBottom="20dp">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
+            android:id="@+id/layoutForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart=" 10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:orientation="vertical">
@@ -106,6 +106,7 @@
                         android:id="@+id/recepientTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:dropDownHeight="wrap_content"
                         android:hint="@string/prompt_recepient"
                         android:inputType="textPersonName"
                         android:maxLines="1"
@@ -240,7 +241,7 @@
         android:text="@string/next"
         android:textStyle="bold"
         android:theme="@style/AppTheme.PrimaryButton"
-        app:layout_anchor="@+id/form"
+        app:layout_anchor="@+id/scrollView"
         app:layout_anchorGravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent"
         />

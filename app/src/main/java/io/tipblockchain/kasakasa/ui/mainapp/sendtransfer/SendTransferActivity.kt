@@ -243,7 +243,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
 
     override fun onInsufficientBalanceError() {
         showProgress(false)
-        showMessage(getString(R.string.error_insufficient_balance))
+        showMessage(getString(R.string.error_insufficient_balance_for_fee))
     }
 
     override fun onSendPendingTransaction(tx: PendingTransaction) {
@@ -281,13 +281,13 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         // the progress spinner.
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-        form.visibility = if (show) View.GONE else View.VISIBLE
-        form.animate()
+        layoutForm.visibility = if (show) View.GONE else View.VISIBLE
+        layoutForm.animate()
                 .setDuration(shortAnimTime)
                 .alpha((if (show) 0 else 1).toFloat())
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        form.visibility = if (show) View.GONE else View.VISIBLE
+                        layoutForm.visibility = if (show) View.GONE else View.VISIBLE
                     }
                 })
 

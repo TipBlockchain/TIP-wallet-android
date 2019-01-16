@@ -7,14 +7,18 @@
     android:layout_height="60dp"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
+        app:riv_border_color="@color/colorLightGray"
+        app:riv_border_width="1dp"
+        app:riv_corner_radius="20dp"
+        app:riv_mutate_background="true"
         tools:layout_editor_absoluteX="26dp"
         tools:layout_editor_absoluteY="44dp"
         tools:srcCompat="@tools:sample/avatars" />

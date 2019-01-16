@@ -71,10 +71,6 @@ class SendTransferPresenter: SendTransfer.Presenter {
 
     override fun validateTransfer(usernameOrAddress: String, value: BigDecimal, transactionFee: BigDecimal, currency: Currency, message: String) {
 
-        if (ethWallet != null && ethWallet!!.balance == BigInteger.ZERO) {
-            view?.onInsufficientEthBalanceError()
-            return
-        }
         var wallet: Wallet? = null
         when (currency) {
             Currency.TIP -> wallet = tipWallet
@@ -90,18 +86,26 @@ class SendTransferPresenter: SendTransfer.Presenter {
             return
         }
 
+        // Check user balances are sufficient
         val txValueInWei = Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
         val txFeeInWei = Convert.toWei(transactionFee, Convert.Unit.ETHER).toBigInteger()
+        val ethBalanceInWei = ethWallet!!.balance
         val accountBalance = wallet.balance
 
-        if (txValueInWei + txFeeInWei > accountBalance) {
-            // tx value larger -> Error
+        if (currency == Currency.ETH && txValueInWei + txFeeInWei > accountBalance) {
             view?.onInsufficientBalanceError()
             return
         }
 
-        if (currency == Currency.TIP && txFeeInWei > accountBalance) {
+        if (currency == Currency.TIP && txFeeInWei > ethBalanceInWei) {
             view?.onInsufficientEthBalanceError()
+            return
+        }
+
+        // Check that sufficient funds exist
+        if (txValueInWei > accountBalance) {
+            view?.onInsufficientBalanceError()
+            return
         }
 
         var address: String?
@@ -124,6 +128,10 @@ class SendTransferPresenter: SendTransfer.Presenter {
                 if (user == null) {
                     view?.onUserNotFound(username)
                 } else {
+                    if (!TextUtils.isEthAddress(user.address)) {
+                        view?.onInvalidRecipient()
+                        return@Observer
+                    }
                     val pending = PendingTransaction(
                             from = wallet.address,
                             fromUsername = UserRepository.currentUser!!.username,

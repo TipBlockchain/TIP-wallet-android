@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.User
 
@@ -15,7 +16,7 @@ class UserFilterAdapter: ArrayAdapter<User>, Filterable {
     private var mSuggestionList: List<User> = listOf()
     private var mFilteredSuggestionList: List<User> = listOf()
 
-    constructor(context: Context, suggestionList: List<User>): super(context, -1) {
+    constructor(context: Context, suggestionList: List<User>): super(context, R.layout.row_user_suggestion) {
         mContext = context
         mSuggestionList = suggestionList
         mFilteredSuggestionList = mSuggestionList
@@ -38,7 +39,11 @@ class UserFilterAdapter: ArrayAdapter<User>, Filterable {
         val searchSuggestion = mFilteredSuggestionList[position]
         viewHolder.usernameTv?.text = searchSuggestion.username
         viewHolder.fullnameTv?.text = searchSuggestion.name
-//        viewHolder.imageView?.setImageResource(if (searchSuggestion.isTag()) R.drama`wable.suggestion_tag_icon else R.drawable.suggestion_project_icon)
+        if (searchSuggestion.originalPhotoUrl != null) {
+            Picasso.get().load(searchSuggestion.originalPhotoUrl).into(viewHolder.imageView)
+        } else {
+            Picasso.get().load(R.drawable.avatar_placeholder_small).into(viewHolder.imageView)
+        }
         return view!!
     }
 

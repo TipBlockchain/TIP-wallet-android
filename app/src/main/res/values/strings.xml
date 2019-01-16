@@ -275,5 +275,5 @@
     <string name="error_load_wallet">Failed to load your wallet</string>
     <string name="error_insufficient_balance">Account balance is not sufficient.</string>
     <string name="error_insufficient_eth_balance">Insufficient ETH balance: TIP is currently an ERC20 token, thus, ETH is needed to transfer tokens.</string>
-    <string name="error_zero_eth_balance">Insufficient funds to pay for network transaction fee.</string>
+    <string name="error_insufficient_balance_for_fee">Insufficient funds to pay for transfer + network fee.</string>
 </resources>

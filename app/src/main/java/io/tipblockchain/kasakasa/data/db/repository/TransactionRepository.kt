@@ -23,6 +23,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.utils.Convert
 import java.lang.Exception
 import java.math.BigInteger
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import java.util.concurrent.Future
 
@@ -89,24 +90,27 @@ class TransactionRepository {
                 var future: Future<TransactionReceipt>?
                 if (credentials != null) {
                     val gasPriceInWei = Convert.toWei(gasPriceInGwei.toBigDecimal(), Convert.Unit.GWEI).toBigInteger()
-                    when (transaction.currency) {
-                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
-                        Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                    try {
+
+                        when (transaction.currency) {
+                            Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                            Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                        }
+                        if (future == null) {
+                            return@execute
+                        }
+                        while (!future.isDone) {
+                        }
+                        txReceipt = future.get()
+                        postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
+                        completion?.invoke(txReceipt, null)
+                    } catch (e: Exception) {
+                        completion?.invoke(null, e)
                     }
-                    if (future == null) {
-                        return@execute
-                    }
-                    while (!future.isDone) {
-                    }
-                    txReceipt = future.get()
-                    postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
-                    completion?.invoke(txReceipt, null)
                 }
             }
 
-        } catch (re: RuntimeException) {
-            completion?.invoke(null, re)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             completion?.invoke(null, e)
         }
     }
