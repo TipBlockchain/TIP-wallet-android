@@ -120,7 +120,6 @@ class SendTransferPresenter: SendTransfer.Presenter {
                     toUsername = null,
                     value = value,
                     currency = currency)
-            calculateActualTxFee(pending, 21_000_000L.toBigInteger())
             view?.onSendPendingTransaction(tx = pending)
         } else if (TextUtils.isUsername(usernameOrAddress)) {
             username = usernameOrAddress
@@ -140,26 +139,11 @@ class SendTransferPresenter: SendTransfer.Presenter {
                             value = value,
                             currency = currency
                     )
-                    calculateActualTxFee(pending, 21_000_000L.toBigInteger())
                     view?.onSendPendingTransaction(tx = pending)
                 }
             })
         } else {
             view?.onInvalidRecipient()
-        }
-    }
-
-    private fun calculateActualTxFee(pendingTransaction: PendingTransaction, gasPrice: BigInteger) {
-
-        Schedulers.io().scheduleDirect {
-            val actualTransaction = web3Bridge.craeteTransaction(
-                    from = pendingTransaction.from,
-                    to = pendingTransaction.to,
-                    value = pendingTransaction.value.toBigInteger(),
-                    gasPrice = gasPrice,
-                    gasLimit = 99_000L.toBigInteger())
-            val estimatedGas = web3Bridge.estimateGas(actualTransaction)
-            Log.d("SendTransferPresenter", "Estimated gasP = $estimatedGas")
         }
     }
 

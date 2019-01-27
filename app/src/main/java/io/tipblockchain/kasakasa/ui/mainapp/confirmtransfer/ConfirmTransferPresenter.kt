@@ -6,7 +6,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.blockchain.eth.Web3Bridge
-import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
@@ -18,7 +17,6 @@ import org.web3j.crypto.CipherException
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.utils.Convert
 import java.lang.Error
-import java.math.BigDecimal
 import java.math.BigInteger
 
 class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
@@ -31,6 +29,8 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
     private var gasDisposable: Disposable? = null
     private var txDisposable: Disposable? = null
     override var view: ConfirmTransfer.View? = null
+
+    private val logTag = javaClass.name
 
     override fun attach(view: ConfirmTransfer.View) {
         super.attach(view)
@@ -79,10 +79,17 @@ class ConfirmTransferPresenter: ConfirmTransfer.Presenter {
                     if (wallet != null) {
                         val credentials = web3Bridge.loadCredentialsForWalletWithPassword(wallet, password)
                         if (credentials != null) {
-                            txRepository.sendTransaction(transaction, credentials, gasPriceInGwei)
-                            AndroidSchedulers.mainThread().scheduleDirect {
-                                view?.onTransactionSent()
+                            txRepository.sendTransaction(transaction, credentials, gasPriceInGwei) {txr: TransactionReceipt?, err: Throwable? ->
+                                AndroidSchedulers.mainThread().scheduleDirect {
+                                    if (err != null) {
+//                                        view?.onTransactionError(err ?: Error("An error occurred while sending transaction"))
+                                        // TODO: Add global notifier to notify of errors
+                                        Log.e(logTag, "Error sending transaction")
+                                        Log.e(logTag, err.stackTrace.toString())
+                                    }
+                                }
                             }
+                            view?.onTransactionSent()
                         }
                     }
                 }, {

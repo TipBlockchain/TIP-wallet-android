@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.ui.mainapp.transactions
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,7 +30,6 @@ class WalletPresenter: WalletInterface.Presenter {
     private var currentWallet: Wallet? = null
 
     private var txDisposable: Disposable? = null
-    private var txFound = false
 
     private val LOG_TAG = javaClass.name
     init {
@@ -143,7 +141,7 @@ class WalletPresenter: WalletInterface.Presenter {
         txDisposable = txRepository.loadTransactions_notLive(currency)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { txlist ->
+                .subscribe ({ txlist ->
             if (currentWallet != null) {
                 val address = currentWallet!!.address
                 val currentWalletTxList = txlist.filter { tx ->
@@ -151,7 +149,9 @@ class WalletPresenter: WalletInterface.Presenter {
                 }
                 view?.onTransactionsFetched(address, Currency.valueOf(currentWallet!!.currency), currentWalletTxList)
             }
-        }
+        }, {
+                    view?.onTransactionsFetchError(it, Currency.valueOf(wallet.currency))
+                })
     }
 
     private fun stopListening() {
