@@ -239,7 +239,7 @@
     <string name="placeholder_country_code">+00</string>
     <string name="plus_plus_country_code">+%s</string>
     <string name="tip_social_connect">Tip is a social platform.\nYour phone number helps you connect with other people on the network.</string>
-    <string name="message_verification_code">Verification code should arrive with a few minutes.</string>
+    <string name="message_verification_code">Verification code should arrive within a few seconds.</string>
     <string name="enter_verification_code">Enter the verification code.</string>
     <string name="error_invalid_recovery_phrase">Invalid recovery phrase</string>
     <string name="error_invalid_recovery_phrase_length">Your recovery phrase does not have the right length.</string>

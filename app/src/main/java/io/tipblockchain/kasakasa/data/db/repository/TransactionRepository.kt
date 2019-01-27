@@ -47,6 +47,8 @@ class TransactionRepository {
     private var ethTxDisposable: Disposable? = null
     private var mergeTxDisposable: Disposable? = null
 
+    private val LOG_TAG = javaClass.name
+
     private constructor(context: Context) {
         val db = TipRoomDatabase.getDatabase(context)
         dao = db.transactionDao()
@@ -103,6 +105,7 @@ class TransactionRepository {
                         }
                         txReceipt = future.get()
                         postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
+                        Log.d(LOG_TAG, "Transaction receipt: $txReceipt")
                         completion?.invoke(txReceipt, null)
                     } catch (e: Exception) {
                         completion?.invoke(null, e)

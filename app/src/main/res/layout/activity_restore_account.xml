@@ -27,6 +27,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/text_enter_recovery_phrase"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sentIv" />
