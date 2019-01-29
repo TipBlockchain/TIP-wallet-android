@@ -2,6 +2,8 @@ package io.tipblockchain.kasakasa.data.db.entity
 
 import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.ContextualSerialization
+import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import java.util.*
 import javax.annotation.Nonnull
@@ -17,7 +19,7 @@ data class User(
         @ColumnInfo(name = "pictureUrl") var pictureUrl: String? = null,
         @ColumnInfo(name = "isContact") var isContact: Boolean = false,
         @ColumnInfo(name = "isBlocked") var isBlocked: Boolean = false,
-        @ColumnInfo(name = "lastMessage") var lastMessage: Date? = null
+        @ColumnInfo(name = "lastMessage") @Optional @ContextualSerialization var lastMessage: Date? = null
     ): java.io.Serializable {
 
     @Ignore @SerializedName("photos") var photos: UserPhotos? = null

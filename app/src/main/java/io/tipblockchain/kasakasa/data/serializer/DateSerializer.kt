@@ -9,17 +9,17 @@ import java.util.*
 
 
 @Serializer(forClass = Date::class)
-object DateSerializer: KSerializer<Date> {
+object DateSerializer: KSerializer<Date?> {
     private val df: DateFormat = SimpleDateFormat(Converters.defaultDateFormat)
 
-    override fun save(output: KOutput, obj: Date) {
-        output.writeStringValue(df.format(obj))
-    }
-
-    override fun load(input: KInput): Date {
-        return df.parse(input.readStringValue())
-    }
-
-    override val serialClassDesc: KSerialClassDesc
+    override val descriptor: SerialDescriptor
         get() = SerialClassDescImpl("DateSerializer")
+
+    override fun serialize(encoder: Encoder, obj: Date?) {
+        encoder.encodeString(df.format(obj))
+    }
+
+    override fun deserialize(decoder: Decoder): Date? {
+        return df.parse(decoder.decodeString())
+    }
 }

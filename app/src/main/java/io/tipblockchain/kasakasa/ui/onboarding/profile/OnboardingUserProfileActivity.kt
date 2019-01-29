@@ -30,7 +30,9 @@ import io.tipblockchain.kasakasa.databinding.ActivityOnboardingUserProfileBindin
 import io.tipblockchain.kasakasa.extensions.onTextChange
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
+import io.tipblockchain.kasakasa.ui.onboarding.enterphone.EnterPhoneNumberActivity
 import io.tipblockchain.kasakasa.ui.onboarding.password.ChoosePasswordActivity
+import io.tipblockchain.kasakasa.ui.onboarding.recovery.RecoveryPhraseActivity
 import io.tipblockchain.kasakasa.ui.onboarding.verifyphone.VerifyPhoneNumberActivity
 import io.tipblockchain.kasakasa.utils.FileUtils
 import io.tipblockchain.kasakasa.utils.KeyboardUtils
@@ -97,7 +99,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     private fun navigateToCreateWallet() {
-        val intent = Intent(this, ChoosePasswordActivity::class.java)
+        val intent = Intent(this, RecoveryPhraseActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or intent.flags
         startActivity(intent)
     }
@@ -351,7 +353,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     private fun navigateToConfirmPhoneNumber() {
-        val intent = Intent(this, VerifyPhoneNumberActivity::class.java)
+        val intent = Intent(this, EnterPhoneNumberActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
