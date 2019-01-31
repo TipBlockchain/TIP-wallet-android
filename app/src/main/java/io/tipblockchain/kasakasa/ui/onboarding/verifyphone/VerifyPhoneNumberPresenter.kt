@@ -38,8 +38,8 @@ class VerifyPhoneNumberPresenter: VerifyPhoneNumber.Presenter {
                         PreferenceHelper.pendingSignupToken = response.pendingSignup!!.token
                         view?.onPhoneVerifiedWithPendingAndDemoAccount(response.pendingSignup!!, response.demoAccount!!)
                     } else if (response.pendingSignup != null) {
-                        view?.onPhoneVerifiedWithPendingAccount(response.pendingSignup!!)
                         PreferenceHelper.pendingSignupToken = response.pendingSignup!!.token
+                        view?.onPhoneVerifiedWithPendingAccount(response.pendingSignup!!)
                     } else {
                         view?.onUnknownError()
                     }

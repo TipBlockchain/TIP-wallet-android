@@ -78,7 +78,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         transactionFeeTv.text = getString(R.string.plus_amount_and_currency, txFee, "ETH")
         if (pendingTransaction != null && pendingTransaction?.currency == Currency.ETH) {
             additionalTxFeeTv.visibility = View.GONE
-            var totalAmount = pendingTransaction!!.value?.plus(txFee)
+            var totalAmount = pendingTransaction!!.value.plus(txFee)
             val currentScale = totalAmount.scale()
             totalAmount = totalAmount.setScale(Math.min(currentScale, 6), RoundingMode.HALF_UP)
             totalAmountValueTv.text = getString(R.string.amount_and_currency, totalAmount, pendingTransaction?.currency?.name)
@@ -92,7 +92,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onInvalidTransactionError(error: Throwable) {
-        showOkDialog(getString(R.string.invalid_transaction, error.localizedMessage), DialogInterface.OnClickListener { dialog, which ->
+        showOkDialog(getString(R.string.invalid_transaction, error.localizedMessage), DialogInterface.OnClickListener { _, _ ->
             finish()
         })
 

@@ -15,7 +15,7 @@ class BigIntegerAdapter: TypeAdapter<BigInteger>() {
 
     override fun read(value: JsonReader?): BigInteger? {
         if (value?.peek() === JsonToken.NULL) {
-            value?.nextNull()
+            value.nextNull()
             return null
         }
         try {

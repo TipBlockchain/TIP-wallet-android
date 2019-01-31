@@ -56,7 +56,7 @@ class WalletPresenter: WalletInterface.Presenter {
             val balance = Convert.fromWei(currentWallet!!.balance.toBigDecimal(), Convert.Unit.ETHER)
             view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
             loadTransactions(wallet = currentWallet!!)
-            val balanceChanged = fetchBalance(currentWallet!!)
+//            val balanceChanged = fetchBalance(currentWallet!!)
 //            if (balanceChanged) {
 //                fetchTransactions(currentWallet!!)
 //            }
