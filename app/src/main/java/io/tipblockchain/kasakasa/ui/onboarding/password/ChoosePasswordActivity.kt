@@ -77,7 +77,7 @@ class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
 
     override fun onWalletRestored() {
         showProgress(false)
-        showOkDialog(getString(R.string.message_wallet_restored), onClickListener = object: DialogInterface.OnClickListener {
+        showOkDialog(title = getString(R.string.hooray), message =  getString(R.string.message_wallet_restored), onClickListener = object: DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 navigateToMainApp()
             }
@@ -92,7 +92,7 @@ class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
     override fun onWalletNotMatchingExistingError() {
         showProgress(false)
         if (existingUser != null) {
-            showOkDialog(getString(R.string.error_address_not_matching_account, existingUser!!.username), onClickListener = object: DialogInterface.OnClickListener {
+            showOkDialog(title = getString(R.string.sorry), message = getString(R.string.error_address_not_matching_account, existingUser!!.username), onClickListener = object: DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     finish()
                 }

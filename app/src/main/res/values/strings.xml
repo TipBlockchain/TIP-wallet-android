@@ -207,8 +207,9 @@
     <string name="permission_request_camera_storage">Camera and storage permissions are required to set your profile picture. Please tap on the Okay button on the next dialog to grant these permissions.</string>
     <string name="permission_camera_denied">Camera and storage permissions have to be enabled to set your profile picture. Do you want to set your profile picture now?</string>
     <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>
-    <string name="congrats_account_created">Congrats!\nYou successfully created a TIP account.\nWelcome to TIP.</string>
-    <string name="generic_error">Sorry, the operation could not be completed due to an error.</string>
+    <string name="congrats">Congrats!</string>
+    <string name="account_created">You successfully created a TIP account.\nWelcome to TIP.</string>
+    <string name="generic_error">The operation could not be completed due to an error.</string>
     <string name="generic_error_with_param">Sorry, an error occured: %s.</string>
     <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
     <string name="invalid_transaction">Invalid transaction: %s</string>
@@ -230,6 +231,9 @@
     <string name="tip">TIP</string>
     <string name="eth">ETH</string>
     <string name="sending">Sending transaction...</string>
+    <string name="sorry">Sorry</string>
+    <string name="error_connecting_network">Error connecting to network</string>
+    <string name="error_connecting_network_message">We could not connect to the network. Please make sure you are online and try again.</string>
     <string name="no_contacts">You do not have any contacts yet. Click the plus button to find people.</string>
     <string name="no_search_results">Find other users on the network to transact with by typing in the search field above.</string>
     <string name="no_transactions">You do not have any transactions.\nTap on the receive button to start using your wallet.</string>
@@ -254,7 +258,8 @@
     <string name="restore_wallet_with_phrase">You will have to restore your wallet using the recovery phrase you used to create it.</string>
     <string name="welcome_back_to_tip_kasakasa">Welcome back to TIP Kasakasa</string>
     <string name="message_create_wallet">You will now create a wallet on your device so you can send and receive TIP and ETH.</string>
-    <string name="message_wallet_restored">Hooray!\nYour account has been restored. You can start tipping again.</string>
+    <string name="hooray">Hooray!</string>
+    <string name="message_wallet_restored">Your account has been restored. You can start tipping again.</string>
     <string name="create_wallet">Create Wallet</string>
     <string name="unknown_error">An unknown error occurred.</string>
     <string name="text_enter_recovery_phrase">Enter your recovery phrase below. This must be the same phrase you used to create your account. \n\nThis phrase is used to restore your account on your device. It is never sent over the network.</string>

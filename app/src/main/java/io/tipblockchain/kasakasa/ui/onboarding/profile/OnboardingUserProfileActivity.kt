@@ -107,7 +107,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageReturnedIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent)
         if (imageReturnedIntent == null) {
-            showOkDialog(getString(R.string.generic_error))
+            showOkDialog(title = getString(R.string.sorry), message = getString(R.string.generic_error))
             return
         }
 
@@ -126,7 +126,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
                 } catch (e: Exception) {}
             } else {
                 val cropError = UCrop.getError(imageReturnedIntent)
-                showOkDialog(cropError?.localizedMessage ?: getString(R.string.generic_error))
+                showOkDialog(title = getString(R.string.sorry), message = cropError?.localizedMessage ?: getString(R.string.generic_error))
             }
         }
     }
@@ -242,11 +242,11 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     override fun onErrorUpdatingUser(error: Throwable) {
-        showOkDialog(getString(R.string.error_updating_user_info, error.localizedMessage))
+        showOkDialog(title = getString(R.string.sorry), message = getString(R.string.error_updating_user_info, error.localizedMessage))
     }
 
     override fun onSignupTokenError() {
-        showOkDialog(getString(R.string.error_session_timeout_reconfirm), onClickListener = object: DialogInterface.OnClickListener {
+        showOkDialog(title = getString(R.string.sorry), message = getString(R.string.error_session_timeout_reconfirm), onClickListener = object: DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 navigateToConfirmPhoneNumber()
             }
@@ -256,11 +256,9 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     override fun onAuthorizationFetched(auth: Authorization?, error: Throwable?) {
         KeyboardUtils.hideKeyboard(this)
         if (error != null) {
-            showOkDialog(getString(R.string.error_creating_account, error.localizedMessage), onClickListener = object: DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
+            showOkDialog(title = getString(R.string.sorry), message = getString(R.string.error_creating_account, error.localizedMessage), onClickListener = DialogInterface.OnClickListener { _, _ ->
                     finish()
-                }
-            })
+                })
         } else {
             if (displayPicFile != null) {
                 presenter?.uploadPhoto(displayPicFile!!)
@@ -272,7 +270,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     private fun showCongratsDialog() {
-        showOkDialog(getString(R.string.congrats_account_created), onClickListener = object : DialogInterface.OnClickListener {
+        showOkDialog(title = getString(R.string.congrats), message = getString(R.string.account_created), onClickListener = object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 navigateToMainApp()
             }
@@ -299,7 +297,7 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
     }
 
     override fun onWalletNotSetupError() {
-        showOkDialog(getString(R.string.error_no_primary_wallet), onClickListener = object: DialogInterface.OnClickListener {
+        showOkDialog(title= getString(R.string.sorry), message = getString(R.string.error_no_primary_wallet), onClickListener = object: DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 navigateToCreateWallet()
             }

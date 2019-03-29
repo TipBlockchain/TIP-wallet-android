@@ -56,7 +56,7 @@ class WalletPresenter: WalletInterface.Presenter {
             val balance = Convert.fromWei(currentWallet!!.balance.toBigDecimal(), Convert.Unit.ETHER)
             view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
             loadTransactions(wallet = currentWallet!!)
-//            val balanceChanged = fetchBalance(currentWallet!!)
+            val balanceChanged = fetchBalance(currentWallet!!)
 //            if (balanceChanged) {
 //                fetchTransactions(currentWallet!!)
 //            }
@@ -65,8 +65,8 @@ class WalletPresenter: WalletInterface.Presenter {
     }
 
     override fun fetchBalance(wallet: Wallet): Boolean {
+        var balanceChanged = false
         try {
-            var balanceChanged = false
             val balance = currentProcessor?.getBalance(wallet.address) ?: BigInteger.ZERO
             val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
             if (balance != null) {
@@ -88,7 +88,7 @@ class WalletPresenter: WalletInterface.Presenter {
             view?.onBalanceFetchError()
         }
 
-        return false
+        return balanceChanged
     }
 
     override fun fetchTransactions(wallet: Wallet) {

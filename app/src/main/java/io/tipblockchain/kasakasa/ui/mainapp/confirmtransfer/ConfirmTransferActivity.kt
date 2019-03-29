@@ -92,14 +92,14 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onInvalidTransactionError(error: Throwable) {
-        showOkDialog(getString(R.string.invalid_transaction, error.localizedMessage), DialogInterface.OnClickListener { _, _ ->
+        showOkDialog(title = getString(R.string.sorry), message = getString(R.string.invalid_transaction, error.localizedMessage), onClickListener =  DialogInterface.OnClickListener { _, _ ->
             finish()
         })
 
     }
 
     override fun onInvalidPasswordError() {
-        showOkDialog(getString(R.string.could_not_unlock_wallet))
+        showOkDialog(message = getString(R.string.could_not_unlock_wallet))
     }
 
     override fun onTransactionSent() {
@@ -124,7 +124,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         confirmBtn.isEnabled = true
         // error might have been triggered after tx was sent, but during posting to server
         if (!transactionSent) {
-            showOkDialog(getString(R.string.error_sending_transaction, error.localizedMessage))
+            showOkDialog(message = getString(R.string.error_sending_transaction, error.localizedMessage))
         } else {
             navigateToTransactionConfirmed()
         }
