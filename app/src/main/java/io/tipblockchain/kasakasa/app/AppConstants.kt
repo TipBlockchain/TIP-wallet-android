@@ -5,6 +5,7 @@ class AppConstants {
     companion object {
         const val APP_START_BLOCK               = "app_start_block"
         const val CONFIG_API_URL                = "tip_api_url"
+        const val CONFIG_API_KEY                = "tip_api_key"
         const val ETHERSCAN_BASE_URL            = "etherscan_base_url"
         const val ETHERSCAN_API_KEY             = "etherscan_api_key"
         const val BUY_TIP_URL                   = "buy_tip_url"
@@ -22,5 +23,7 @@ class AppConstants {
         const val EXTRA_RECOVERY_PHRASE         = "extra_recovery_phrase"
         const val ACTION_CONTACT_ADDED          = "action_contact_added"
         const val EXTRA_CONTACT_ADDED           = "extra_contact_added"
+        const val ACTION_CONFIG_LOADED          = "action_config_loaded"
+        const val EXTRA_CONFIG_LOADED           = "extra_config_loaded"
     }
 }

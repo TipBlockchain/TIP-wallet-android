@@ -1,13 +1,15 @@
 package io.tipblockchain.kasakasa.networking
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.data.db.entity.Country
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.MultipartBody
-import org.web3j.abi.datatypes.Bool
 import retrofit2.http.*
+import java.util.*
 
 interface TipApi {
 
@@ -79,4 +81,6 @@ interface TipApi {
     @POST("/transactions/fill")
     fun fillTransactions(@Body txList: List<Transaction>): Observable<TransactionListResponse?>
 
+    @GET("/appconfig")
+    fun getAppConfig(): Observable<JsonObject>
 }
