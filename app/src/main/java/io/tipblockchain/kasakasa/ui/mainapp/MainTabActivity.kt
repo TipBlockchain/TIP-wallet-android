@@ -52,8 +52,7 @@ class MainTabActivity : BaseActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_account -> {
-//                supportActionBar?.show()
-                supportActionBar?.setTitle(R.string.title_my_account)
+                supportActionBar?.setTitle(R.string.title_more)
                 mSectionsPagerAdapter?.replaceFragment(moreFragment)
                 activeFragment = moreFragment
                 return@OnNavigationItemSelectedListener true

@@ -284,4 +284,6 @@
     <string name="error_insufficient_balance_for_fee">Insufficient funds to pay for transfer + network fee.</string>
     <string name="success">Success!</string>
     <string name="title_activity_my_profile">MyProfileActivity</string>
+    <string name="title_activity_trade_tip">Trade TIP</string>
+    <string name="trade_tip_message">Trade TIP on these cryptocurrency exchanges.\nTap to open in web browser.</string>
 </resources>

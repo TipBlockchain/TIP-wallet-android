@@ -20,7 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.mainapp.wallet.WalletActivity"></activity>
+        <activity
+            android:name=".ui.mainapp.tradetip.TradeTipActivity"
+            android:label="@string/title_activity_trade_tip"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ui.mainapp.wallet.WalletActivity" />
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"

@@ -37,20 +37,14 @@ class MyMoreItemRecyclerViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val item: MoreListItem = mValues[position]
-//        while (item.isHeader) {
-//            true -> return ViewTypes.Header.value
-//        }
-        Log.d("Adapter", "getItemViewType for position ${position}")
-        if (item.isHeader) {
-            return ViewTypes.Header.value
-        } else {
-            return ViewTypes.Content.value
+        when (item.isHeader) {
+            true -> return ViewTypes.Header.value
+            false -> return  ViewTypes.Content.value
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view: View
-        Log.d("Adapter", "Creating view for type ${viewType}")
         if (viewType == ViewTypes.Header.value) {
             view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.fragment_more_list_header, parent, false)
@@ -64,8 +58,6 @@ class MyMoreItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        Log.d("Adapter", "Binding View for position ${position}")
-        Log.d("Adapter", "item is ${item}")
         if (holder is HeaderViewHolder) {
             holder.mTitleView.text = item.title
         } else if (holder is ContentViewHolder) {

@@ -3,12 +3,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import io.tipblockchain.kasakasa.R
-import io.tipblockchain.kasakasa.app.AppConstants
-import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.ui.mainapp.myaccount.MyProfileActivity
-import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 import io.tipblockchain.kasakasa.ui.settings.SettingsActivity
-import java.net.URL
+import android.support.v4.content.ContextCompat.startActivity
+import io.tipblockchain.kasakasa.ui.mainapp.tradetip.TradeTipActivity
 
 class MoreContent {
 
@@ -27,20 +25,33 @@ class MoreContent {
                 }),
 
                 MoreListItem("Trade TIP", null, true),
-                MoreListItem("Trade TIP", R.drawable.ic_chart),
+                MoreListItem("Trade TIP", R.drawable.ic_chart, action = {
+                    val intent = Intent(context, TradeTipActivity::class.java)
+                    context?.startActivity(intent)
+                }),
 
                 MoreListItem("Join Our Community", null, true),
                 MoreListItem("Telegram", R.drawable.ic_telegram, action = {
                     openUrl("https://t.me/TipBLockchain")
                 }),
                 MoreListItem("Twitter", R.drawable.ic_twitter, action = {
-                    openUrl("https://twitter.com")
+                    openUrl("https://twitter.com/TipBlockchain")
                 }),
                 MoreListItem("Facebook", R.drawable.ic_facebook, action = {
                     openUrl("https://facebook.com/tipnetworkio")
                 }),
                 MoreListItem("Reddit", R.drawable.ic_reddit, action = {
-                    openUrl("https://reddit.com")
+                    openUrl("https://www.reddit.com/r/TipBlockchain/")
+                }),
+                MoreListItem("Invite Friends", R.drawable.ic_share, action = {
+                    val i = Intent(Intent.ACTION_SEND)
+                    i.type = "text/plain"
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Tip Blockchain Kasakasa")
+                    i.putExtra(Intent.EXTRA_TEXT, "Send and receive crypto using usernames https://tipblockchain.io/kasakasa")
+                    if (context != null) {
+                        startActivity(context!!, Intent.createChooser(i, "Check out Tip Blockchain Kasakasa"), null)
+                    }
+
                 }),
 
                 MoreListItem("Sign Out", null, true),

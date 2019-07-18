@@ -52,7 +52,6 @@ class MoreFragment : Fragment() {
             }
         }
 
-
         return view
     }
 
@@ -68,8 +67,8 @@ class MoreFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         recyclerView.addItemDecoration(DividerItemDecoration(context!!, LinearLayoutManager.VERTICAL))
-
     }
+
     override fun onDetach() {
         super.onDetach()
         listener = null
