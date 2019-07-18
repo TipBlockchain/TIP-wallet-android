@@ -40,9 +40,9 @@
         android:id="@+id/form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="20dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,6 @@
                 android:text="@string/verify_phone"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
-                android:textColorHint="@color/colorWhite"
                 android:theme="@style/AppTheme.WhiteText.Title" />
 
             <TextView
@@ -79,27 +78,33 @@
                 android:textAlignment="center"
                 android:theme="@style/AppTheme.WhiteText.Subtitle" />
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/verificationCodeTv"
+                android:orientation="vertical"
+                android:background="@drawable/shape_rounded_corners">
+                <android.support.design.widget.TextInputLayout
+                    app:hintTextAppearance="@style/AppTheme.HintTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_verification_code"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/verifyPhoneBtn"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
+                    android:layout_weight="1"
+                    android:textColorHint="@color/colorAppPurple"
+                    android:theme="@style/AppTheme.DarkColorAccent">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/verificationCodeTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_verification_code"
+                        android:inputType="phone"
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/verifyPhoneBtn"
+                        android:singleLine="true"
+                        android:theme="@style/AppTheme.DarkEditText" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>
@@ -108,8 +113,8 @@
         android:id="@+id/verifyPhoneBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
         android:text="@string/verify_phone"
         android:textStyle="bold"

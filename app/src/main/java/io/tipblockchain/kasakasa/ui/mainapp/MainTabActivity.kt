@@ -5,7 +5,6 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +14,9 @@ import kotlinx.android.synthetic.main.activity_main_tab.*
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment
-import io.tipblockchain.kasakasa.ui.mainapp.transactions.WalletFragment
-import io.tipblockchain.kasakasa.ui.mainapp.myaccount.MyAccountFragment
+import io.tipblockchain.kasakasa.ui.mainapp.more.MoreFragment
+import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletFragment
+import io.tipblockchain.kasakasa.ui.mainapp.walletlist.WalletListFragment
 
 class MainTabActivity : BaseActivity() {
 
@@ -32,8 +32,8 @@ class MainTabActivity : BaseActivity() {
 
     private var activeFragment: Fragment? = null
     private val contactListFragment = ContactListFragment.newInstance(1)
-    private val walletFragment = WalletFragment.newInstance(1)
-    private val accountFragment = MyAccountFragment.newInstance("")
+    private val walletFragment = WalletListFragment.newInstance(1)
+    private val moreFragment = MoreFragment.newInstance(0)
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
@@ -54,8 +54,8 @@ class MainTabActivity : BaseActivity() {
             R.id.navigation_account -> {
 //                supportActionBar?.show()
                 supportActionBar?.setTitle(R.string.title_my_account)
-                mSectionsPagerAdapter?.replaceFragment(accountFragment)
-                activeFragment = accountFragment
+                mSectionsPagerAdapter?.replaceFragment(moreFragment)
+                activeFragment = moreFragment
                 return@OnNavigationItemSelectedListener true
             }
         }

@@ -124,6 +124,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_contacts">Contacts</string>
     <string name="title_wallet">Wallet</string>
+    <string name="title_more">More</string>
     <string name="title_my_account">My Account</string>
     <string name="title_activity_backup_wallet">BackupWalletActivity</string>
     <string name="title_activity_backup_finished">BackupFinishedActivity</string>
@@ -233,12 +234,12 @@
     <string name="sending">Sending transaction...</string>
     <string name="sorry">Sorry</string>
     <string name="error_connecting_network">Error connecting to network</string>
-    <string name="error_connecting_network_message">We could not connect to the network. Please make sure you are online and try again.</string>
+    <string name="error_connecting_network_message">We could not connect to the TIP network. Please make sure your network connection online and try again.</string>
     <string name="no_contacts">You do not have any contacts yet. Click the plus button to find people.</string>
     <string name="no_search_results">Find other users on the network to transact with by typing in the search field above.</string>
     <string name="no_transactions">You do not have any transactions.\nTap on the receive button to start using your wallet.</string>
     <string name="transaction_queued_message">Your transaction has been queued for sending. It may take a couple minutes to show up in your transaction list.</string>
-    <string name="onboarding_enter_password">Enter a secure password. This password will be used to secure your account. You will need to enter it in order to send transactions.</string>
+    <string name="onboarding_enter_password">Enter a secure password. This password will be used to secure your account. You will need it to send transactions.</string>
     <string name="saving">Saving...</string>
     <string name="placeholder_country_code">+00</string>
     <string name="plus_plus_country_code">+%s</string>
@@ -281,4 +282,6 @@
     <string name="error_insufficient_balance">Account balance is not sufficient.</string>
     <string name="error_insufficient_eth_balance">Insufficient ETH balance: TIP is currently an ERC20 token, thus, ETH is needed to transfer tokens.</string>
     <string name="error_insufficient_balance_for_fee">Insufficient funds to pay for transfer + network fee.</string>
+    <string name="success">Success!</string>
+    <string name="title_activity_my_profile">MyProfileActivity</string>
 </resources>

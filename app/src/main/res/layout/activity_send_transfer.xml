@@ -57,175 +57,171 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <Spinner
-                android:id="@+id/spinner"
-                style="@style/AppTheme.Spinner"
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
 
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
-
-                <EditText
-                    android:id="@+id/availableTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:hint="@string/promptAvailable"
-                    android:inputType="text|number|numberDecimal"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="@string/zero_tip"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="@drawable/shape_rounded_corners">
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    style="@style/AppTheme.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_weight="0.8"
-                    android:textColorHint="@color/colorVeryLightGray"
-                    android:theme="@style/AppTheme.WhiteColorAccent">
+                    android:layout_weight="0.33"
+                    android:theme="@style/AppTheme.DarkColorAccent">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/recepientTv"
+                    <EditText
+                        android:id="@+id/availableTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:dropDownHeight="wrap_content"
-                        android:hint="@string/prompt_recepient"
-                        android:inputType="textPersonName"
+                        android:enabled="false"
+                        android:hint="@string/promptAvailable"
+                        android:inputType="text|number|numberDecimal"
                         android:maxLines="1"
-                        android:nextFocusDown="@id/amountTv"
-                        android:nextFocusForward="@id/amountTv"
                         android:singleLine="true"
-                        android:textColor="@android:color/white"
-                        android:textColorHighlight="@color/colorWhite"
-                        android:textColorHint="@color/colorWhite"
-                        android:textColorLink="@color/colorWhite"
-                        android:theme="@style/AppTheme.WhiteEditText" />
+                        android:text="@string/zero_tip"
+                        android:theme="@style/AppTheme.DarkEditText" />
 
                 </android.support.design.widget.TextInputLayout>
 
-                <ImageButton
-                    android:id="@+id/scanButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="5dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/qr_code_btn" />
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent">
-
-                <EditText
-                    android:id="@+id/amountTv"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_amount"
-                    android:inputType="text|number|numberDecimal"
-                    android:maxLines="1"
-                    android:nextFocusDown="@id/seekBar"
-                    android:nextFocusForward="@id/seekBar"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText" />
+                    android:orientation="horizontal">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_weight="0.8"
+                        android:theme="@style/AppTheme.DarkColorAccent">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.33"
-                android:textColorHint="@color/colorVeryLightGray"
-                android:theme="@style/AppTheme.WhiteColorAccent"
-                android:visibility="gone">
+                        <AutoCompleteTextView
+                            android:id="@+id/recepientTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:dropDownHeight="wrap_content"
+                            android:hint="@string/prompt_recepient"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:nextFocusDown="@id/amountTv"
+                            android:nextFocusForward="@id/amountTv"
+                            android:singleLine="true"
+                            android:theme="@style/AppTheme.DarkEditText" />
 
-                <EditText
-                    android:id="@+id/messageTv"
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/scanButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/qr_code_btn" />
+                </LinearLayout>
+
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_message"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textColorHighlight="@android:color/white"
-                    android:textColorHint="@color/colorWhite"
-                    android:theme="@style/AppTheme.WhiteEditText"
-                    android:visibility="gone" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/networkFeeTv"
-                    style="@style/AppTheme.WhiteText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginBottom="20dp"
-                    android:text="@string/network_fee_placeholder" />
+                    android:layout_weight="0.33"
+                    android:theme="@style/AppTheme.DarkColorAccent">
 
-                <SeekBar
-                    android:id="@+id/seekBar"
-                    style="@style/AppTheme.Seekbar.Light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="30"
-                    android:min="1"
-                    android:progress="15" />
+                    <EditText
+                        android:id="@+id/amountTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_amount"
+                        android:inputType="text|number|numberDecimal"
+                        android:maxLines="1"
+                        android:nextFocusDown="@id/seekBar"
+                        android:nextFocusForward="@id/seekBar"
+                        android:singleLine="true"
+                        android:theme="@style/AppTheme.DarkEditText" />
 
-                <android.support.constraint.ConstraintLayout
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="0dp"
+                    android:layout_weight="0.33"
+                    android:textColorHint="@color/colorVeryLightGray"
+                    android:theme="@style/AppTheme.WhiteColorAccent"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/messageTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_message"
+                        android:imeActionId="6"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:theme="@style/AppTheme.DarkEditText"
+                        android:visibility="gone" />
+
+                </android.support.design.widget.TextInputLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/slowTv"
-                        style="@style/AppTheme.WhiteText"
+                        android:id="@+id/networkFeeTv"
+                        style="@style/AppTheme.DarkText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/slow"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/network_fee_placeholder" />
 
-                    <TextView
-                        android:id="@+id/fastTv"
-                        style="@style/AppTheme.WhiteText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="19dp"
-                        android:text="@string/fast"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </android.support.constraint.ConstraintLayout>
+                    <SeekBar
+                        android:id="@+id/seekBar"
+                        style="@style/AppTheme.Seekbar.Dark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="30"
+                        android:min="1"
+                        android:progress="15" />
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/slowTv"
+                            style="@style/AppTheme.DarkText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/slow"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/fastTv"
+                            style="@style/AppTheme.DarkText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="19dp"
+                            android:text="@string/fast"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
+
+
         </LinearLayout>
 
     </ScrollView>
@@ -234,9 +230,9 @@
         android:id="@+id/nextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="50dp"
         android:text="@string/next"
         android:textStyle="bold"

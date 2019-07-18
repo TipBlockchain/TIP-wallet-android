@@ -13,6 +13,7 @@ import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 import io.tipblockchain.kasakasa.ui.onboarding.OnboardingActivity
+import io.tipblockchain.kasakasa.ui.onboarding.enterphone.EnterPhoneNumberActivity
 
 class SplashActivity : BaseActivity(), SplashScreenContract.View {
 
@@ -54,6 +55,11 @@ class SplashActivity : BaseActivity(), SplashScreenContract.View {
         startActivity(intent)
     }
 
+    fun gotoSignup() {
+        val intent = Intent(this, EnterPhoneNumberActivity::class.java)
+        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
     private fun proceed() {
 
     }

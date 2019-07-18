@@ -6,6 +6,7 @@ import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
 import java.io.File
+import java.io.Serializable
 import java.math.BigInteger
 import java.util.*
 
@@ -20,4 +21,4 @@ data class Wallet (
         @ColumnInfo(name = "blockNumber") var blockNumber: BigInteger = BigInteger.ZERO,
         @ColumnInfo(name = "startBlockNumber") var startBlockNumber: BigInteger = BigInteger.ZERO,
         @ColumnInfo(name = "lastSynced") var lastSynced: Date = Date()
-        )
+        ): Serializable

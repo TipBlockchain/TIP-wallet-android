@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.ui.mainapp.transactions
+package io.tipblockchain.kasakasa.ui.mainapp.wallet
 
 import android.content.Context
 import android.content.Intent
@@ -18,6 +18,7 @@ import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.ui.mainapp.receivetransfer.ReceiveTransferActivity
 import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
@@ -126,12 +127,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         outState.putString("currency", lastCurrency.name)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lastCurrency = PreferenceHelper.walletLastSelectedCurrency
-        currencySelected(lastCurrency)
-    }
-
     private fun getActionBarHeight(): Int {
         val styledAttributes = context!!.theme.obtainStyledAttributes(
                 intArrayOf(android.R.attr.actionBarSize))
@@ -217,6 +212,18 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         }
     }
 
+    override fun onWalletsLoaded() {
+        if (activity is WalletActivity) {
+            val walletActivity = activity as WalletActivity
+            val bundle = walletActivity.getData()
+            val extra = bundle.get("wallet")
+            if (extra != null) {
+                val wallet = extra as Wallet
+                this.currencySelected(Currency.valueOf(wallet.currency))
+            }
+        }
+    }
+
     override fun onBalanceFetchError() {
         Snackbar.make(recyclerView, "Error updating your balance", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -241,7 +248,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private fun setupPresenter() {
         presenter = WalletPresenter()
         presenter?.attach(this)
-//        presenter?.switchCurrency(lastCurrency)
         presenter?.loadWallets()
     }
 
