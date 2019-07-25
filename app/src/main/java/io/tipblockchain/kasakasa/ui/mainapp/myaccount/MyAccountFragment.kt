@@ -74,7 +74,6 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
         super.onViewCreated(view, savedInstanceState)
         presenter?.loadUser()
         cameraImageButton.setOnClickListener { checkPermissions() }
-        buyTipBtn.setOnClickListener { openBuyTipUrl() }
     }
 
     override fun onResume() {

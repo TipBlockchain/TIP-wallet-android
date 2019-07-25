@@ -17,6 +17,7 @@
     <string name="title_activity_choose_name">Choose your username</string>
     <string name="title_activity_choose_username">Choose your username</string>
     <string name="next">Next</string>
+    <string name="username">Username</string>
 
     <string name="title_activity_settings">Settings</string>
 
