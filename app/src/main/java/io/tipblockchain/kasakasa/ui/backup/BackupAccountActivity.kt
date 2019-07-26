@@ -3,6 +3,9 @@ package io.tipblockchain.kasakasa.ui.backup
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.AsyncTask
 import android.os.Build
@@ -13,154 +16,127 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 
 import android.content.Intent
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
+import android.util.Log
+import android.widget.EditText
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 import kotlinx.android.synthetic.main.activity_backup_account.*
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.ui.BaseActivity
+import io.tipblockchain.kasakasa.utils.keystore.TipKeystore
 
 /**
  * A login screen that offers login via email/password.
  */
-class BackupAccountActivity : AppCompatActivity() {
+class BackupAccountActivity : BaseActivity() {
+
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private var mAuthTask: UserLoginTask? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        LOG_TAG = javaClass.name
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_backup_account)
-        // Set up the login form.
-        password.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
-            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptLogin()
-                return@OnEditorActionListener true
-            }
-            false
-        })
 
-        nextBtn.setOnClickListener { attemptLogin() }
-        nextBtn.setOnClickListener(object: View.OnClickListener {
-            override fun onClick(v: View?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
-    }
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private fun attemptLogin() {
-        if (mAuthTask != null) {
-            return
+        copyBtn.setOnClickListener {
+            this.copyPhraseToClipboard()
         }
 
-        // Reset errors.
-        password.error = null
-
-        // Store values at the time of the login attempt.
-        val passwordStr = password.text.toString()
-
-        var cancel = false
-        var focusView: View? = null
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
-            password.error = getString(R.string.error_invalid_password)
-            focusView = password
-            cancel = true
+        backupBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_TEXT, seedPhraseTv.text)
+            intent.type = "text/plain"
+            startActivity(Intent.createChooser(intent, getString(R.string.backup_using)), null)
         }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView?.requestFocus()
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true)
-            mAuthTask = UserLoginTask(passwordStr)
-            mAuthTask!!.execute(null as Void?)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    private fun isPasswordValid(password: String): Boolean {
-        //TODO: Replace this with your own logic
-        return password.length > 4
+    override fun onStart() {
+        super.onStart()
+        this.enableButtons(false)
+        this.showEnterPasswordDialog()
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private fun showProgress(show: Boolean) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+    private fun showEnterPasswordDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_enter_password, null)
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle(getString(R.string.enter_password))
+        alertDialog.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_secure))
+        alertDialog.setCancelable(false)
 
-        form.visibility = if (show) View.GONE else View.VISIBLE
-        form.animate()
-                .setDuration(shortAnimTime)
-                .alpha((if (show) 0 else 1).toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        form.visibility = if (show) View.GONE else View.VISIBLE
-                    }
-                })
+        val passwordView =  view.findViewById(R.id.passwordTv) as EditText
 
-        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-        login_progress.animate()
-                .setDuration(shortAnimTime)
-                .alpha((if (show) 1 else 0).toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
-                    }
-                })
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    inner class UserLoginTask internal constructor(private val mPassword: String) : AsyncTask<Void, Void, Boolean>() {
-
-        override fun doInBackground(vararg params: Void): Boolean? {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000)
-            } catch (e: InterruptedException) {
-                return false
-            }
-
-            return true
-        }
-
-        override fun onPostExecute(success: Boolean?) {
-            mAuthTask = null
-            showProgress(false)
-
-            if (success!!) {
-                goToBackupFinished()
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.okay)) { _, _ ->
+            val password = passwordView.text.toString()
+            if (checkPassword(password)) {
+                this.enableButtons(true)
+                showRecoveryPhrase()
             } else {
-                password.error = getString(R.string.error_incorrect_password)
-                password.requestFocus()
+                showInvalidPasswordDialog()
             }
         }
 
-        override fun onCancelled() {
-            mAuthTask = null
-            showProgress(false)
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+            finish()
         }
+
+        alertDialog.setView(view)
+        alertDialog.show()
     }
 
-    private fun goToBackupFinished() {
-        val intent = Intent(this, BackupFinishedActivity::class.java)
-        startActivity(intent)
+
+    private fun showInvalidPasswordDialog() {
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle(getString(R.string.dialog_title_invalid_password))
+        alertDialog.setMessage(getString(R.string.dialog_message_invalid_password))
+        alertDialog.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_secure))
+        alertDialog.setCancelable(false)
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.try_again)) { _, _ ->
+            this.showEnterPasswordDialog()
+        }
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+            this.finish()
+        }
+
+        alertDialog.show()
+    }
+
+    private fun copyPhraseToClipboard() {
+        val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData: ClipData = ClipData.newPlainText("recovery phrase", seedPhraseTv.text)
+        clipboard.primaryClip = clipData
+
+        this.showMessage(getString(R.string.recovery_phrase_copied))
+    }
+
+    private fun enableButtons(enable: Boolean) {
+        copyBtn.isEnabled = enable
+        backupBtn.isEnabled = enable
+    }
+
+    private fun checkPassword(password: String): Boolean {
+        val storedPassword = TipKeystore.readPassword()
+        Log.w(LOG_TAG, "password = $password, stored=$storedPassword")
+        if (storedPassword != null) {
+            return storedPassword == password
+        }
+        return false
+    }
+
+    private fun showRecoveryPhrase() {
+        val recoveryPhrase = TipKeystore.readSeedPhrase()
+        if (recoveryPhrase != null) {
+            seedPhraseTv.text = recoveryPhrase
+        }
     }
 
 }

@@ -72,7 +72,12 @@
         <activity
             android:name=".ui.backup.BackupAccountActivity"
             android:label="@string/title_activity_backup_account"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="io.tipblockchain.kasakasa.ui.backup.BackupAccountActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.mainapp.sendtransfer.SendTransferActivity"
             android:label="@string/send_payment"

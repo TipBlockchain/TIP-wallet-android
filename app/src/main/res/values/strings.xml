@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Kasakasa</string>
+    <string name="app_package">io.tipblockchain.kasakasa</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="background_content_desc">background</string>
@@ -139,6 +140,7 @@
     <string name="yes_i_made_backup">Yes, i made a backup</string>
     <string name="send">Send</string>
     <string name="receive">Receive</string>
+    <string name="try_again">Try again</string>
     <string name="name_placeholder">Jane Smith</string>
     <string name="jane_smith">\@JaneSmith99</string>
     <string name="prefs_setup_complete">SetupComplete</string>
@@ -178,13 +180,14 @@
     <string name="verify_phone">Verify your number</string>
     <string name="prompt_enter_verification">Enter your phone verification code</string>
     <string name="save_password">Save Password</string>
-    <string name="enter_password">Enter your password</string>
+    <string name="enter_password">Enter Your Password</string>
     <string name="title_activity_recovery_phrase">Recovery Phrase</string>
     <string name="title_activity_verify_recovery_phrase">Verify Recovery Phrase</string>
     <string name="verify_recovery_phrase">Verify Recovery Phrase</string>
     <string name="written_recovery_phrase">I have written down my recovery phrase</string>
     <string name="this_is_recover">This is your recovery phrase</string>
     <string name="recovery_warning">Write down your recovery phrase somewhere safe. If you lose this phrase you will lose access to your account.</string>
+    <string name="backup_recovery_warning">Backup your recovery phrase somewhere safe. If you lose this phrase you will lose access to your account.</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="recovery_phrase_copied">Recovery phrase copied.</string>
     <string name="address_copied">Address copied</string>
@@ -203,6 +206,7 @@
     <string name="error_verifying_phone_try_again">Please check your number and try again</string>
     <string name="error_verifying_phone">Error verifying your phone number: %s</string>
     <string name="error_verifying_recovery_phrase">The words entered do not match recovery phrase.</string>
+    <string name="four_blank_lines">\n\n\n\n</string>
     <string name="verification_started">Verification SMS sent</string>
     <string name="error_empty_field">This field can not be empty</string>
     <string name="could_not_unlock_wallet">Your wallet could not be unlocked. Please check your password and try again.</string>
@@ -221,6 +225,7 @@
     <string name="scan_address">Scan destination address</string>
     <string name="scan_cancelled">Scan cancelled.</string>
     <string name="enter_password_unlock">Enter your password to unlock your wallet and send this transaction.</string>
+    <string name="enter_password_backup">Enter your password to display and backup your recovery phrase.</string>
     <string name="total">Total</string>
     <string name="error_session_timeout_reconfirm">Your session has timed out. You will need to confirm your phone number again to continue</string>
     <string name="title_activity_receive_transfer">Receive TIP or ETH</string>
@@ -287,4 +292,16 @@
     <string name="title_activity_my_profile">MyProfileActivity</string>
     <string name="title_activity_trade_tip">Trade TIP</string>
     <string name="trade_tip_message">Trade TIP on these cryptocurrency exchanges.\nTap to open in web browser.</string>
+    <string name="prefs_backup_seed_title">Backup recovery phrase.</string>
+    <string name="prefs_password_for_transfer_title">Require password for transfers</string>
+    <string name="prefs_password_for_transfer_summary">You will have to enter your password each time to send a transfer.</string>
+    <string name="prefs_password_for_seed_title">Require password to show recovery</string>
+    <string name="prefs_password_for_seed_summary">You will have to enter your password to display or backup your recovery phrase.</string>
+    <string name="prefs_category_account">My Account</string>
+    <string name="app_name_version">Kasakasa v1.2.0</string>
+    <string name="app_copyright">Copyright © 2019 Tip Blockchain S.A.</string>
+    <string name="share_using">Share Tip using</string>
+    <string name="backup_using">Backup your recovery phrase using</string>
+    <string name="dialog_title_invalid_password">Invalid password</string>
+    <string name="dialog_message_invalid_password">The password you entered is incorrect. Please try again.</string>
 </resources>

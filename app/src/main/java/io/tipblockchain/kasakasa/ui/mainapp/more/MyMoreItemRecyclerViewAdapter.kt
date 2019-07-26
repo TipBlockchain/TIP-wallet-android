@@ -2,7 +2,6 @@ package io.tipblockchain.kasakasa.ui.mainapp.more
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.TextView
 import io.tipblockchain.kasakasa.R
 
 import io.tipblockchain.kasakasa.ui.mainapp.more.MoreFragment.OnListFragmentInteractionListener
-import io.tipblockchain.kasakasa.ui.mainapp.more.dummy.DummyContent.DummyItem
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the

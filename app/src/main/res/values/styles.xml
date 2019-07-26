@@ -285,4 +285,7 @@
     </style>
 
     <style name="placeholderName2">mike_styles184</style>
+    <style name="AppTheme.PreferenceTheme" parent="PreferenceThemeOverlay">
+        <item name="android:iconSpaceReserved">false</item>
+    </style>
 </resources>

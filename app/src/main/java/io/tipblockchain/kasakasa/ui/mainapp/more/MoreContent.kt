@@ -49,7 +49,7 @@ class MoreContent {
                     i.putExtra(Intent.EXTRA_SUBJECT, "Tip Blockchain Kasakasa")
                     i.putExtra(Intent.EXTRA_TEXT, "Send and receive crypto using usernames https://tipblockchain.io/kasakasa")
                     if (context != null) {
-                        startActivity(context!!, Intent.createChooser(i, "Check out Tip Blockchain Kasakasa"), null)
+                        startActivity(context!!, Intent.createChooser(i, context!!.getString(R.string.share_using)), null)
                     }
 
                 }),

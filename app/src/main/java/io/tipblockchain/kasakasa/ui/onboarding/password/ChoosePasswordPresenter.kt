@@ -5,6 +5,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
+import io.tipblockchain.kasakasa.utils.keystore.TipKeystore
 import java.lang.Error
 
 class ChoosePasswordPresenter: ChoosePassword.Presenter {
@@ -33,15 +34,16 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
                                 walletRepository.delete(newWallet.wallet.address)
                                 view?.onWalletNotMatchingExistingError()
                             } else {
+                                this.saveToKeystore(password = password, seedPhrase = mnemonic)
                                 view?.onWalletRestored()
                             }
                         } else {
+                            this.saveToKeystore(password = password, seedPhrase = mnemonic)
                             view?.onWalletCreated()
                         }
                     } else {
                         view?.onWalletCreationError(Error())
                     }
-
                 }
             }
         } catch (err: Throwable) {
@@ -49,6 +51,11 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
                 view?.onWalletCreationError(err)
             }
         }
+    }
+
+    private fun saveToKeystore(password: String, seedPhrase: String) {
+        TipKeystore.savePassword(password)
+        TipKeystore.saveSeedPhrase(seedPhrase)
     }
 
 

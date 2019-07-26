@@ -10,6 +10,7 @@ import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import io.tipblockchain.kasakasa.config.AppProperties
+import io.tipblockchain.kasakasa.utils.keystore.TipKeystore
 
 class App : Application() {
 
@@ -36,7 +37,7 @@ class App : Application() {
         instance = this
 
         MultiDex.install(this)
-
+        TipKeystore.initialize(this)
         Stetho.initializeWithDefaults(this)
         TipRoomDatabase.getDatabase(instance.applicationContext)
         PreferenceHelper.placehoderValue = "Some random value"
