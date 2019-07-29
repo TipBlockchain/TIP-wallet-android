@@ -18,9 +18,13 @@ import io.tipblockchain.kasakasa.ui.mainapp.usersearch.UserSearchActivity
 import kotlinx.android.synthetic.main.fragment_contact_list.*
 import android.graphics.drawable.InsetDrawable
 import android.support.v4.content.LocalBroadcastManager
+import android.widget.Button
 import io.tipblockchain.kasakasa.app.AppConstants
+import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 import java.util.*
 import kotlin.concurrent.timerTask
+import io.tipblockchain.kasakasa.ui.mainapp.phonecontacts.PhoneContactsFragment
+
 
 class ContactListFragment: Fragment(), ContactList.View {
 
@@ -35,6 +39,7 @@ class ContactListFragment: Fragment(), ContactList.View {
     private val LOG_TAG = this.javaClass.name
 
     private val contactReceiver = ContactReceiver()
+    private lateinit var tabActivity: MainTabActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +62,17 @@ class ContactListFragment: Fragment(), ContactList.View {
             navigateToUserSearch()
         }
 
+        var inviteBtn = view.findViewById<Button>(R.id.inviteBtn)
+        inviteBtn.setOnClickListener {
+            this.selectPhoneContacts()
+        }
+
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        this.tabActivity = activity as MainTabActivity
     }
 
     override fun onStop() {
@@ -162,6 +177,15 @@ class ContactListFragment: Fragment(), ContactList.View {
 
     private fun hideSpinner() {
 
+    }
+
+    private fun showPhoneContacts() {
+        val newFragment = PhoneContactsFragment.newInstance(1)
+        this.tabActivity.addFragment(newFragment)
+    }
+
+    private fun selectPhoneContacts() {
+        this.tabActivity.selectContact()
     }
 
     inner class ContactReceiver: BroadcastReceiver() {

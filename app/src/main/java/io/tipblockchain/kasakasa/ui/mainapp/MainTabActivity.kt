@@ -1,6 +1,9 @@
 package io.tipblockchain.kasakasa.ui.mainapp
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -12,11 +15,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main_tab.*
 
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment
 import io.tipblockchain.kasakasa.ui.mainapp.more.MoreFragment
 import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletFragment
 import io.tipblockchain.kasakasa.ui.mainapp.walletlist.WalletListFragment
+import android.net.Uri
 
 class MainTabActivity : BaseActivity() {
 
@@ -89,14 +94,65 @@ class MainTabActivity : BaseActivity() {
         if (activeFragment == contactListFragment) {
             finish()
         } else {
-            addStartingFragment()
-            navigation.selectedItemId = R.id.navigation_contacts
+            super.onBackPressed()
         }
+    }
+
+    fun addFragment(fragment: Fragment) {
+        activeFragment = fragment
+        mSectionsPagerAdapter?.replaceFragment(fragment,addToBackStack = true)
     }
 
     private fun addStartingFragment() {
         mSectionsPagerAdapter?.replaceFragment(contactListFragment, addToBackStack = false)
         activeFragment = contactListFragment
+    }
+
+    fun selectContact() {
+        val intent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
+        intent.type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+        startActivityForResult(intent, AppConstants.REQUEST_CODE_PICK_CONTACTS)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            AppConstants.REQUEST_CODE_PICK_CONTACTS -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+
+                    // Get the URI that points to the selected contact
+                    data?.data?.also { contactUri ->
+                        // Perform the query on the contact to get the NUMBER column
+                        // We don't need a selection or sort order (there's only one result for this URI)
+                        // CAUTION: The query() method should be called from a separate thread to avoid
+                        // blocking your app's UI thread. (For simplicity of the sample, this code doesn't
+                        // do that.)
+                        // Consider using <code><a href="/reference/android/content/CursorLoader.html">CursorLoader</a></code> to perform the query.
+                        contentResolver.query(contactUri, projection, null, null, null)?.apply {
+                            moveToFirst()
+
+                            // Retrieve the phone number from the NUMBER column
+                            val column: Int = getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                            val number: String? = getString(column)
+                            if (number != null) {
+                                sendInviteMessage(number)
+                            } else {
+                                // show error dialog.
+                                showOkDialog(title = getString(R.string.error_sending_message), message = getString(R.string.error_sending_message_body))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun sendInviteMessage(phoneNumber: String) {
+        val uri = Uri.parse("smsto:$phoneNumber")
+        val intent = Intent(Intent.ACTION_SENDTO, uri)
+        intent.putExtra("sms_body", getString(R.string.message_invite))
+        startActivity(intent)
     }
 
     /**

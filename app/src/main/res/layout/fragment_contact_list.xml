@@ -1,71 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <!--<android.support.constraint.ConstraintLayout-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-        <!--xmlns:tools="http://schemas.android.com/tools"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+<!--<android.support.constraint.ConstraintLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
 
-        <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/emptyView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="447dp"
-                    android:layout_marginStart="100dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="100dp"
-                    android:layout_marginBottom="8dp"
-                    android:alpha="0.1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/logo_purple" />
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/no_contacts"
-                    android:textAlignment="center"
-                    style="@style/AppTheme.EmptyText"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-    <io.tipblockchain.kasakasa.ui.views.EmptyRecyclerView
-        android:id="@+id/recyclerView"
-        android:name="io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:layout_marginBottom="60dp"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:context=".ui.mainapp.ContactFragment"
-        tools:listitem="@layout/row_contact">
+        android:visibility="visible">
 
-    </io.tipblockchain.kasakasa.ui.views.EmptyRecyclerView>
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="447dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="8dp"
+            android:alpha="0.1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_purple" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/no_contacts"
+            android:textAlignment="center"
+            style="@style/AppTheme.EmptyText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--style="?android:attr/borderlessButtonStyle"-->
+        <Button
+            android:id="@+id/inviteBtn"
+            style="@style/AppTheme.WhiteButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Invite Friends >"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <io.tipblockchain.kasakasa.ui.views.EmptyRecyclerView
+            android:id="@+id/recyclerView"
+            android:name="io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="60dp"
+            android:layout_marginTop="40dp"
+            android:visibility="invisible"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/inviteBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:context=".ui.mainapp.ContactFragment"
+            tools:listitem="@layout/row_contact">
+
+        </io.tipblockchain.kasakasa.ui.views.EmptyRecyclerView>
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -78,7 +91,7 @@
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
-        </FrameLayout>
+</FrameLayout>
 
 
-<!--</android.support.constraint.ConstraintLayout>-->
+    <!--</android.support.constraint.ConstraintLayout>-->

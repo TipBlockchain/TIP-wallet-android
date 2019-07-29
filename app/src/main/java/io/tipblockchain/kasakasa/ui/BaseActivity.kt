@@ -48,7 +48,7 @@ open class BaseActivity: AppCompatActivity() {
 
     }
 
-    protected fun showOkCancelDialog(title: String? = null, message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
+    fun showOkCancelDialog(title: String? = null, message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
         AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)

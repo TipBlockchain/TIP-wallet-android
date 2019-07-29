@@ -18,8 +18,8 @@ class EmptyRecyclerView(context: Context, attrs: AttributeSet?, defStyle: Int): 
         Log.d(LOG_TAG, "initing empty view")
         if (mEmptyView != null) {
             mEmptyView!!.visibility = (if (adapter == null || adapter!!.itemCount == 0) View.VISIBLE else View.GONE)
-            this@EmptyRecyclerView.visibility = if (adapter == null || adapter!!.itemCount == 0) View.GONE else View.VISIBLE
         }
+        this@EmptyRecyclerView.visibility = if (adapter == null || adapter!!.itemCount == 0) View.GONE else View.VISIBLE
     }
 
     fun updateState() {

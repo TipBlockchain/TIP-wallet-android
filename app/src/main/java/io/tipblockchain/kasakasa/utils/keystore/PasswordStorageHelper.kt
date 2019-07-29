@@ -146,20 +146,20 @@ class PasswordStorageHelper(context: Context) {
                 kpGenerator.generateKeyPair()
             } catch (e: NoSuchAlgorithmException) {
                 try {
-                    ks?.deleteEntry(alias)
+                    ks.deleteEntry(alias)
                 } catch (e1: Exception) {
                     // Just ignore any errors here
                 }
 
             } catch (e: InvalidAlgorithmParameterException) {
                 try {
-                    ks?.deleteEntry(alias)
+                    ks.deleteEntry(alias)
                 } catch (e1: Exception) {
                 }
 
             } catch (e: NoSuchProviderException) {
                 try {
-                    ks?.deleteEntry(alias)
+                    ks.deleteEntry(alias)
                 } catch (e1: Exception) {
                 }
 
