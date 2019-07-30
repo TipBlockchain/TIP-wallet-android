@@ -75,6 +75,14 @@ class ContactListFragment: Fragment(), ContactList.View {
         this.tabActivity = activity as MainTabActivity
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        listener = InteractionListener()
+        userVisibleHint = false
+        this.setupRecyclerView()
+        this.setupPresenter()
+    }
+
     override fun onStop() {
         presenter?.detach()
         super.onStop()
@@ -84,14 +92,6 @@ class ContactListFragment: Fragment(), ContactList.View {
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(contactReceiver)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        listener = InteractionListener()
-        userVisibleHint = false
-        this.setupRecyclerView()
-        this.setupPresenter()
     }
 
     /**
@@ -224,7 +224,7 @@ class ContactListFragment: Fragment(), ContactList.View {
 
         val a = context!!.obtainStyledAttributes(attrs)
         val divider = a.getDrawable(0)
-        val leftInset = resources.getDimensionPixelSize(R.dimen.list_divider_large_margin)
+        val leftInset = resources.getDimensionPixelSize(R.dimen.list_divider_very_large_margin)
         val rightInset = resources.getDimensionPixelSize(R.dimen.list_divider_small_margin)
 
         val insetDivider = InsetDrawable(divider, leftInset, 0, rightInset, 0)

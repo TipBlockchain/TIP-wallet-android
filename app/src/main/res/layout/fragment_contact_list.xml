@@ -53,27 +53,51 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!--style="?android:attr/borderlessButtonStyle"-->
-        <Button
-            android:id="@+id/inviteBtn"
-            style="@style/AppTheme.WhiteButton"
-            android:layout_width="0dp"
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/inviteLinearLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Invite Friends >"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/inviteBtn"
+                style="@style/AppTheme.WhiteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:minHeight="0dip"
+                android:text="Invite Friends >"
+                app:layout_constraintEnd_toStartOf="@+id/emptyView"
+                app:layout_constraintStart_toEndOf="@+id/emptyView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+        </LinearLayout>
 
         <io.tipblockchain.kasakasa.ui.views.EmptyRecyclerView
             android:id="@+id/recyclerView"
             android:name="io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="60dp"
             android:layout_marginTop="40dp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/inviteBtn"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inviteLinearLayout"
             tools:context=".ui.mainapp.ContactFragment"
             tools:listitem="@layout/row_contact">
 
