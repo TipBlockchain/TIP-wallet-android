@@ -20,6 +20,7 @@ class PreferenceHelper {
         private const val PLACEHOLDER_VALUE = "placeholder_value"
         private const val AUTHORIZATION = "authorization"
         private const val WALLET_LAST_CURRENCY = "wallet_last_currency"
+        private const val UPGRADED_ACCOUNT = "upgraded_account"
 
 
         var onboardingComplete: Boolean
@@ -42,6 +43,9 @@ class PreferenceHelper {
             get() = prefs.getString(PENDING_ACCOUNT_TOKEN, null)
             set(value) =  prefs.edit().putString(PENDING_ACCOUNT_TOKEN, value).apply()
 
+        var upgradedAccount: Boolean
+            get() = prefs.getBoolean(UPGRADED_ACCOUNT, false)
+            set(value) = prefs.edit().putBoolean(UPGRADED_ACCOUNT, value).apply()
 
         var authorization: String?
             get() = prefs.getString(AUTHORIZATION, null)

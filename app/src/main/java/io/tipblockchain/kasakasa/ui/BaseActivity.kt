@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import io.tipblockchain.kasakasa.R
 
 
@@ -67,6 +68,31 @@ open class BaseActivity: AppCompatActivity() {
                 .setOnDismissListener(onDismissListener)
                 .create()
                 .show()
+    }
+
+    open fun showEnterPasswordDialog(onCompletion: (String) -> Unit, onCancel: (() -> Unit)? = null) {
+        val view = layoutInflater.inflate(R.layout.dialog_confirm_password, null)
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle(getString(R.string.enter_password))
+        alertDialog.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_secure))
+        alertDialog.setCancelable(false)
+
+        val passwordView =  view.findViewById(R.id.passwordTv) as EditText
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
+            val password = passwordView.text.toString()
+            onCompletion(password)
+        }
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+            if (onCancel != null) {
+                onCancel()
+            }
+        }
+
+        alertDialog.setView(view)
+        alertDialog.show()
     }
 
     protected fun getColorFromId(@ColorRes resId: Int): Int {

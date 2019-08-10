@@ -91,6 +91,9 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
 
     override fun updateUser(user: User) {
         usernameTv.setText(user.username)
+        usernameET.setText(user.username)
+        fullNameET.setText(user.name)
+        aboutMeET.setText("I Love TIP")
         if (user.originalPhotoUrl != null) {
             Picasso.get().load(user.originalPhotoUrl).into(profileImageView)
         } else {

@@ -21,9 +21,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.mainapp.upgradeaccount.UpgradeAccountActivity"
+            android:label="@string/title_activity_upgrade_account"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="io.tipblockchain.kasakasa.ui.mainapp.upgradeaccount.UpgradeAccountActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.mainapp.tradetip.TradeTipActivity"
             android:label="@string/title_activity_trade_tip"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.mainapp.wallet.WalletActivity" />
         <activity
             android:name=".ui.settings.SettingsActivity"
@@ -72,10 +81,10 @@
         <activity
             android:name=".ui.backup.BackupAccountActivity"
             android:label="@string/title_activity_backup_account"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="io.tipblockchain.kasakasa.ui.backup.BackupAccountActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="io.tipblockchain.kasakasa.ui.backup.BackupAccountActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity

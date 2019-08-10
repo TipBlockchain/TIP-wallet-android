@@ -68,6 +68,7 @@
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
+
     <style name="AppTheme.ListTitle">
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
@@ -143,12 +144,15 @@
         <item name="android:textColor">@color/colorGray</item>
         <item name="android:fontFamily">@font/avenir_ltd_std</item>
     </style>
+
     <style name="AppTheme.DarkGrayText.Subtitle" parent="AppTheme.DarkGrayText">
         <item name="android:textSize">24sp</item>
     </style>
+
     <style name="AppTheme.DarkGrayText.Normal" parent="AppTheme.DarkGrayText">>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="AppTheme.DarkText">
         <item name="android:textColor">@color/colorAppPurple</item>
     </style>

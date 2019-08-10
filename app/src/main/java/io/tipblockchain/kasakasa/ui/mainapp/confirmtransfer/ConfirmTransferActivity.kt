@@ -157,25 +157,9 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     private fun showEnterPasswordDialog() {
-        val view = layoutInflater.inflate(R.layout.dialog_confirm_password, null)
-        val alertDialog = AlertDialog.Builder(this).create()
-        alertDialog.setTitle(getString(R.string.unlock_wallet))
-        alertDialog.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_secure))
-        alertDialog.setCancelable(false)
-
-        val passwordView =  view.findViewById(R.id.passwordTv) as EditText
-
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
-            val password = passwordView.text.toString()
+        super.showEnterPasswordDialog(onCompletion = { password ->
             sendTransaction(password)
-        }
-
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        alertDialog.setView(view)
-        alertDialog.show()
+        }, onCancel = null)
     }
 
     private fun sendTransaction(password: String) {

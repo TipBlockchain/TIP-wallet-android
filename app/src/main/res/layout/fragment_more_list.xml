@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
+    android:layout_marginBottom="50dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="io.tipblockchain.kasakasa.ui.mainapp.more.MoreFragment"
     tools:listitem="@layout/fragment_more_list_item" />

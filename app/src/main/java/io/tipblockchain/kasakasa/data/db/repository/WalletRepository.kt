@@ -4,12 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import android.util.Log
-import io.reactivex.Flowable
-import io.reactivex.Maybe
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.internal.operators.flowable.FlowableFlatMapSingle
-import io.reactivex.internal.operators.flowable.FlowableSingle
 import io.reactivex.schedulers.Schedulers
 import io.tipblockchain.kasakasa.app.App
 import io.tipblockchain.kasakasa.app.AppConstants
@@ -20,7 +15,9 @@ import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.dao.WalletDao
 import io.tipblockchain.kasakasa.utils.FileUtils
-import java.math.BigInteger
+import org.web3j.crypto.Bip39Wallet
+import org.web3j.crypto.WalletFile
+import java.io.File
 
 class WalletRepository {
     private var dao: WalletDao
@@ -86,22 +83,62 @@ class WalletRepository {
        dao.deleteAll()
     }
 
-    fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String): NewWallet? {
-        deleteAllDirect()
+    fun bip39WalletFileFromMnemonic(mnemonic: String, password: String): WalletFile {
+        return WalletUtils.getBip39WalletFileFromMnemonic(mnemonic, password, destinationDirectory = FileUtils().walletsDir())
+    }
+
+    fun bip44WalletFileFromMnemonic(mnemonic: String, password: String): WalletFile {
+        return WalletUtils.getBip44WalletFileFromMnemonic(mnemonic, password, FileUtils().walletsDir())
+    }
+    fun checkWalletMatchesExisting(mnemonic: String, password: String): Boolean {
+        var walletFile = WalletUtils.getBip39WalletFileFromMnemonic(mnemonic, password, destinationDirectory = FileUtils().walletsDir())
+        val walletList = dao.getAllWallets()
+        var walletMatch = false
+        Log.i(LOG_TAG, "Wallets are: $walletList")
+        if (walletList != null) {
+            for (wallet in walletList) {
+                Log.i(LOG_TAG, "wallet.address = ${wallet.address} <=> walletFile.address = ${walletFile.address}")
+                if (wallet.address == WalletUtils.add0xIfNotExists(walletFile.address)) {
+                    walletMatch = true
+                    break
+                }
+            }
+        }
+        return walletMatch
+    }
+
+    fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String, useBip44: Boolean = true): NewWallet? {
         val web3Bridge = Web3Bridge()
-        val bip39Wallet = WalletUtils.getnerateBip39WalletFromMnemonic(mnemonic = mnemonic, password = password, destinationDirectory = FileUtils().walletsDir())
-        val walletFile = FileUtils().fileForWalletFilename(bip39Wallet.filename)
+        var bip39Wallet: Bip39Wallet? = null
+        when (useBip44) {
+            true -> bip39Wallet = WalletUtils.generateBip44WalletFromMnemonic(mnemonic = mnemonic, password = password, destinationDirectory = FileUtils().walletsDir())
+            false -> bip39Wallet = WalletUtils.generateBip39WalletFromMnemonic(mnemonic = mnemonic, password = password, destinationDirectory = FileUtils().walletsDir())
+        }
+        val walletFile = FileUtils().fileForWalletFilename(bip39Wallet!!.filename)
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
             val blockNumber = AppProperties.get(AppConstants.APP_START_BLOCK).toBigInteger()
-            val tipWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
+            val tipWallet = Wallet(address = WalletUtils.add0xIfNotExists(credentials.address), filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(tipWallet)
-            val ethWallet = Wallet(address = credentials.address, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
+            val ethWallet = Wallet(address = WalletUtils.add0xIfNotExists(credentials.address), filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(ethWallet)
-            return NewWallet(bip39Wallet.mnemonic, tipWallet)
+            return NewWallet(bip39Wallet!!.mnemonic, tipWallet)
         }
 
         return null
+    }
+
+    fun saveWalletFile(walletFile: WalletFile, isPrimary: Boolean = false): File? {
+        val file = WalletUtils.saveWalletFile(walletFile, destinationDirectory = FileUtils().walletsDir())
+
+        if (file != null && file.exists()) {
+            val blockNumber = AppProperties.get(AppConstants.APP_START_BLOCK).toBigInteger()
+            val tipWallet = Wallet(address = WalletUtils.add0xIfNotExists(walletFile.address), filePath = file.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber, isPrimary = isPrimary)
+            this.insert(tipWallet)
+            val ethWallet = Wallet(address = WalletUtils.add0xIfNotExists(walletFile.address), filePath = file.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber, isPrimary = isPrimary)
+            this.insert(ethWallet)
+        }
+        return file
     }
 
     companion object {

@@ -2,10 +2,8 @@ package io.tipblockchain.kasakasa.utils
 
 import org.web3j.crypto.Hash
 import java.lang.Integer.parseInt
-import java.lang.NumberFormatException
-import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
-import org.spongycastle.jcajce.provider.digest.SHA3
+import org.bouncycastle.jcajce.provider.digest.SHA3
 import org.spongycastle.util.encoders.Hex
 
 

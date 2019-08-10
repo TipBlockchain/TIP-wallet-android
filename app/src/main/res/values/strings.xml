@@ -122,6 +122,7 @@
     <string name="title_activity_backup_info">BackupInfoActivity</string>
     <string name="title_activity_main_tab">MainTabActivity</string>
     <string name="title_home">Home</string>
+    <string name="empty"></string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_contacts">Contacts</string>
@@ -219,6 +220,8 @@
     <string name="error_no_primary_wallet">You do not have a valid wallet set up. Please hit the back button to create a wallet now.</string>
     <string name="congrats">Congrats!</string>
     <string name="account_created">You successfully created a TIP account.\nWelcome to TIP.</string>
+    <string name="wallets_upgraded">Account upgraded</string>
+    <string name="wallets_upgraded_message">We created a new wallet using the new account settings. The new account address will serve as your default account when you receive transfers.</string>
     <string name="generic_error">The operation could not be completed due to an error.</string>
     <string name="generic_error_with_param">Sorry, an error occured: %s.</string>
     <string name="invalid_user">Sorry, an error occurred while creating your account. Please try again.</string>
@@ -228,6 +231,11 @@
     <string name="unlock_wallet">Unlock your wallet</string>
     <string name="scan_address">Scan destination address</string>
     <string name="scan_cancelled">Scan cancelled.</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="upgrade_account">Upgrade Account</string>
+    <string name="upgrade_account_message">We\'ve upgraded our network.\nYou will have to upgrade your account to use our new features. You will have to create a new wallet.</string>
+    <string name="upgrade_account_description">Enter your recovery phrase.\nThis will be used to upgrade your account and generate a new wallets on your device.</string>
+    <string name="recovery_phrase_disclaimer">Your recovery phrase is never sent over the network.</string>
     <string name="enter_password_unlock">Enter your password to unlock your wallet and send this transaction.</string>
     <string name="enter_password_backup">Enter your password to display and backup your recovery phrase.</string>
     <string name="total">Total</string>
@@ -258,11 +266,13 @@
     <string name="enter_verification_code">Enter the verification code.</string>
     <string name="error_invalid_recovery_phrase">Invalid recovery phrase</string>
     <string name="error_invalid_recovery_phrase_length">Your recovery phrase does not have the right length.</string>
+    <string name="error_invalid_recovery_phrase_message">This phrase does not match the recovery phrase. Please enter the same phrase used to create your account.</string>
     <string name="error_empty_recovery_phrase">Your recovery phrase can not be empty.</string>
     <string name="enter_missing_words">Enter the words missing from the recovery phrase below.</string>
     <string name="enter_first_missing_word">Enter first missing word</string>
     <string name="enter_second_missing_word">Enter second missing word</string>
     <string name="recovery_phrase_verified">Recovery phrase verified</string>
+    <string name="enter_seed_phrase">Please enter your recovery phrase to continue.</string>
     <string name="welcome_to_tip_kasakasa">Welcome to TIP Kasakasa</string>
     <string name="error_address_not_matching_account">The restored wallet address does not match the address for %s. Please enter the same recovery phrase and password used to create the account.</string>
     <string name="restore_wallet">Restore Wallet</string>
@@ -292,11 +302,15 @@
     <string name="error_insufficient_balance">Account balance is not sufficient.</string>
     <string name="error_insufficient_eth_balance">Insufficient ETH balance: TIP is currently an ERC20 token, thus, ETH is needed to transfer tokens.</string>
     <string name="error_insufficient_balance_for_fee">Insufficient funds to pay for transfer + network fee.</string>
+    <string name="error_invalid_seed_phrase">Invalid Recovery Phrase</string>
+    <string name="error_enter_valid_seed_phrase">Please enter the phrase you used to create your account.</string>
     <string name="success">Success!</string>
     <string name="title_activity_my_profile">MyProfileActivity</string>
     <string name="title_activity_trade_tip">Trade TIP</string>
     <string name="trade_tip_message">Trade TIP on these cryptocurrency exchanges.\nTap to open in web browser.</string>
     <string name="prefs_backup_seed_title">Backup recovery phrase.</string>
+    <string name="prefs_upgrade_account_title">Upgrade account</string>
+    <string name="prefs_upgrade_account_summary">Up account to use new features of Kasakasa.\nYou will have to enter your recovery phrase.</string>
     <string name="prefs_password_for_transfer_title">Require password for transfers</string>
     <string name="prefs_password_for_transfer_summary">You will have to enter your password each time to send a transfer.</string>
     <string name="prefs_password_for_seed_title">Require password to show recovery</string>
@@ -309,4 +323,5 @@
     <string name="dialog_title_invalid_password">Invalid password</string>
     <string name="dialog_message_invalid_password">The password you entered is incorrect. Please try again.</string>
     <string name="message_invite">Tip is a social platform that lets you send and receive cryptocurrency using usernames. Check it out here https://tipblockchain.io/app</string>
+    <string name="title_activity_upgrade_account">UpgradeAccountActivity</string>
 </resources>

@@ -5,8 +5,6 @@ import io.tipblockchain.kasakasa.blockchain.smartcontracts.TipToken
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.utils.FileUtils
 import org.web3j.protocol.Web3j
-import org.web3j.protocol.Web3jFactory
-import org.web3j.protocol.http.HttpService
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import org.web3j.tx.Transfer
 import org.web3j.utils.Convert
@@ -18,7 +16,6 @@ import io.tipblockchain.kasakasa.crypto.*
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import org.web3j.crypto.Bip39Wallet
 import org.web3j.crypto.Credentials
-import org.web3j.protocol.core.DefaultBlockParameter
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.core.methods.request.Transaction
 import org.web3j.tx.ClientTransactionManager
@@ -28,7 +25,7 @@ import java.util.concurrent.Future
 
 class Web3Bridge {
 
-    private var web3: Web3j = Web3jFactory.build(HttpService(AppProperties.get(AppConstants.CONFIG_ETH_NODE_URL)))
+    private var web3: Web3j = Web3jFactory.build(AppProperties.get(AppConstants.CONFIG_ETH_NODE_URL))
     private var readOnlyTipToken: TipToken? = null
 
     private var defaultGasPrice = BigInteger.valueOf(21_000_000_000L)
@@ -72,7 +69,7 @@ class Web3Bridge {
         return credentials
     }
 
-    fun createBip39Wallet(password: String): Bip39Wallet {
+    fun createBip39Wallet(password: String): Bip39Wallet? {
         val bip39Wallet = WalletUtils.generateBip39Wallet(password, FileUtils().walletsDir())
         return bip39Wallet
     }

@@ -139,7 +139,7 @@ dependencies {
         exclude group: "com.android.support"
     }
     implementation "com.squareup.picasso:picasso:2.71828"
-    implementation "org.web3j:core:3.3.1-android"
+    implementation "org.web3j:core:4.2.0-android"
     implementation "org.bitcoinj:bitcoinj-core:0.14.7"
     implementation "com.karumi:dexter:5.0.0"
     implementation "com.github.yalantis:ucrop:2.2.2"

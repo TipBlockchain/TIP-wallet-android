@@ -63,6 +63,19 @@ class BackupAccountActivity : BaseActivity() {
     }
 
     private fun showEnterPasswordDialog() {
+        this.showEnterPasswordDialog(onCompletion = {password ->
+            if (checkPassword(password)) {
+                this.enableButtons(true)
+                showRecoveryPhrase()
+            } else {
+                showInvalidPasswordDialog()
+            }
+        }, onCancel = {
+            finish()
+        })
+    }
+
+    override fun showEnterPasswordDialog(onCompletion: (String) -> Unit, onCancel: (() -> Unit)?) {
         val view = layoutInflater.inflate(R.layout.dialog_enter_password, null)
         val alertDialog = AlertDialog.Builder(this).create()
         alertDialog.setTitle(getString(R.string.enter_password))
@@ -73,24 +86,19 @@ class BackupAccountActivity : BaseActivity() {
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.okay)) { _, _ ->
             val password = passwordView.text.toString()
-            if (checkPassword(password)) {
-                this.enableButtons(true)
-                showRecoveryPhrase()
-            } else {
-                showInvalidPasswordDialog()
-            }
+            onCompletion(password)
         }
 
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
-            finish()
+            if (onCancel != null) {
+                onCancel()
+            }
         }
 
         alertDialog.setView(view)
         alertDialog.show()
     }
-
-
     private fun showInvalidPasswordDialog() {
         val alertDialog = AlertDialog.Builder(this).create()
         alertDialog.setTitle(getString(R.string.dialog_title_invalid_password))
@@ -125,7 +133,6 @@ class BackupAccountActivity : BaseActivity() {
 
     private fun checkPassword(password: String): Boolean {
         val storedPassword = TipKeystore.readPassword()
-        Log.w(LOG_TAG, "password = $password, stored=$storedPassword")
         if (storedPassword != null) {
             return storedPassword == password
         }

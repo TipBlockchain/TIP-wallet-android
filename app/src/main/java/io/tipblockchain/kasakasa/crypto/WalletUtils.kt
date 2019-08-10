@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.crypto
 
 
+import android.util.Log
 import java.io.File
 import java.io.IOException
 import java.security.InvalidAlgorithmParameterException
@@ -25,6 +26,7 @@ import org.web3j.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX
  * Utility functions for working with Wallet files.
  */
 object WalletUtils {
+    private const val HARDENED_BIT = -0x80000000
 
     private val objectMapper = ObjectMapper()
 
@@ -47,28 +49,35 @@ object WalletUtils {
     }
 
     @Throws(NoSuchAlgorithmException::class, NoSuchProviderException::class, InvalidAlgorithmParameterException::class, CipherException::class, IOException::class)
-    fun generateFullNewWalletFile(password: String, destinationDirectory: File): String {
+    fun generateFullNewWalletFile(password: String, destinationDirectory: File): File? {
 
         return generateNewWalletFile(password, destinationDirectory, true)
     }
 
+    fun add0xIfNotExists(address: String): String {
+        if (!address.startsWith("0x", ignoreCase = true)) {
+            return "0x$address"
+        }
+        return address
+    }
+
     @Throws(NoSuchAlgorithmException::class, NoSuchProviderException::class, InvalidAlgorithmParameterException::class, CipherException::class, IOException::class)
-    fun generateLightNewWalletFile(password: String, destinationDirectory: File): String {
+    fun generateLightNewWalletFile(password: String, destinationDirectory: File): File? {
 
         return generateNewWalletFile(password, destinationDirectory, false)
     }
 
     @Throws(CipherException::class, IOException::class, InvalidAlgorithmParameterException::class, NoSuchAlgorithmException::class, NoSuchProviderException::class)
     fun generateNewWalletFile(
-            password: String, destinationDirectory: File, useFullScrypt: Boolean): String {
+            password: String, destinationDirectory: File, useFullScrypt: Boolean): File? {
 
         val ecKeyPair = Keys.createEcKeyPair()
         return generateWalletFile(password, ecKeyPair, destinationDirectory, useFullScrypt)
     }
 
+
     @Throws(CipherException::class, IOException::class)
-    fun generateWalletFile(
-            password: String, ecKeyPair: ECKeyPair, destinationDirectory: File, useFullScrypt: Boolean): String {
+    fun getWalletFile(password: String, ecKeyPair: ECKeyPair, useFullScrypt: Boolean): WalletFile {
 
         val walletFile: WalletFile
         if (useFullScrypt) {
@@ -77,12 +86,28 @@ object WalletUtils {
             walletFile = Wallet.createLight(password, ecKeyPair)
         }
 
+        return walletFile
+    }
+
+    @Throws(CipherException::class, IOException::class)
+    fun generateWalletFile(
+            password: String, ecKeyPair: ECKeyPair, destinationDirectory: File, useFullScrypt: Boolean, saveFile: Boolean = true): File? {
+
+        val walletFile = getWalletFile(password = password, ecKeyPair = ecKeyPair, useFullScrypt = useFullScrypt)
+
+        if (saveFile) {
+            return saveWalletFile(walletFile, destinationDirectory)
+        }
+
+        return null
+    }
+
+    fun saveWalletFile(walletFile: WalletFile, destinationDirectory: File): File {
         val fileName = getWalletFileName(walletFile)
         val destination = File(destinationDirectory, fileName)
-
         objectMapper.writeValue(destination, walletFile)
 
-        return fileName
+        return destination
     }
 
     /**
@@ -99,17 +124,19 @@ object WalletUtils {
      * @throws IOException if the destination cannot be written to
      */
     @Throws(CipherException::class, IOException::class)
-    fun generateBip39Wallet(password: String, destinationDirectory: File): Bip39Wallet {
+    fun generateBip39Wallet(password: String, destinationDirectory: File): Bip39Wallet? {
         val initialEntropy = ByteArray(16)
         secureRandom.nextBytes(initialEntropy)
 
         val mnemonic = MnemonicUtils.generateMnemonic(initialEntropy)
         val seed = MnemonicUtils.generateSeed(mnemonic, password)
-        val privateKey = ECKeyPair.create(sha256(seed))
+        val ecKeyPair = ECKeyPair.create(sha256(seed))
 
-        val walletFile = generateWalletFile(password, privateKey, destinationDirectory, useFullScrypt = false)
-
-        return Bip39Wallet(walletFile, mnemonic)
+        val walletFile = generateWalletFile(password, ecKeyPair, destinationDirectory, useFullScrypt = false)
+        if (walletFile != null) {
+            return Bip39Wallet(walletFile.name, mnemonic)
+        }
+        return null
     }
 
     @Throws(CipherException::class, IOException::class)
@@ -121,14 +148,45 @@ object WalletUtils {
         return mnemonic
     }
 
+    fun getBip39WalletFileFromMnemonic(mnemonic: String, password: String, destinationDirectory: File): WalletFile {
+        val seed = MnemonicUtils.generateSeed(mnemonic, password)
+        val ecKeyPair = ECKeyPair.create(sha256(seed))
+
+        return getWalletFile(password = password, ecKeyPair = ecKeyPair, useFullScrypt = false)
+    }
+
+    fun getBip44WalletFileFromMnemonic(mnemonic: String, password: String, destinationDirectory: File): WalletFile {
+        val seed = MnemonicUtils.generateSeed(mnemonic, password)
+        val ecKeyPair = Bip32ECKeyPair.generateKeyPair(seed)
+        val path = intArrayOf(44 or HARDENED_BIT, 60 or HARDENED_BIT, 0 or HARDENED_BIT, 0, 0)
+        val bip44KeyPair = Bip32ECKeyPair.deriveKeyPair(ecKeyPair, path)
+        return getWalletFile(password = password, ecKeyPair = bip44KeyPair, useFullScrypt = false)
+    }
+
     @Throws(CipherException::class, IOException::class)
-    fun getnerateBip39WalletFromMnemonic(mnemonic: String, password: String, destinationDirectory: File): Bip39Wallet {
+    fun generateBip39WalletFromMnemonic(mnemonic: String, password: String, destinationDirectory: File, saveFile: Boolean = true): Bip39Wallet? {
         val seed = MnemonicUtils.generateSeed(mnemonic, password)
         val privateKey = ECKeyPair.create(sha256(seed))
 
-        val walletFile = generateWalletFile(password, privateKey, destinationDirectory, useFullScrypt = false)
+        val walletFile = generateWalletFile(password, privateKey, destinationDirectory, useFullScrypt = false, saveFile = saveFile)
+        if (walletFile != null) {
+           return Bip39Wallet(walletFile.name, mnemonic)
+        }
+        return null
+    }
 
-        return Bip39Wallet(walletFile, mnemonic)
+    fun generateBip44WalletFromMnemonic(mnemonic: String, password: String, destinationDirectory: File, saveFile: Boolean = true): Bip39Wallet? {
+        val seed = MnemonicUtils.generateSeed(mnemonic, password)
+        val keyPair = Bip32ECKeyPair.generateKeyPair(seed)
+        val path = intArrayOf(44 or HARDENED_BIT, 60 or HARDENED_BIT, 0 or HARDENED_BIT, 0, 0)
+//        val bip44KeyPair = Bip44WalletUtils.generateBip44KeyPair(keyPair, false)
+        val bip44KeyPair = Bip32ECKeyPair.deriveKeyPair(keyPair, path)
+
+        val walletFile = generateWalletFile(password, bip44KeyPair, destinationDirectory, useFullScrypt = false, saveFile = saveFile)
+        if (walletFile != null) {
+            return Bip39Wallet(walletFile.name, mnemonic)
+        }
+        return null
     }
 
     @Throws(IOException::class, CipherException::class)
@@ -147,7 +205,7 @@ object WalletUtils {
         return Credentials.create(ECKeyPair.create(sha256(seed)))
     }
 
-    private fun getWalletFileName(walletFile: WalletFile): String {
+    fun getWalletFileName(walletFile: WalletFile): String {
         val dateFormat = SimpleDateFormat("'UTC--'yyyy-MM-dd'T'HH-mm-ss.SSS'--'")
         return dateFormat.format(Date()) + walletFile.address + ".json"
     }

@@ -30,6 +30,9 @@ interface WalletDao {
     @Query("SELECT * FROM wallets")
     fun findAllWallets(): LiveData<List<Wallet>>
 
+    @Query(value = "SELECT * from wallets")
+    fun getAllWallets(): List<Wallet>
+
     @Update()
     fun update(wallet: Wallet)
 

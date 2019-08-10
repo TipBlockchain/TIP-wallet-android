@@ -53,9 +53,9 @@ class MoreContent {
                     }
 
                 }),
-
+/*
                 MoreListItem("Sign Out", null, true),
-                MoreListItem("Sign Out", R.drawable.ic_exit),
+                MoreListItem("Sign Out", R.drawable.ic_exit), */
                 MoreListItem("", null, isHeader = true)
         )
 

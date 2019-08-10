@@ -22,6 +22,12 @@ import io.tipblockchain.kasakasa.ui.mainapp.more.MoreFragment
 import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletFragment
 import io.tipblockchain.kasakasa.ui.mainapp.walletlist.WalletListFragment
 import android.net.Uri
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
+import android.widget.Button
+import android.widget.EditText
+import io.tipblockchain.kasakasa.app.PreferenceHelper
+import io.tipblockchain.kasakasa.ui.mainapp.upgradeaccount.UpgradeAccountActivity
 
 class MainTabActivity : BaseActivity() {
 
@@ -85,6 +91,11 @@ class MainTabActivity : BaseActivity() {
         this.addStartingFragment()
     }
 
+    override fun onStart() {
+        super.onStart()
+        this.checkForUpgrade()
+    }
+
     override fun onResume() {
         super.onResume()
         Log.d(LOG_TAG, "OnResume: Empty Contact")
@@ -106,6 +117,33 @@ class MainTabActivity : BaseActivity() {
     private fun addStartingFragment() {
         mSectionsPagerAdapter?.replaceFragment(contactListFragment, addToBackStack = false)
         activeFragment = contactListFragment
+    }
+
+    private fun checkForUpgrade() {
+        if (!PreferenceHelper.upgradedAccount) {
+            this.showUpgradeDialog()
+        }
+    }
+
+    private fun showUpgradeDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_upgrade_account, null)
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setCancelable(false)
+
+        val upgradeBtn =  view.findViewById(R.id.upgradeBtn) as Button
+
+        upgradeBtn.setOnClickListener {
+            alertDialog.dismiss()
+            this.startUpgrade()
+        }
+
+        alertDialog.setView(view)
+        alertDialog.show()
+    }
+
+    private fun startUpgrade() {
+        val intent = Intent(this, UpgradeAccountActivity::class.java)
+        startActivity(intent)
     }
 
     fun selectContact() {

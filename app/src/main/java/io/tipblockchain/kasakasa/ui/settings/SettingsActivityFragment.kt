@@ -9,13 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.PreferenceHelper
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class SettingsActivityFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(bundle: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
+        if (PreferenceHelper.upgradedAccount) {
+            setPreferencesFromResource(R.xml.preferences, rootKey)
+        } else {
+            setPreferencesFromResource(R.xml.preferences_with_upgrade, rootKey)
+        }
     }
 
     override fun onCreateAdapter(preferenceScreen: PreferenceScreen?): RecyclerView.Adapter<*> {
