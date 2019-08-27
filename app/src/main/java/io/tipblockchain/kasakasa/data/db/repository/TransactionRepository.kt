@@ -163,7 +163,7 @@ class TransactionRepository {
                         var cleanedList = txlist.map { it.currency = Currency.ETH.name
                             it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
-                        fillTransactions(cleanedList) { mergedList, _ ->
+                        fillTransactions(cleanedList) { mergedList, err ->
                             var resultList = mergedList
                             if (mergedList.isEmpty() && ! cleanedList.isEmpty()) {
                                 resultList = cleanedList

@@ -10,22 +10,48 @@ class MyAccountPresenter:MyAccount.Presenter {
 
     val userRepository = UserRepository.instance
     var uploadPhotoDisposable: Disposable? =  null
+    var fullnameDisposable: Disposable? = null
+    var aboutMeDisposable: Disposable? = null
 
 
     override fun attach(view: MyAccount.View) {
         super.attach(view)
         userRepository.fetchMyAccount()
     }
+
     override fun detach() {
         uploadPhotoDisposable?.dispose()
+        fullnameDisposable?.dispose()
+        aboutMeDisposable?.dispose()
+
         uploadPhotoDisposable = null
+        fullnameDisposable = null
+        aboutMeDisposable = null
+
         super.detach()
     }
+
     override fun loadUser() {
         val user = UserRepository.currentUser
         if (user != null) {
             view?.updateUser(user)
         }
+    }
+
+    override fun saveAboutMe(aboutMe: String) {
+        aboutMeDisposable = userRepository.updateAboutMe(aboutMe).subscribe({
+            view?.onAboutMeUpdated(aboutMe)
+        }, {
+            view?.onErrorUpdatingUser(it)
+        })
+    }
+
+    override fun saveFullname(fullname: String) {
+        fullnameDisposable = userRepository.updateFullname(fullname).subscribe ({
+            view?.onFullnameUpdated(fullname)
+        }, {
+            view?.onErrorUpdatingUser(it)
+        })
     }
 
     override fun uploadPhoto(imageFile: File) {
@@ -42,6 +68,10 @@ class MyAccountPresenter:MyAccount.Presenter {
                 }, { err ->
                     view?.onErrorUpdatingUser(err)
                 })
+    }
+
+    override fun saveUser() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override var view: MyAccount.View? = null

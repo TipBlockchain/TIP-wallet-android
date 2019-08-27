@@ -40,6 +40,12 @@ interface TipApi {
     @GET("/accounts/profile/{username}")
     fun getAccountByUsername(@Path(value = "username") username: String): Observable<User?>
 
+    @PATCH("/accounts/my/fullname")
+    fun updateFullname(@Body json: FullnameRequest): Observable<User?>
+
+    @PATCH("/accounts/my/aboutme")
+    fun updateAboutMe(@Body json: AboutMeRequest): Observable<User?>
+
     @Multipart
     @POST("/accounts/photos")
     fun uploadPhoto(@Part image: MultipartBody.Part): Observable<User?>

@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AlertDialog
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,10 +25,12 @@ import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.config.AppProperties
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.BaseFragment
 import io.tipblockchain.kasakasa.utils.FileUtils
 import kotlinx.android.synthetic.main.fragment_my_account.*
+import org.web3j.abi.datatypes.Bool
 import java.io.File
 
 /**
@@ -40,6 +44,8 @@ import java.io.File
 class MyAccountFragment : BaseFragment(), MyAccount.View {
 
     var permissionsGranted = false
+    private var fullName: String? = null
+    private var aboutMe: String? = null
 
     private enum class ActivityRequest(val code: Int) {
         CAMERA(111),
@@ -50,6 +56,7 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
     private var mListener: OnFragmentInteractionListener? = null
     var presenter: MyAccount.Presenter? = null
     var baseActivity: BaseActivity? = null
+    var saveButtonVisible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,23 +81,41 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
         super.onViewCreated(view, savedInstanceState)
         presenter?.loadUser()
         cameraImageButton.setOnClickListener { checkPermissions() }
+
+        editFullNameBtn.setOnClickListener {
+            baseActivity?.showEnterTextDialog(title = getString(R.string.full_name), message = getString(R.string.enter_full_name), initialText = UserRepository.currentUser!!.name, onEnter = {
+                this.saveFullname(it)
+            })
+        }
+
+        editAboutMeBtn.setOnClickListener {
+            baseActivity?.showEnterTextDialog(title = getString(R.string.about_me), message = getString(R.string.enter_about_me), initialText = "I Love TIP", onEnter = {
+                this.saveAboutMe(it)
+            })
+        }
+        saveButtton.setOnClickListener {
+            this.saveUser()
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        fullName = UserRepository.currentUser?.name
+        aboutMe = UserRepository.currentUser?.name
     }
 
     override fun onDestroy() {
         presenter?.detach()
         super.onDestroy()
     }
+
     override fun onDetach() {
         super.onDetach()
         mListener = null
     }
 
     override fun updateUser(user: User) {
-        usernameTv.setText(user.username)
+        usernameTv.text = user.username
         usernameET.setText(user.username)
         fullNameET.setText(user.name)
         aboutMeET.setText("I Love TIP")
@@ -102,7 +127,17 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
     }
 
     override fun onErrorUpdatingUser(error: Throwable) {
-        showOkDialog(getString(R.string.error_updating_user_info, error.localizedMessage))
+        showOkDialog(getString(R.string.error_updating_user_info))
+    }
+
+    override fun onAboutMeUpdated(aboutMe: String) {
+        aboutMeET.setText(aboutMe)
+        baseActivity?.showMessage(getString(R.string.profile_updated))
+    }
+
+    override fun onFullnameUpdated(fullname: String) {
+        fullNameET.setText(fullname)
+        baseActivity?.showMessage(getString(R.string.profile_updated))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageReturnedIntent: Intent?) {
@@ -205,6 +240,14 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
         pictureDialog.show()
     }
 
+    private fun saveFullname(fullname: String) {
+        presenter?.saveFullname(fullname)
+    }
+
+    private fun saveAboutMe(aboutMe: String) {
+        presenter?.saveAboutMe(aboutMe)
+    }
+
     private fun takePhotoFromCamera() {
         val takePicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(takePicture, ActivityRequest.CAMERA.code)
@@ -215,11 +258,14 @@ class MyAccountFragment : BaseFragment(), MyAccount.View {
         startActivityForResult(pickPhotoIntent , ActivityRequest.GALLERY.code)
     }
 
-    private fun openBuyTipUrl() {
-        val url = AppProperties.get(AppConstants.BUY_TIP_URL)
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
+    private fun saveUser() {
+        val user = UserRepository.currentUser
+        if (user != null && this.fullName != user.name) {
+            // update name
+        }
+
+        if (user != null && this.aboutMe != user.address) {
+        }
     }
 
     /**

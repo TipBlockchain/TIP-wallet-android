@@ -13,7 +13,9 @@ import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.dao.UserDao
+import io.tipblockchain.kasakasa.data.responses.AboutMeRequest
 import io.tipblockchain.kasakasa.data.responses.ContactListResponse
+import io.tipblockchain.kasakasa.data.responses.FullnameRequest
 import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
 import kotlinx.serialization.json.Json
@@ -44,6 +46,7 @@ class UserRepository {
     init {
         fetchCurrentUser()
     }
+
     fun insert(user: User) {
         insertAsyncTask(dao).execute(user)
     }
@@ -77,7 +80,6 @@ class UserRepository {
     }
 
     fun fetchMyAccount() {
-
         val disposable = apiService.getMyAccount().observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe ({
             Log.i(LOG_TAG, "My account fetched:: $it")
             if (it != null) {
@@ -89,6 +91,25 @@ class UserRepository {
             Log.e(LOG_TAG, "Error getting my account: $it")
         })
     }
+
+    fun updateFullname(fullName: String): Observable<User?> {
+//        return apiService.updateFullname(FullnameRequest(fullname = fullName))
+
+        return apiService.updateFullname(FullnameRequest(fullname = fullName)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).doOnNext {u ->
+            if (u != null) {
+                currentUser = u
+            }
+        }
+    }
+
+    fun updateAboutMe(aboutMe: String): Observable<User?> {
+        return apiService.updateAboutMe(AboutMeRequest(aboutMe = aboutMe)).doOnNext { u ->
+            if (u != null) {
+                currentUser = u
+            }
+        }
+    }
+
     fun uploadProfilePhoto(imageFile: File): Observable<User?> {
         return apiService.uploadProfilePhoto(imageFile)
     }

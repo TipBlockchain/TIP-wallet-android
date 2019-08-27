@@ -171,6 +171,7 @@
     <string name="message_added_to_contacts">%s added to your contacts.</string>
     <string name="confirm_add_to_contacts">Do you want to add %s to your contact list?</string>
     <string name="okay">Okay</string>
+    <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="transaction_sent">Transaction Sent</string>
     <string name="buyTip">Buy TIP</string>
@@ -199,7 +200,7 @@
     <string name="title_allow_camera_access">Allow camera access</string>
     <string name="title_allow_read_contacts">Allow access to your contacts</string>
     <string name="error_adding_contact">Error adding contact: %s</string>
-    <string name="error_updating_user_info">"Error updating your information: %s</string>
+    <string name="error_updatiing_user_info">"Error updating your information: %s</string>
     <string name="error_creating_account">Error creating your account:\n%s</string>
     <string name="error_setting_up_search">Error setting up search: \n%s</string>
     <string name="error_sending_transaction">Error sending transaction: \n%s</string>
@@ -316,7 +317,7 @@
     <string name="prefs_password_for_seed_title">Require password to show recovery</string>
     <string name="prefs_password_for_seed_summary">You will have to enter your password to display or backup your recovery phrase.</string>
     <string name="prefs_category_account">My Account</string>
-    <string name="app_name_version">Kasakasa v1.2.0</string>
+    <string name="app_name_version">Kasakasa v1.3.0</string>
     <string name="app_copyright">Copyright © 2019 Tip Blockchain S.A.</string>
     <string name="share_using">Share Tip using</string>
     <string name="backup_using">Backup your recovery phrase using</string>
@@ -324,4 +325,10 @@
     <string name="dialog_message_invalid_password">The password you entered is incorrect. Please try again.</string>
     <string name="message_invite">Tip is a social platform that lets you send and receive cryptocurrency using usernames. Check it out here https://tipblockchain.io/app</string>
     <string name="title_activity_upgrade_account">UpgradeAccountActivity</string>
+    <string name="full_name">Full name</string>
+    <string name="enter_full_name">Enter your full name</string>
+    <string name="about_me">About me</string>
+    <string name="enter_about_me">Enter about me</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="error_updating_user_info">Error updating profile</string>
 </resources>

@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
@@ -57,6 +58,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_wallet, container, false)
+
         return view
     }
 
@@ -66,6 +68,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         setupRecyclerView()
         sendBtn.setOnClickListener {
             val intent = Intent(activity, SendTransferActivity::class.java)
+            intent.putExtra(AppConstants.EXTRA_SELECTED_CURRENCY, lastCurrency.name)
             startActivity(intent)
         }
         receiveBtn.setOnClickListener {
@@ -88,6 +91,17 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         val selectionIndex = if (lastCurrency == Currency.TIP)  0 else 1
         spinner.setSelection(selectionIndex)
         spinner.onItemSelectedListener = this
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val wallet = arguments?.getSerializable("wallet") as? Wallet
+        if (wallet  != null) {
+            Log.d(logTag, "Wallet is $wallet")
+            currencySelected(Currency.valueOf(wallet.currency))
+        } else {
+            Log.d(logTag, "Wallet is null")
+        }
     }
 
     private fun setupRecyclerView() {

@@ -8,11 +8,16 @@ import java.io.File
 interface MyAccount {
     interface View: BaseView {
         fun updateUser(user: User)
+        fun onAboutMeUpdated(aboutMe: String)
+        fun onFullnameUpdated(fullname: String)
         fun onErrorUpdatingUser(error: Throwable)
     }
 
     interface Presenter: BasePresenter<View> {
         fun loadUser()
         fun uploadPhoto(imageFile: File)
+        fun saveFullname(fullname: String)
+        fun saveAboutMe(aboutMe: String)
+        fun saveUser()
     }
 }

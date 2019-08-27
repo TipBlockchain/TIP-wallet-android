@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment"
@@ -129,15 +130,28 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/fullnameTI"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/fullNameET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:enabled="true"
                     android:hint="Full Name" />
             </android.support.design.widget.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/editFullNameBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_weight="0.1"
+                android:background="@color/clear"
+                android:src="@drawable/ic_edit"
+                tools:src="@drawable/ic_edit" />
         </LinearLayout>
 
         <!--
@@ -167,17 +181,42 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/aboutMeTI"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/aboutMeET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:enabled="true"
                     android:hint="About Me" />
             </android.support.design.widget.TextInputLayout>
+            <ImageButton
+                android:id="@+id/editAboutMeBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_weight="0.1"
+                android:background="@color/clear"
+                android:src="@drawable/ic_edit"
+                tools:src="@drawable/ic_edit" />
         </LinearLayout>
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/saveButtton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="50dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:backgroundTint="@color/receivedGreen"
+        app:layout_constraintBottom_toBottomOf="@id/fragment"
+        app:layout_constraintEnd_toEndOf="@id/fragment"
+        app:srcCompat="@android:drawable/ic_menu_save" />
 
 </android.support.constraint.ConstraintLayout>

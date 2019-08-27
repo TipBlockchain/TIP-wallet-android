@@ -50,7 +50,6 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
 
         recepientTv.threshold = 1
 
-
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
         setupSpinner()
@@ -75,6 +74,26 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         })
         setupPresenter()
         setGasPrice(defaultGasPriceInGwei)
+        val currencyName = intent.getStringExtra(AppConstants.EXTRA_SELECTED_CURRENCY)
+        if (currencyName != null) {
+            val currency = Currency.valueOf(currencyName)
+            Log.d(LOG_TAG, "Found extra currency: $currency")
+            when (currency) {
+                Currency.TIP -> {
+                    spinner.setSelection(0)
+                }
+                Currency.ETH -> {
+                    spinner.setSelection(1)
+                }
+            }
+        } else {
+            Log.d(LOG_TAG, "Currency is null")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        spinner.setSelection(0)
     }
 
     private fun setupPresenter() {
@@ -190,7 +209,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         }
     }
 
-    fun  navigateToConfirmWithTransaction(tx: PendingTransaction) {
+    fun navigateToConfirmWithTransaction(tx: PendingTransaction) {
         val intent = Intent(this, ConfirmTransferActivity::class.java)
         intent.putExtra(AppConstants.EXTRA_TRANSACTION, tx)
         intent.putExtra(AppConstants.EXTRA_GAS_PRICE, currentGasPriceInGwei)
@@ -268,6 +287,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
             0 -> selectedCurrency = Currency.TIP
             1 -> selectedCurrency = Currency.ETH
         }
+        Log.d(LOG_TAG,"Currency selected: $selectedCurrency")
         presenter?.currencySelected(selectedCurrency)
     }
 

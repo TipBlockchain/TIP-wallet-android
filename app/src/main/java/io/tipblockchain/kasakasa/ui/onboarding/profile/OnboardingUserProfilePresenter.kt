@@ -8,6 +8,7 @@ import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.tipblockchain.kasakasa.app.PreferenceHelper
+import io.tipblockchain.kasakasa.crypto.WalletUtils
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.AuthorizationRepository
@@ -62,7 +63,7 @@ class OnboardingUserProfilePresenter: OnboardingUserProfile.Presenter, Observer<
             return
         }
 
-        val user = User(id = "", name = viewModel.name, username = viewModel.username!!, address = wallet!!.address)
+        val user = User(id = "", name = viewModel.name, username = viewModel.username!!, address = WalletUtils.add0xIfNotExists(wallet!!.address))
         createAccountDisposable = tipApiService.createUser(user, signupToken = signupToken!!, claimDemoAccount = demoAccountFound)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

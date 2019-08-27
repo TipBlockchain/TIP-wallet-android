@@ -14,8 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import io.tipblockchain.kasakasa.R
-
-
+import android.widget.FrameLayout
 
 open class BaseActivity: AppCompatActivity() {
 
@@ -95,6 +94,44 @@ open class BaseActivity: AppCompatActivity() {
         alertDialog.show()
     }
 
+    open fun showEnterTextDialog(title: String, message: String, initialText: String = "", onEnter: ((text: String) -> Unit)? = null, onCancel: (() -> Unit)? = null) {
+        val alert = AlertDialog.Builder(this)
+
+        val edittext = EditText(this)
+        val layout = FrameLayout(this)
+
+//set padding in parent layout
+        layout.setPaddingRelative(60,15,60,0)
+
+        alert.setTitle(title)
+
+        layout.addView(edittext)
+
+        alert.setView(layout)
+        alert.setTitle(title)
+        alert.setMessage(message)
+
+        edittext.setText(initialText)
+
+        alert.setPositiveButton(getString(R.string.save)) { dialog, whichButton ->
+            //What ever you want to do with the value
+            //OR
+            if (onEnter != null) {
+                val text = edittext.text.toString()
+                onEnter(text)
+            }
+        }
+
+        alert.setNegativeButton(getString(R.string.cancel)) { dialog, whichButton ->
+            // what ever you want to do with No option.
+            if (onCancel != null) {
+                onCancel()
+            }
+        }
+
+        alert.show()
+    }
+
     protected fun getColorFromId(@ColorRes resId: Int): Int {
         when (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             true -> return this.resources.getColor(resId, this.theme)
@@ -102,7 +139,7 @@ open class BaseActivity: AppCompatActivity() {
         }
     }
 
-    protected fun showMessage(message: String) {
+    open fun showMessage(message: String) {
         var fromView: View = rootView()
         Snackbar.make(fromView, message, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()

@@ -25,6 +25,7 @@ class AppConstants {
         const val EXTRA_CONTACT_ADDED           = "extra_contact_added"
         const val ACTION_CONFIG_LOADED          = "action_config_loaded"
         const val EXTRA_CONFIG_LOADED           = "extra_config_loaded"
+        const val EXTRA_SELECTED_CURRENCY       = "extra_selected_currency"
 
         const val REQUEST_CODE_PICK_CONTACTS    = 10001
     }
