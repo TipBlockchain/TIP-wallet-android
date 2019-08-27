@@ -20,6 +20,7 @@ data class User(
         @ColumnInfo(name = "isContact") var isContact: Boolean = false,
         @ColumnInfo(name = "isBlocked") var isBlocked: Boolean = false,
         @ColumnInfo(name = "lastMessage") @Optional @ContextualSerialization var lastMessage: Date? = null
+//        @ColumnInfo(name = "aboutMe") var aboutMe: String? = "I ♥ TIP"
     ): java.io.Serializable {
 
     @Ignore @SerializedName("photos") var photos: UserPhotos? = null

@@ -18,7 +18,7 @@ import android.arch.persistence.room.migration.Migration
 
 
 
-@Database(entities = arrayOf(Transaction::class, User::class, Wallet::class), version = 1)
+@Database(entities = arrayOf(Transaction::class, User::class, Wallet::class), version = 2)
 @TypeConverters(Converters::class)
 abstract class TipRoomDatabase: RoomDatabase() {
 
@@ -37,6 +37,7 @@ abstract class TipRoomDatabase: RoomDatabase() {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.applicationContext, TipRoomDatabase::class.java, dbName)
                                 .addCallback(sRoomDatabaseCallback)
+//                                .addMigrations(MIGRATION_1_2)
                                 .build()
                     }
                 }
@@ -63,8 +64,7 @@ abstract class TipRoomDatabase: RoomDatabase() {
 
         private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("INSERT INTO wallets (address, filePath, created, lastSynced, balance, isPrimary) " +
-                        "   SELECT address, filePath, created, lastSynced, balance, isPrimary FROM wallet2;")
+                database.execSQL("ALTER TABLE users ADD COLUMN aboutMe TEXT")
             }
         }
     }

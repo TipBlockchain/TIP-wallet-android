@@ -55,10 +55,19 @@ class WalletRepository {
         insertAsyncTask(dao).execute(wallet)
     }
 
+    fun makePrimary(wallet: Wallet, primary: Boolean) {
+        wallet.isPrimary = primary
+        this.updateDirect(wallet)
+    }
+
     fun update(wallet: Wallet) {
         Schedulers.io().scheduleDirect{
             dao.update(wallet)
         }
+    }
+
+    fun updateDirect(wallet: Wallet) {
+        dao.update(wallet)
     }
 
     fun delete(address: String) {
