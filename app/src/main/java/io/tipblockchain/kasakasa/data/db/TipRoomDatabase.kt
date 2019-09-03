@@ -65,6 +65,7 @@ abstract class TipRoomDatabase: RoomDatabase() {
         private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE users ADD COLUMN aboutMe TEXT")
+                database.execSQL("ALTER TABLE wallets ADD COLUMN name TEXT")
             }
         }
     }

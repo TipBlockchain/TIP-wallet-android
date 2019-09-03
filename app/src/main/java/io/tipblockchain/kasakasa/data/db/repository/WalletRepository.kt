@@ -47,6 +47,10 @@ class WalletRepository {
         return dao.findWalletForAddressAndCurrency(address, currency = currency.name).toObservable()
     }
 
+    fun findWalletForAddressAndCurrencyAsLiveData(address: String, currency: Currency): LiveData<Wallet?> {
+        return dao.findWalletForAddressAndCurrencyLiveData(address, currency = currency.name)
+    }
+
     fun findWalletForCurrency(currency: Currency): LiveData<Wallet?> {
         return dao.findWalletForCurrency(currency = currency.name)
     }

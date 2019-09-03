@@ -124,6 +124,10 @@ class TipApiService {
         return tipApi.updateFullname(fullname)
     }
 
+    fun updateAddress(payload: SecureMessage): Observable<User?> {
+        return tipApi.updateAddress(payload)
+    }
+
     fun uploadProfilePhoto(imageFile: File): Observable<User?> {
         var requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile)
         val multipart: MultipartBody.Part = MultipartBody.Part.createFormData("file", imageFile.name, requestBody)

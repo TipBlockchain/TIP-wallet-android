@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 
@@ -30,12 +31,12 @@ import java.util.*
  */
 class TransactionRecyclerViewAdapter(
         private var mContext: Context,
+        private var wallet: Wallet,
         private var mValues: List<Transaction>,
         private val mListener: OnListFragmentInteractionListener?)
     : RecyclerView.Adapter<TransactionRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
-    private val currentUser = UserRepository.currentUser
 
     init {
         mOnClickListener = View.OnClickListener { v ->
@@ -59,7 +60,7 @@ class TransactionRecyclerViewAdapter(
         var addressToShow: String
 
         var otherUser: User? = null
-        if (currentUser?.address == fromAddress) {
+        if (wallet.address == fromAddress) {
             if (transaction.toUser != null) {
                 otherUser = transaction.toUser
                 addressToShow = transaction.toUser!!.username

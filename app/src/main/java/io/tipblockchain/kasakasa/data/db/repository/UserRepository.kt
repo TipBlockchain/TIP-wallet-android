@@ -13,10 +13,7 @@ import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.TipRoomDatabase
 import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.dao.UserDao
-import io.tipblockchain.kasakasa.data.responses.AboutMeRequest
-import io.tipblockchain.kasakasa.data.responses.ContactListResponse
-import io.tipblockchain.kasakasa.data.responses.FullnameRequest
-import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
+import io.tipblockchain.kasakasa.data.responses.*
 import io.tipblockchain.kasakasa.networking.TipApiService
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -34,6 +31,8 @@ class UserRepository {
 
     private val logTag = javaClass.name
     private var fetchContactsDisposable: Disposable? = null
+    private var addContactDisposable: Disposable? = null
+    private var removeContactDisposable: Disposable? = null
 
     private constructor(application: Application) {
         val db = TipRoomDatabase.getDatabase(application)
@@ -110,11 +109,22 @@ class UserRepository {
         }
     }
 
+    fun updateAddress(address: String): Observable<User?> {
+        val payload = SecureMessage(message = "", address = address, signature = "", username = currentUser!!.username)
+        return apiService.updateAddress(payload).doOnNext { u ->
+            if (u != null) {
+                currentUser = u
+            }
+        }
+    }
+
     fun uploadProfilePhoto(imageFile: File): Observable<User?> {
         return apiService.uploadProfilePhoto(imageFile)
     }
 
     fun fetchContacts() {
+        fetchContactsDisposable?.dispose()
+
         fetchContactsDisposable = apiService.getContacts()
                 .subscribeOn(Schedulers.io())
                 // Have to observe on Schedulers.io() since we write to database
@@ -135,7 +145,8 @@ class UserRepository {
     }
 
     fun addContact(user: User, callback: ContactsUpdated) {
-        val observable = apiService.addContact(user)
+        addContactDisposable?.dispose()
+        addContactDisposable = apiService.addContact(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({
@@ -152,7 +163,8 @@ class UserRepository {
     }
 
     fun removeContact(user: User, callback: ContactsUpdated) {
-        val observable = apiService.removeContact(user)
+        removeContactDisposable?.dispose()
+        removeContactDisposable = apiService.removeContact(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({

@@ -121,8 +121,9 @@ class TransactionRepository {
         tipTxDisposable?.dispose()
 
         tipTxDisposable = etherscanApiService.getTipTransactions(address = address, startBlock = startBlock, endBlock = endBlock)
-                .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
+                // observe on Schedulers.io() since we write to db
+                .observeOn(Schedulers.io())
                 .subscribe ({ response ->
                     val txlist = response.result
                     if (txlist != null && !txlist.isEmpty()) {

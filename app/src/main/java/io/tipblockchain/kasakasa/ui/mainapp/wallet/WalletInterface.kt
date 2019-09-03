@@ -19,9 +19,8 @@ interface WalletInterface {
     }
 
     interface Presenter: BasePresenter<View> {
-        fun loadWallets()
+        fun setWallet(wallet: Wallet)
         fun fetchBalance(wallet: Wallet): Boolean
         fun fetchTransactions(wallet: Wallet)
-        fun switchCurrency(currency: Currency)
     }
 }

@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.wallet
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
@@ -21,6 +22,7 @@ import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
+import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.receivetransfer.ReceiveTransferActivity
 import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 import kotlinx.android.synthetic.main.fragment_wallet.*
@@ -44,6 +46,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private val logTag = javaClass.name
     private var lastCurrency: Currency = Currency.TIP
     private var adapter: TransactionRecyclerViewAdapter? = null
+    private var currentWallet: Wallet? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,14 +68,19 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
         sendBtn.setOnClickListener {
             val intent = Intent(activity, SendTransferActivity::class.java)
             intent.putExtra(AppConstants.EXTRA_SELECTED_CURRENCY, lastCurrency.name)
+            if (currentWallet != null) {
+                intent.putExtra(AppConstants.EXTRA_CURRENT_WALLET, currentWallet)
+            }
             startActivity(intent)
         }
         receiveBtn.setOnClickListener {
             val intent = Intent(activity, ReceiveTransferActivity::class.java)
+            if (currentWallet != null) {
+                intent.putExtra(AppConstants.EXTRA_CURRENT_WALLET, currentWallet)
+            }
             startActivity(intent)
         }
     }
@@ -95,16 +103,28 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val wallet = arguments?.getSerializable("wallet") as? Wallet
+        val wallet = activity!!.intent.getSerializableExtra(AppConstants.EXTRA_CURRENT_WALLET) as? Wallet
         if (wallet  != null) {
             Log.d(logTag, "Wallet is $wallet")
-            currencySelected(Currency.valueOf(wallet.currency))
+            this.updateUIForWallet(wallet)
+            presenter?.setWallet(wallet)
+            setupRecyclerView(wallet)
+            currentWallet = wallet
         } else {
-            Log.d(logTag, "Wallet is null")
+            (activity as? BaseActivity)?.showOkDialog(getString(R.string.unknown_error), getString(R.string.error_load_wallet), onClickListener = object: DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    activity!!.finish()
+                }
+            })
+            Log.e(logTag, "Wallet is null")
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun updateUIForWallet(wallet: Wallet) {
+        currencyTv.text = wallet.currency
+    }
+
+    private fun setupRecyclerView(wallet: Wallet) {
         recyclerView.setEmptyView(view!!.findViewById(R.id.emptyView))
 
         if (recyclerView is RecyclerView) {
@@ -118,14 +138,14 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
             Log.w("TAG", "Transaction list is NOT a recyclerView, it is a ${recyclerView}")
         }
         listener = ListFragmentInteractionListener()
-        adapter = TransactionRecyclerViewAdapter(context!!, listOf(), listener)
+        adapter = TransactionRecyclerViewAdapter(context!!, wallet, listOf(), listener)
         recyclerView.adapter = adapter
 
         val attrs = intArrayOf(android.R.attr.listDivider)
 
         val a = context!!.obtainStyledAttributes(attrs)
         val divider = a.getDrawable(0)
-        val leftInset = resources.getDimensionPixelSize(R.dimen.list_divider_large_margin)
+        val leftInset = resources.getDimensionPixelSize(R.dimen.list_divider_very_large_margin)
         val rightInset = resources.getDimensionPixelSize(R.dimen.list_divider_small_margin)
 
         val insetDivider = InsetDrawable(divider, leftInset, 0, rightInset, 0)
@@ -153,7 +173,6 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         lastCurrency = currency
         Log.d(logTag, "Last selected currency is ${currency}")
         PreferenceHelper.walletLastSelectedCurrency = lastCurrency
-        presenter?.switchCurrency(lastCurrency)
     }
 
     override fun onTransactionsFetchError(error: Throwable?, currency: Currency) {
@@ -244,17 +263,12 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     }
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
-        if (lastCurrency == currency) {
             val balanceScale = balance.scale()
             balanceTv.text = NumberFormat.getInstance().format( balance.setScale(Math.min(balanceScale, 4), RoundingMode.HALF_UP))
             currencyTv.setText(currency.name)
-        }
     }
 
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {
-        if (currency != lastCurrency) {
-            return
-        }
         adapter?.setItems(transactions)
         recyclerView.scrollToPosition(0)
     }
@@ -262,7 +276,7 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     private fun setupPresenter() {
         presenter = WalletPresenter()
         presenter?.attach(this)
-        presenter?.loadWallets()
+//        presenter?.loadWallets()
     }
 
 }

@@ -239,6 +239,9 @@
     <string name="recovery_phrase_disclaimer">Your recovery phrase is never sent over the network.</string>
     <string name="enter_password_unlock">Enter your password to unlock your wallet and send this transaction.</string>
     <string name="enter_password_backup">Enter your password to display and backup your recovery phrase.</string>
+    <string name="enter_password_upgrade">Enter your password upgrade your account and create a new wallet.</string>
+    <string name="error_creating_upgrade_wallet">Error creating upgraded wallet</string>
+    <string name="error_upgrading_account">Error upgrading account</string>
     <string name="total">Total</string>
     <string name="error_session_timeout_reconfirm">Your session has timed out. You will need to confirm your phone number again to continue</string>
     <string name="title_activity_receive_transfer">Receive TIP or ETH</string>

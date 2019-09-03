@@ -16,7 +16,9 @@ import io.tipblockchain.kasakasa.ui.BaseActivity
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.squareup.picasso.Picasso
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import kotlinx.android.synthetic.main.content_receive_transfer.*
 
@@ -33,12 +35,16 @@ class ReceiveTransferActivity : BaseActivity(), ReceiveTransfer.View {
         presenter = ReceiveTransferPresenter()
         presenter!!.attach(this)
 
+        val wallet: Wallet? = intent.getSerializableExtra(AppConstants.EXTRA_CURRENT_WALLET) as? Wallet
+        if (wallet != null) {
+            this.showWallet(wallet.address)
+        }
         copyBtn.setOnClickListener { copyAddress() }
     }
 
     override fun onResume() {
         super.onResume()
-        presenter?.loadWallet()
+//        presenter?.loadWallet()
     }
 
     override fun onDestroy() {

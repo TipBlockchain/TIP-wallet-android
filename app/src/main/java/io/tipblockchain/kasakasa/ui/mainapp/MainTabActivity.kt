@@ -19,13 +19,10 @@ import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.mainapp.contactlist.ContactListFragment
 import io.tipblockchain.kasakasa.ui.mainapp.more.MoreFragment
-import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletFragment
 import io.tipblockchain.kasakasa.ui.mainapp.walletlist.WalletListFragment
 import android.net.Uri
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.widget.Button
-import android.widget.EditText
 import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.ui.mainapp.upgradeaccount.UpgradeAccountActivity
 
@@ -79,8 +76,6 @@ class MainTabActivity : BaseActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-
-
 
         // Set up the ViewPager with the sections adapter.
         viewPager.adapter = mSectionsPagerAdapter
@@ -199,16 +194,15 @@ class MainTabActivity : BaseActivity() {
      */
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment = when (position) {
-            0 -> PlaceholderFragment.newInstance(position + 1)
-            1 -> WalletFragment()
-            2 -> ContactListFragment()
-            else -> PlaceholderFragment.newInstance(position + 1)
+        val placeHolder = PlaceholderFragment()
+
+        override fun getItem(position: Int): Fragment {
+             return placeHolder
         }
 
         override fun getCount(): Int {
             // Show 3 total pages.
-            return 3
+            return 1
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

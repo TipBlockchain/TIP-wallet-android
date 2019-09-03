@@ -26,6 +26,7 @@ class AppConstants {
         const val ACTION_CONFIG_LOADED          = "action_config_loaded"
         const val EXTRA_CONFIG_LOADED           = "extra_config_loaded"
         const val EXTRA_SELECTED_CURRENCY       = "extra_selected_currency"
+        const val EXTRA_CURRENT_WALLET          = "extra_current_wallet"
 
         const val REQUEST_CODE_PICK_CONTACTS    = 10001
     }

@@ -19,6 +19,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.entity.User
+import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
 import io.tipblockchain.kasakasa.ui.BaseActivity
@@ -33,11 +34,12 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     private val REQUEST_READ_CONTACTS = 0
     var presenter: SendTransferPresenter? = null
     var adapter: UserFilterAdapter? = null
-    var selectedCurrency: Currency = Currency.TIP
     val scannerRequestCode = 99
     private val defaultGasPriceInGwei = 15
     private var currentGasPriceInGwei = defaultGasPriceInGwei
     private var transactionFeeInEth: BigDecimal? = null
+    private var selectedWallet: Wallet? = null
+    private var wallets: List<Wallet> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +54,6 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
 
         nextButton.setOnClickListener { nextButtonClicked() }
         scanButton.setOnClickListener { showQRCodeScanner() }
-        setupSpinner()
         var username = intent.getStringExtra(AppConstants.TRANSACTION_RECIPIENT)
         if (username  != null) {
             recepientTv.setText(username)
@@ -74,21 +75,6 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         })
         setupPresenter()
         setGasPrice(defaultGasPriceInGwei)
-        val currencyName = intent.getStringExtra(AppConstants.EXTRA_SELECTED_CURRENCY)
-        if (currencyName != null) {
-            val currency = Currency.valueOf(currencyName)
-            Log.d(LOG_TAG, "Found extra currency: $currency")
-            when (currency) {
-                Currency.TIP -> {
-                    spinner.setSelection(0)
-                }
-                Currency.ETH -> {
-                    spinner.setSelection(1)
-                }
-            }
-        } else {
-            Log.d(LOG_TAG, "Currency is null")
-        }
     }
 
     override fun onResume() {
@@ -109,23 +95,38 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
         super.onDestroy()
     }
 
+    override fun showWallets(wallets: List<Wallet>) {
+        this.wallets = wallets
+        this.setupSpinner(wallets)
+    }
+
     private fun populateAutoComplete() {
         if (!mayRequestContacts()) {
             return
         }
     }
 
-    private fun setupSpinner() {
-        ArrayAdapter.createFromResource(
-                this,
-                R.array.currency_options,
-                android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinner.adapter = adapter
-            spinner.onItemSelectedListener = this
+    private fun setupSpinner(wallets: List<Wallet>) {
+        Log.d(LOG_TAG, "Setting up spinner")
+        val walletNames = wallets.map {
+            it.currency
+        }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, walletNames)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = this
+
+        val wallet = intent.getSerializableExtra(AppConstants.EXTRA_CURRENT_WALLET) as? Wallet
+        this.selectedWallet = wallet
+        Log.d(LOG_TAG, "Selected wallet = $selectedWallet")
+        if (wallet != null && !wallets.isEmpty()) {
+            for (i in 0 .. wallets.size) {
+                if (wallets[i].currency == wallet.currency && wallets[i].address == wallet.address) {
+                    spinner.setSelection(i)
+                    break
+                }
+            }
+        } else {
+            Log.d(LOG_TAG, "Currency is null")
         }
     }
 
@@ -138,7 +139,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     }
 
     override fun onBalanceFetched(balance: BigDecimal, currency: Currency) {
-        if (currency == selectedCurrency) {
+        if (selectedWallet != null && currency == Currency.valueOf(selectedWallet!!.currency)) {
             val rounded = balance.round(MathContext(8, RoundingMode.HALF_EVEN))
             availableTv.setText(getString(R.string.text_balance_currency, rounded.toString(), currency.name))
         }
@@ -231,8 +232,12 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
             this.onInvalidTransactionValueError()
             return
         }
+        if (selectedWallet == null) {
+            this.onWalletError()
+            return
+        }
 
-        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = BigDecimal(amount), transactionFee = transactionFeeInEth ?: BigDecimal.ZERO, currency = selectedCurrency, message = message)
+        presenter?.validateTransfer(usernameOrAddress = usernameOrAddress, value = BigDecimal(amount), transactionFee = transactionFeeInEth ?: BigDecimal.ZERO, wallet = selectedWallet!!, message = message)
     }
 
     override fun onInvalidRecipient() {
@@ -283,12 +288,12 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (position) {
-            0 -> selectedCurrency = Currency.TIP
-            1 -> selectedCurrency = Currency.ETH
+        if (wallets.size > position) {
+            this.selectedWallet = wallets[position]
+            presenter?.walletSelected(this.selectedWallet!!)
+        } else {
+            this.onWalletError()
         }
-        Log.d(LOG_TAG,"Currency selected: $selectedCurrency")
-        presenter?.currencySelected(selectedCurrency)
     }
 
     /**

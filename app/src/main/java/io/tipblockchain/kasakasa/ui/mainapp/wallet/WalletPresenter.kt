@@ -20,50 +20,37 @@ import java.util.*
 
 class WalletPresenter: WalletInterface.Presenter {
 
-    private var tipProcessor: TipProcessor? = null
-    private var ethProcessor = EthProcessor()
     private var currentProcessor: TransactionProcessor? = null
     private var txRepository: TransactionRepository = TransactionRepository.instance
     private val walletRepository = WalletRepository.instance
 
-    private var tipWallet: Wallet? = null
-    private var ethWallet: Wallet? = null
     private var currentWallet: Wallet? = null
 
     private var txDisposable: Disposable? = null
-    var onWalletsLoadedCalled: Boolean = false
 
     private val LOG_TAG = javaClass.name
-    init {
-        currentProcessor = tipProcessor
-    }
 
     override fun detach() {
-        stopListening()
         super.detach()
+        txDisposable?.dispose()
     }
 
-    override fun switchCurrency(currency: Currency) {
+    override fun setWallet(wallet: Wallet) {
+        currentWallet = wallet
+        val currency = Currency.valueOf(wallet.currency)
+        val balance = Convert.fromWei(currentWallet!!.balance.toBigDecimal(), Convert.Unit.ETHER)
+        view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
         when (currency) {
             Currency.TIP -> {
-                currentProcessor = tipProcessor
-                currentWallet = tipWallet
+                currentProcessor = TipProcessor(wallet = wallet)
             }
             Currency.ETH -> {
-                currentProcessor = ethProcessor
-                currentWallet = ethWallet
+                currentProcessor = EthProcessor()
             }
         }
-        if (currentWallet != null) {
-            val balance = Convert.fromWei(currentWallet!!.balance.toBigDecimal(), Convert.Unit.ETHER)
-            view?.onBalanceFetched(currentWallet!!.address, currency = currency, balance = balance)
-            loadTransactions(wallet = currentWallet!!)
-            val balanceChanged = fetchBalance(currentWallet!!)
-//            if (balanceChanged) {
-//                fetchTransactions(currentWallet!!)
-//            }
-            fetchTransactions(currentWallet!!)
-        }
+        fetchBalance(wallet)
+        loadTransactions(wallet)
+        fetchTransactions(wallet)
     }
 
     override fun fetchBalance(wallet: Wallet): Boolean {
@@ -154,47 +141,5 @@ class WalletPresenter: WalletInterface.Presenter {
         }, {
                     view?.onTransactionsFetchError(it, Currency.valueOf(wallet.currency))
                 })
-    }
-
-    private fun stopListening() {
-
-    }
-
-    override fun loadWallets() {
-        if (ethWallet == null) {
-            walletRepository.findWalletForCurrency(Currency.ETH).observe(view!!, Observer { wallet ->
-                if (wallet != null) {
-                    ethWallet = wallet
-                    Log.d(LOG_TAG, "Updating ETH wallet on change")
-                    view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
-                }
-                if (!onWalletsLoadedCalled) {
-                    this.onWalletsLoaded()
-                }
-            })
-        }
-        if (tipWallet == null) {
-            walletRepository.findWalletForCurrency(Currency.TIP).observe(view!!, Observer { wallet ->
-                if (wallet != null && tipWallet == null) {
-                    Log.d(LOG_TAG, "Updating TIP wallet on change")
-                    view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
-                    tipWallet = wallet
-                    if(tipProcessor == null) {
-                        tipProcessor = TipProcessor(wallet)
-                    }
-                }
-                if (!onWalletsLoadedCalled) {
-                    this.onWalletsLoaded()
-                }
-            })
-        }
-        startListening()
-    }
-
-    private fun onWalletsLoaded() {
-        if (ethWallet != null && tipWallet != null) {
-            onWalletsLoadedCalled = true
-            view?.onWalletsLoaded()
-        }
     }
 }

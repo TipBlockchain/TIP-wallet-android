@@ -25,6 +25,9 @@ interface WalletDao {
     fun findWalletForCurrency(currency: String): LiveData<Wallet?>
 
     @Query(value = "SELECT * from wallets WHERE address = :address AND currency = :currency")
+    fun findWalletForAddressAndCurrencyLiveData(address: String, currency: String): LiveData<Wallet?>
+
+    @Query(value = "SELECT * from wallets WHERE address = :address AND currency = :currency")
     fun findWalletForAddressAndCurrency(address: String, currency: String): Single<Wallet?>
 
     @Query("SELECT * FROM wallets")

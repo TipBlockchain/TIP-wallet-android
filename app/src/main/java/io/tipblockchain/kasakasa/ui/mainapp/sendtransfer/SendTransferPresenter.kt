@@ -14,6 +14,7 @@ import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 import io.tipblockchain.kasakasa.data.responses.PendingTransaction
+import io.tipblockchain.kasakasa.extensions.observeOnce
 import io.tipblockchain.kasakasa.networking.EthGasStationService
 import io.tipblockchain.kasakasa.utils.TextUtils
 import org.web3j.utils.Convert
@@ -25,10 +26,9 @@ class SendTransferPresenter: SendTransfer.Presenter {
     private val userRepository = UserRepository.instance
     private val walletRepository = WalletRepository.instance
     private val estimatedGas = 59_000L
-    private lateinit var web3Bridge: Web3Bridge
-
     private var tipWallet: Wallet? = null
     private var ethWallet: Wallet? = null
+    private lateinit var web3Bridge: Web3Bridge
 
     private val LOG_TAG = javaClass.name
 
@@ -47,11 +47,9 @@ class SendTransferPresenter: SendTransfer.Presenter {
         })
     }
 
-    override fun currencySelected(currency: Currency) {
-        when (currency) {
-            Currency.ETH -> fetchBalance(ethWallet)
-            Currency.TIP -> fetchBalance(tipWallet)
-        }
+    override fun walletSelected(wallet: Wallet) {
+        fetchBalance(wallet)
+        this.findMatchingWallets(wallet)
     }
 
     override fun userSelected(user: User?, address: String) {
@@ -69,18 +67,13 @@ class SendTransferPresenter: SendTransfer.Presenter {
         view?.onTransactionFeeCalculated(priceInEth, gasPrice)
     }
 
-    override fun validateTransfer(usernameOrAddress: String, value: BigDecimal, transactionFee: BigDecimal, currency: Currency, message: String) {
-
-        var wallet: Wallet? = null
-        when (currency) {
-            Currency.TIP -> wallet = tipWallet
-            Currency.ETH -> wallet = ethWallet
-        }
+    override fun validateTransfer(usernameOrAddress: String, value: BigDecimal, transactionFee: BigDecimal, wallet: Wallet, message: String) {
 
         if (wallet == null) {
             view?.onWalletError()
             return
         }
+        val currency = Currency.valueOf(wallet.currency)
         if (!TextUtils.isEthAddress(usernameOrAddress) && !TextUtils.isUsername(usernameOrAddress)) {
             view?.onInvalidRecipient()
             return
@@ -188,29 +181,33 @@ class SendTransferPresenter: SendTransfer.Presenter {
     }
 
     override fun loadWallets() {
-        if (ethWallet == null) {
-            walletRepository.findWalletForCurrency(Currency.ETH).observe(view!!, Observer { wallet ->
-                if (wallet != null) {
-                    ethWallet = wallet
-                    Log.d(LOG_TAG, "Updating ETH wallet on change")
-                    val balance = Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER)
-                    view?.onBalanceFetched(balance, Currency.valueOf(wallet.currency))
-                    fetchBalance(wallet)
-                }
-            })
-        }
+        walletRepository.allWallets().observe(view!!, Observer {wallets ->
+            if (wallets != null) {
+                view?.showWallets(wallets)
+            }
+        })
+    }
 
-        if (tipWallet == null) {
-            walletRepository.findWalletForCurrency(Currency.TIP).observe(view!!, Observer { wallet ->
-                if (wallet != null && tipWallet == null) {
-                    Log.d(LOG_TAG, "Updating TIP wallet on change")
-                    val balance = Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER)
-                    view?.onBalanceFetched(balance, Currency.valueOf(wallet.currency))
-                    tipWallet = wallet
-                    fetchBalance(wallet)
-                }
-            })
-        }
+    private fun findMatchingWallets(wallet: Wallet) {
+        val address = wallet.address
+        walletRepository.findWalletForAddressAndCurrencyAsLiveData(address, Currency.ETH).observeOnce(view!!, Observer { it
+            if (it != null) {
+                ethWallet = it
+                Log.d(LOG_TAG, "Updating ETH wallet on change")
+                val balance = Convert.fromWei(it.balance.toBigDecimal(), Convert.Unit.ETHER)
+                view?.onBalanceFetched(balance, Currency.ETH)
+                fetchBalance(wallet)
+            }
+        })
+        walletRepository.findWalletForAddressAndCurrencyAsLiveData(address, Currency.TIP).observeOnce(view!!, Observer { it
+            if (it != null) {
+                tipWallet = it
+                Log.d(LOG_TAG, "Updating TIP wallet on change")
+                val balance = Convert.fromWei(it.balance.toBigDecimal(), Convert.Unit.ETHER)
+                view?.onBalanceFetched(balance, Currency.TIP)
+                fetchBalance(wallet)
+            }
+        })
     }
 
     // TODO: Use this to set the default gas price

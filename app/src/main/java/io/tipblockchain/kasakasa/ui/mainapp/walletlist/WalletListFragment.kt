@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
+import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletActivity
 import kotlinx.android.synthetic.main.fragment_wallet_list.recyclerView
@@ -123,7 +124,7 @@ class WalletListFragment : Fragment(), WalletList.View {
 
     fun showWallet(wallet: Wallet) {
         val intent = Intent(this.context, WalletActivity::class.java)
-        intent.putExtra("wallet", wallet)
+        intent.putExtra(AppConstants.EXTRA_CURRENT_WALLET, wallet)
         context?.startActivity(intent)
     }
 

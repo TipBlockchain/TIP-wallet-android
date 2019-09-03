@@ -59,7 +59,7 @@ open class BaseActivity: AppCompatActivity() {
                 .show()
     }
 
-    protected fun showOkDialog(title: String? = "", message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
+    fun showOkDialog(title: String? = "", message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
         AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
@@ -78,7 +78,7 @@ open class BaseActivity: AppCompatActivity() {
 
         val passwordView =  view.findViewById(R.id.passwordTv) as EditText
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.send)) { _, _ ->
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.okay)) { _, _ ->
             val password = passwordView.text.toString()
             onCompletion(password)
         }

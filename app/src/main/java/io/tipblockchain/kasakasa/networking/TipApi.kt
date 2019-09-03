@@ -46,6 +46,9 @@ interface TipApi {
     @PATCH("/accounts/my/aboutme")
     fun updateAboutMe(@Body json: AboutMeRequest): Observable<User?>
 
+    @PATCH("/accounts/my/address")
+    fun updateAddress(@Body message: SecureMessage): Observable<User?>
+
     @Multipart
     @POST("/accounts/photos")
     fun uploadPhoto(@Part image: MultipartBody.Part): Observable<User?>

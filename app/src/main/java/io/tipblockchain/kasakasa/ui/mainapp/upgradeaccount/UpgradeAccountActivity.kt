@@ -2,6 +2,9 @@ package io.tipblockchain.kasakasa.ui.mainapp.upgradeaccount
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
+import android.widget.EditText
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.BaseView
@@ -20,6 +23,7 @@ class UpgradeAccountActivity : BaseActivity(), BaseView {
         setContentView(R.layout.activity_upgrade_account)
         setSupportActionBar(toolbar)
         setupPresenter()
+        checkForRecoveryAndPassword()
         upgradeBtn.setOnClickListener {
             this.upgradeAccount()
         }
@@ -36,6 +40,26 @@ class UpgradeAccountActivity : BaseActivity(), BaseView {
         presenter?.attach(this)
     }
 
+    private fun checkForRecoveryAndPassword() {
+        val recoveryPassword = presenter?.recoveryPhrasAndPasswordExist()
+        if (recoveryPassword != null) {
+            disableInteraction()
+
+            this.showEnterPasswordDialog(onCompletion = { password ->
+                if (password == recoveryPassword.password) {
+                    presenter?.restoreAccount(seedPhrase = recoveryPassword.recoveryPhrase, password = recoveryPassword.password)
+                } else {
+                    this.showOkDialog(getString(R.string.dialog_title_invalid_password), getString(R.string.dialog_message_invalid_password))
+                }
+            })
+        }
+    }
+
+    private fun disableInteraction() {
+        upgradeBtn.isEnabled = false
+        seedPhraseTv.isEnabled = false
+    }
+
     private fun upgradeAccount() {
         val seedPhrase = seedPhraseTv.text.toString().trim()
         if (seedPhrase.isEmpty()) {
@@ -48,7 +72,32 @@ class UpgradeAccountActivity : BaseActivity(), BaseView {
         }
         this.showEnterPasswordDialog(onCompletion = { password ->
             presenter?.restoreAccount(seedPhrase = seedPhrase, password = password)
-        })
+        }, onCancel = null)
+    }
+
+    override fun showEnterPasswordDialog(onCompletion: (String) -> Unit, onCancel: (() -> Unit)?) {
+        val view = layoutInflater.inflate(R.layout.dialog_enter_password_upgrade, null)
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle(getString(R.string.enter_password))
+        alertDialog.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_secure))
+        alertDialog.setCancelable(false)
+
+        val passwordView =  view.findViewById(R.id.passwordTv) as EditText
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.okay)) { _, _ ->
+            val password = passwordView.text.toString()
+            onCompletion(password)
+        }
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+            if (onCancel != null) {
+                onCancel()
+            }
+        }
+
+        alertDialog.setView(view)
+        alertDialog.show()
     }
 
     fun onAccountUpgraded() {
@@ -66,8 +115,8 @@ class UpgradeAccountActivity : BaseActivity(), BaseView {
         this.showMessage(getString(R.string.error_verifying_recovery_phrase))
     }
 
-    fun onErrorUpgradingWalletError() {
-
+    fun onErrorUpgradingWalletError(message: String) {
+        this.showOkDialog(getString(R.string.error_updatiing_user_info), message)
     }
 
 }
