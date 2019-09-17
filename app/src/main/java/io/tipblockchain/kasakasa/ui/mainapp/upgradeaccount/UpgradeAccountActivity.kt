@@ -112,7 +112,8 @@ class UpgradeAccountActivity : BaseActivity(), BaseView {
     }
 
     fun onNotMatchingRecoveryPhrase() {
-        this.showMessage(getString(R.string.error_verifying_recovery_phrase))
+        this.showOkDialog(title = getString(R.string.error_incorrect_phrase_or_password), message = getString(R.string.error_verifying_phrase_please_enter), onClickListener = DialogInterface.OnClickListener { dialog, which ->
+        })
     }
 
     fun onErrorUpgradingWalletError(message: String) {

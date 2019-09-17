@@ -1,6 +1,7 @@
 package io.tipblockchain.kasakasa.ui.mainapp.receivetransfer
 
 import android.arch.lifecycle.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
 
@@ -16,7 +17,10 @@ class ReceiveTransferPresenter: ReceiveTransfer.Presenter {
     override fun loadWallet() {
         walletRepository.findWalletForCurrency(Currency.TIP).observe(view!!, Observer {
             if (it != null) {
-                view?.showWallet(it.address)
+                AndroidSchedulers.mainThread().scheduleDirect {
+                    view?.showWallet(it.address)
+                }
+
             }
         })
     }

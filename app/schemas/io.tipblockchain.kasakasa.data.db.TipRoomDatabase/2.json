@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "caa8b134fa8e5332b12ffb47a71ebddc",
+    "identityHash": "b27a8a7bfd36d80444c777c76e50eab0",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `txReceiptStatus` TEXT, `from_smallPhoto` TEXT, `from_originalPhoto` TEXT, `from_mediumPhoto` TEXT, `from_id` TEXT, `from_name` TEXT, `from_username` TEXT, `from_address` TEXT, `from_imageFileKey` TEXT, `from_pictureUrl` TEXT, `from_isContact` INTEGER, `from_isBlocked` INTEGER, `from_country` TEXT, `from_countryCode` TEXT, `from_phoneNumber` TEXT, `from_aboutMe` TEXT, `from_isLegacy` INTEGER, `from_lastMessage` INTEGER, `to_smallPhoto` TEXT, `to_originalPhoto` TEXT, `to_mediumPhoto` TEXT, `to_id` TEXT, `to_name` TEXT, `to_username` TEXT, `to_address` TEXT, `to_imageFileKey` TEXT, `to_pictureUrl` TEXT, `to_isContact` INTEGER, `to_isBlocked` INTEGER, `to_country` TEXT, `to_countryCode` TEXT, `to_phoneNumber` TEXT, `to_aboutMe` TEXT, `to_isLegacy` INTEGER, `to_lastMessage` INTEGER, PRIMARY KEY(`hash`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `txReceiptStatus` TEXT, `from_smallPhoto` TEXT, `from_originalPhoto` TEXT, `from_mediumPhoto` TEXT, `from_id` TEXT, `from_name` TEXT, `from_username` TEXT, `from_address` TEXT, `from_imageFileKey` TEXT, `from_pictureUrl` TEXT, `from_isContact` INTEGER, `from_isBlocked` INTEGER, `from_country` TEXT, `from_countryCode` TEXT, `from_phone` TEXT, `from_aboutMe` TEXT, `from_isLegacy` INTEGER, `from_lastMessage` INTEGER, `to_smallPhoto` TEXT, `to_originalPhoto` TEXT, `to_mediumPhoto` TEXT, `to_id` TEXT, `to_name` TEXT, `to_username` TEXT, `to_address` TEXT, `to_imageFileKey` TEXT, `to_pictureUrl` TEXT, `to_isContact` INTEGER, `to_isBlocked` INTEGER, `to_country` TEXT, `to_countryCode` TEXT, `to_phone` TEXT, `to_aboutMe` TEXT, `to_isLegacy` INTEGER, `to_lastMessage` INTEGER, PRIMARY KEY(`hash`))",
         "fields": [
           {
             "fieldPath": "hash",
@@ -160,7 +160,7 @@
           },
           {
             "fieldPath": "fromUser.phone",
-            "columnName": "from_phoneNumber",
+            "columnName": "from_phone",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -262,7 +262,7 @@
           },
           {
             "fieldPath": "toUser.phone",
-            "columnName": "to_phoneNumber",
+            "columnName": "to_phone",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -354,7 +354,7 @@
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `imageFileKey` TEXT, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `country` TEXT, `countryCode` TEXT, `phoneNumber` TEXT, `aboutMe` TEXT, `isLegacy` INTEGER, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `imageFileKey` TEXT, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `country` TEXT, `countryCode` TEXT, `phone` TEXT, `aboutMe` TEXT, `isLegacy` INTEGER, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "smallPhotoUrl",
@@ -436,7 +436,7 @@
           },
           {
             "fieldPath": "phone",
-            "columnName": "phoneNumber",
+            "columnName": "phone",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -588,7 +588,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"caa8b134fa8e5332b12ffb47a71ebddc\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b27a8a7bfd36d80444c777c76e50eab0\")"
     ]
   }
 }

@@ -87,7 +87,7 @@ class PasswordStorageHelper(context: Context) {
         @SuppressLint("NewApi", "TrulyRandom")
         override fun init(context: Context): Boolean {
             preferences = context.getSharedPreferences(PreferenceHelper.getPreferenceFilename(), Context.MODE_PRIVATE)
-            alias = context.getString(R.string.app_package)
+            alias = context.applicationContext.packageName
 
             val ks: KeyStore?
 

@@ -23,6 +23,7 @@
         <activity
             android:name=".ui.mainapp.upgradeaccount.UpgradeAccountActivity"
             android:label="@string/title_activity_upgrade_account"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="io.tipblockchain.kasakasa.ui.mainapp.upgradeaccount.UpgradeAccountActivity" />
