@@ -37,7 +37,7 @@ abstract class TipRoomDatabase: RoomDatabase() {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.applicationContext, TipRoomDatabase::class.java, dbName)
                                 .addCallback(sRoomDatabaseCallback)
-//                                .addMigrations(MIGRATION_1_2)
+                                .addMigrations(MIGRATION_1_2)
                                 .build()
                     }
                 }
@@ -65,6 +65,22 @@ abstract class TipRoomDatabase: RoomDatabase() {
         private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE users ADD COLUMN aboutMe TEXT")
+                database.execSQL("ALTER TABLE users ADD COLUMN isLegacy INT")
+                database.execSQL("ALTER TABLE users ADD COLUMN country TEXT")
+                database.execSQL("ALTER TABLE users ADD COLUMN countryCode TEXT")
+                database.execSQL("ALTER TABLE users ADD COLUMN phone TEXT")
+
+                database.execSQL("ALTER TABLE transactions ADD COLUMN from_aboutMe TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN to_aboutMe TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN from_isLegacy INT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN to_isLegacy INT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN from_country TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN to_country TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN from_countryCode TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN from_countryCode TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN to_phone TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN to_phone TEXT")
+
                 database.execSQL("ALTER TABLE wallets ADD COLUMN name TEXT")
             }
         }

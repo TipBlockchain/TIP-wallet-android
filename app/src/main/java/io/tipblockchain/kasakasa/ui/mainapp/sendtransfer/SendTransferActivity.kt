@@ -109,7 +109,7 @@ class SendTransferActivity : BaseActivity(), SendTransfer.View, AdapterView.OnIt
     private fun setupSpinner(wallets: List<Wallet>) {
         Log.d(LOG_TAG, "Setting up spinner")
         val walletNames = wallets.map {
-            it.currency
+            it.displayName()
         }
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, walletNames)
         spinner.adapter = adapter

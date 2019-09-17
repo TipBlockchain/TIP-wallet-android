@@ -15,7 +15,7 @@ interface ChoosePassword {
 
     interface Presenter: BasePresenter<View> {
         fun setExistingUser(user: User?)
-        fun generateWalletFromMnemonicAndPassword(mnemonic: String, password: String)
+//        fun generateWalletFromMnemonicAndPassword(mnemonic: String, password: String)
         fun checkAndGenerateWallet(mnemonic: String, password: String)
     }
 }

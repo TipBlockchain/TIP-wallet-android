@@ -68,7 +68,7 @@ class UpgradeAccountPresenter: UpgradeAccount.Presenter {
                     }
                 }
 
-                val walletFile = walletRepo.newWalletWithMnemonicAndPassword(mnemonic = seedPhrase, password = password)
+                val walletFile = walletRepo.newWalletWithMnemonicAndPassword(mnemonic = seedPhrase, password = password, walletSuffix = "2")
                 if (walletFile != null) {
                     this.updateAddress(walletFile.wallet.address)
                 } else {

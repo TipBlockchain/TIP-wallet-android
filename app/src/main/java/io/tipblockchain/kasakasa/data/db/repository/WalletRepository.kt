@@ -120,7 +120,7 @@ class WalletRepository {
         return walletMatch
     }
 
-    fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String, useBip44: Boolean = true): NewWallet? {
+    fun newWalletWithMnemonicAndPassword(mnemonic: String, password: String, useBip44: Boolean = true, walletSuffix: String? = null): NewWallet? {
         val web3Bridge = Web3Bridge()
         var bip39Wallet: Bip39Wallet? = null
         when (useBip44) {
@@ -131,9 +131,13 @@ class WalletRepository {
         if (walletFile != null && walletFile.exists()) {
             val credentials = web3Bridge.loadCredentialsWithPassword(password, walletFile)
             val blockNumber = AppProperties.get(AppConstants.APP_START_BLOCK).toBigInteger()
-            val tipWallet = Wallet(address = WalletUtils.add0xIfNotExists(credentials.address), filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
+
+            var walletName = if (walletSuffix != null) "${Currency.TIP.name} $walletSuffix" else Currency.TIP.name
+
+            val tipWallet = Wallet(address = WalletUtils.add0xIfNotExists(credentials.address), name = walletName, filePath = walletFile.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(tipWallet)
-            val ethWallet = Wallet(address = WalletUtils.add0xIfNotExists(credentials.address), filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
+            walletName = if (walletSuffix != null) "${Currency.ETH.name} $walletSuffix" else Currency.ETH.name
+            val ethWallet = Wallet(address = WalletUtils.add0xIfNotExists(credentials.address), name = walletName, filePath = walletFile.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber)
             this.insert(ethWallet)
             return NewWallet(bip39Wallet!!.mnemonic, tipWallet)
         }
@@ -141,14 +145,15 @@ class WalletRepository {
         return null
     }
 
-    fun saveWalletFile(walletFile: WalletFile, isPrimary: Boolean = false): File? {
+    fun saveWalletFile(walletFile: WalletFile, isPrimary: Boolean = false, walletSuffix: String? = null): File? {
         val file = WalletUtils.saveWalletFile(walletFile, destinationDirectory = FileUtils().walletsDir())
-
         if (file != null && file.exists()) {
             val blockNumber = AppProperties.get(AppConstants.APP_START_BLOCK).toBigInteger()
-            val tipWallet = Wallet(address = WalletUtils.add0xIfNotExists(walletFile.address), filePath = file.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber, isPrimary = isPrimary)
+            var walletName = if (walletSuffix != null) "${Currency.TIP.name} $walletSuffix" else Currency.TIP.name
+            val tipWallet = Wallet(address = WalletUtils.add0xIfNotExists(walletFile.address), name = walletName, filePath = file.absolutePath, currency = Currency.TIP.name, blockNumber = blockNumber, startBlockNumber = blockNumber, isPrimary = isPrimary)
             this.insert(tipWallet)
-            val ethWallet = Wallet(address = WalletUtils.add0xIfNotExists(walletFile.address), filePath = file.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber, isPrimary = isPrimary)
+            walletName = if (walletSuffix != null) "${Currency.ETH.name} $walletSuffix" else Currency.ETH.name
+            val ethWallet = Wallet(address = WalletUtils.add0xIfNotExists(walletFile.address), name = walletName, filePath = file.absolutePath, currency = Currency.ETH.name, blockNumber = blockNumber, startBlockNumber = blockNumber, isPrimary = isPrimary)
             this.insert(ethWallet)
         }
         return file

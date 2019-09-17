@@ -47,7 +47,7 @@ class WalletListRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.currencyTextView.text = item.currency
+        holder.currencyTextView.text = item.displayName()
         val logoResourceId = getResourceId(item)
         if (logoResourceId > 0) {
             holder.logoImageView.setImageResource(logoResourceId)

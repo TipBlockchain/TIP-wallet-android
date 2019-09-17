@@ -152,8 +152,8 @@ class ChoosePasswordActivity : BaseActivity(), ChoosePassword.View {
         } else {
             // Show a progress spinner, and proceed to next screen
 //            showProgress(true)
-            presenter?.generateWalletFromMnemonicAndPassword(mnemonic = recoveryPhrase!!, password = viewModel.password)
-//            presenter?.checkAndGenerateWallet(mnemonic = recoveryPhrase!!, password = viewModel.password)
+//            presenter?.generateWalletFromMnemonicAndPassword(mnemonic = recoveryPhrase!!, password = viewModel.password)
+            presenter?.checkAndGenerateWallet(mnemonic = recoveryPhrase!!, password = viewModel.password)
         }
     }
 

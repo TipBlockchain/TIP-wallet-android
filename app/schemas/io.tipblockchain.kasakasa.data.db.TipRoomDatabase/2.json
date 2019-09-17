@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "4c2e21b3ad1e18919218d33b4099ab0e",
+    "identityHash": "caa8b134fa8e5332b12ffb47a71ebddc",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `txReceiptStatus` TEXT, `from_smallPhoto` TEXT, `from_originalPhoto` TEXT, `from_mediumPhoto` TEXT, `from_id` TEXT, `from_name` TEXT, `from_username` TEXT, `from_address` TEXT, `from_imageFileKey` TEXT, `from_pictureUrl` TEXT, `from_isContact` INTEGER, `from_isBlocked` INTEGER, `from_lastMessage` INTEGER, `to_smallPhoto` TEXT, `to_originalPhoto` TEXT, `to_mediumPhoto` TEXT, `to_id` TEXT, `to_name` TEXT, `to_username` TEXT, `to_address` TEXT, `to_imageFileKey` TEXT, `to_pictureUrl` TEXT, `to_isContact` INTEGER, `to_isBlocked` INTEGER, `to_lastMessage` INTEGER, PRIMARY KEY(`hash`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hash` TEXT NOT NULL, `blockHash` TEXT NOT NULL, `from` TEXT NOT NULL, `to` TEXT NOT NULL, `currency` TEXT NOT NULL, `value` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `gas` TEXT NOT NULL, `confirmations` TEXT NOT NULL, `nonce` INTEGER NOT NULL, `message` TEXT, `txReceiptStatus` TEXT, `from_smallPhoto` TEXT, `from_originalPhoto` TEXT, `from_mediumPhoto` TEXT, `from_id` TEXT, `from_name` TEXT, `from_username` TEXT, `from_address` TEXT, `from_imageFileKey` TEXT, `from_pictureUrl` TEXT, `from_isContact` INTEGER, `from_isBlocked` INTEGER, `from_country` TEXT, `from_countryCode` TEXT, `from_phoneNumber` TEXT, `from_aboutMe` TEXT, `from_isLegacy` INTEGER, `from_lastMessage` INTEGER, `to_smallPhoto` TEXT, `to_originalPhoto` TEXT, `to_mediumPhoto` TEXT, `to_id` TEXT, `to_name` TEXT, `to_username` TEXT, `to_address` TEXT, `to_imageFileKey` TEXT, `to_pictureUrl` TEXT, `to_isContact` INTEGER, `to_isBlocked` INTEGER, `to_country` TEXT, `to_countryCode` TEXT, `to_phoneNumber` TEXT, `to_aboutMe` TEXT, `to_isLegacy` INTEGER, `to_lastMessage` INTEGER, PRIMARY KEY(`hash`))",
         "fields": [
           {
             "fieldPath": "hash",
@@ -147,6 +147,36 @@
             "notNull": false
           },
           {
+            "fieldPath": "fromUser.country",
+            "columnName": "from_country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.countryCode",
+            "columnName": "from_countryCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.phone",
+            "columnName": "from_phoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.aboutMe",
+            "columnName": "from_aboutMe",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromUser.isLegacy",
+            "columnName": "from_isLegacy",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "fromUser.lastMessage",
             "columnName": "from_lastMessage",
             "affinity": "INTEGER",
@@ -215,6 +245,36 @@
           {
             "fieldPath": "toUser.isBlocked",
             "columnName": "to_isBlocked",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.country",
+            "columnName": "to_country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.countryCode",
+            "columnName": "to_countryCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.phone",
+            "columnName": "to_phoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.aboutMe",
+            "columnName": "to_aboutMe",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toUser.isLegacy",
+            "columnName": "to_isLegacy",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -294,7 +354,7 @@
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `imageFileKey` TEXT, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`smallPhoto` TEXT, `originalPhoto` TEXT, `mediumPhoto` TEXT, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `username` TEXT NOT NULL, `address` TEXT NOT NULL, `imageFileKey` TEXT, `pictureUrl` TEXT, `isContact` INTEGER NOT NULL, `isBlocked` INTEGER NOT NULL, `country` TEXT, `countryCode` TEXT, `phoneNumber` TEXT, `aboutMe` TEXT, `isLegacy` INTEGER, `lastMessage` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "smallPhotoUrl",
@@ -363,6 +423,36 @@
             "notNull": true
           },
           {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "countryCode",
+            "columnName": "countryCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aboutMe",
+            "columnName": "aboutMe",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isLegacy",
+            "columnName": "isLegacy",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "lastMessage",
             "columnName": "lastMessage",
             "affinity": "INTEGER",
@@ -405,7 +495,7 @@
       },
       {
         "tableName": "wallets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `filePath` TEXT, `created` INTEGER NOT NULL, `balance` TEXT NOT NULL, `currency` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, `blockNumber` TEXT NOT NULL, `startBlockNumber` TEXT NOT NULL, `lastSynced` INTEGER NOT NULL, PRIMARY KEY(`address`, `currency`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `filePath` TEXT, `created` INTEGER NOT NULL, `balance` TEXT NOT NULL, `currency` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, `blockNumber` TEXT NOT NULL, `startBlockNumber` TEXT NOT NULL, `name` TEXT, `lastSynced` INTEGER NOT NULL, PRIMARY KEY(`address`, `currency`))",
         "fields": [
           {
             "fieldPath": "address",
@@ -456,6 +546,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "lastSynced",
             "columnName": "lastSynced",
             "affinity": "INTEGER",
@@ -492,7 +588,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4c2e21b3ad1e18919218d33b4099ab0e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"caa8b134fa8e5332b12ffb47a71ebddc\")"
     ]
   }
 }

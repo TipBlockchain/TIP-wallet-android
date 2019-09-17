@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
 import android.support.v7.widget.DividerItemDecoration
+import android.util.Log
 import kotlinx.android.synthetic.main.fragment_more_list.*
 
 
@@ -27,6 +28,7 @@ class MoreFragment : Fragment() {
     private var columnCount = 1
 
     private var listener: OnListFragmentInteractionListener? = InteractionListener()
+    private var logTag = javaClass.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +95,9 @@ class MoreFragment : Fragment() {
     inner class InteractionListener: OnListFragmentInteractionListener {
         override fun onListFragmentInteraction(item: MoreListItem?) {
             if (item != null && item.action != null) {
-                item?.action.invoke()
+                item.action.invoke()
+            } else {
+                Log.d(logTag, "action is null")
             }
         }
     }

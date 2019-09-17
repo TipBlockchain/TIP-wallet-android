@@ -20,5 +20,11 @@ data class Wallet (
         @ColumnInfo(name = "isPrimary") var isPrimary: Boolean = true,
         @ColumnInfo(name = "blockNumber") var blockNumber: BigInteger = BigInteger.ZERO,
         @ColumnInfo(name = "startBlockNumber") var startBlockNumber: BigInteger = BigInteger.ZERO,
+        @ColumnInfo(name = "name") var name: String? = null,
         @ColumnInfo(name = "lastSynced") var lastSynced: Date = Date()
-        ): Serializable
+        ): Serializable {
+
+        fun displayName(): String {
+               return if (name != null)  name!! else currency
+        }
+}
