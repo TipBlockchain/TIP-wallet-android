@@ -22,7 +22,7 @@ data class User(
         @ColumnInfo(name = "isBlocked") var isBlocked: Boolean = false,
         @Transient @ColumnInfo(name = "country") var country: String? = null,
         @Transient @ColumnInfo(name = "countryCode") var countryCode: String? = null,
-        @Transient @ColumnInfo(name = "phoneNumber") var phone: String? = null,
+        @Transient @ColumnInfo(name = "phone") var phone: String? = null,
         @Transient @ColumnInfo(name = "aboutMe") var aboutMe: String? = "I ♥ TIP",
         @Transient @ColumnInfo(name = "isLegacy") var isLegacy: Boolean? = false,
         @ColumnInfo(name = "lastMessage") @Optional @ContextualSerialization var lastMessage: Date? = null
