@@ -43,6 +43,7 @@ class UpgradeAccountPresenter: UpgradeAccount.Presenter {
         Schedulers.io().scheduleDirect {
             if (MnemonicUtils.validateMnemonic(seedPhrase)) {
                 if (walletRepo.checkWalletMatchesExisting(mnemonic = seedPhrase, password = password)) {
+                    this.saveToKeystore(seedPhrase = seedPhrase, password = password)
                     this.upgradeAccount(seedPhrase, password)
                 } else {
                     AndroidSchedulers.mainThread().scheduleDirect{
@@ -94,5 +95,10 @@ class UpgradeAccountPresenter: UpgradeAccount.Presenter {
                     Log.e(logTag, "Error updating address: ${it.localizedMessage}")
                     view?.onErrorUpgradingWalletError(it.localizedMessage)
                 })
+    }
+
+    private fun saveToKeystore(password: String, seedPhrase: String) {
+        TipKeystore.savePassword(password)
+        TipKeystore.saveSeedPhrase(seedPhrase)
     }
 }

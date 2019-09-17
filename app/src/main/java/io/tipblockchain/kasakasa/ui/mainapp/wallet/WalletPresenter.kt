@@ -136,10 +136,10 @@ class WalletPresenter: WalletInterface.Presenter {
                 val currentWalletTxList = txlist.filter { tx ->
                     /* tx.currency == currentWallet?.currency && */ (tx.from == address || tx.to == address)
                 }
-                view?.onTransactionsFetched(address, Currency.valueOf(currentWallet!!.currency), currentWalletTxList)
+                view?.onTransactionsFetched(address, currency, currentWalletTxList)
             }
         }, {
-                    view?.onTransactionsFetchError(it, Currency.valueOf(wallet.currency))
+                    view?.onTransactionsFetchError(it, currency)
                 })
     }
 }
