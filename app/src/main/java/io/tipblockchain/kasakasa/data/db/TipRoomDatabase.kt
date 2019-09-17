@@ -77,8 +77,8 @@ abstract class TipRoomDatabase: RoomDatabase() {
                 database.execSQL("ALTER TABLE transactions ADD COLUMN from_country TEXT")
                 database.execSQL("ALTER TABLE transactions ADD COLUMN to_country TEXT")
                 database.execSQL("ALTER TABLE transactions ADD COLUMN from_countryCode TEXT")
-                database.execSQL("ALTER TABLE transactions ADD COLUMN from_countryCode TEXT")
-                database.execSQL("ALTER TABLE transactions ADD COLUMN to_phone TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN to_countryCode TEXT")
+                database.execSQL("ALTER TABLE transactions ADD COLUMN from_phone TEXT")
                 database.execSQL("ALTER TABLE transactions ADD COLUMN to_phone TEXT")
 
                 database.execSQL("ALTER TABLE wallets ADD COLUMN name TEXT")
