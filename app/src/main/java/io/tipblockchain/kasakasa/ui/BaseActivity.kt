@@ -44,8 +44,9 @@ open class BaseActivity: AppCompatActivity() {
                 .show()
     }
 
-    protected fun showOkDialog(message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
+    protected fun showOkDialog(title: String? = "", message: String, onClickListener: DialogInterface.OnClickListener? = null, onDismissListener: DialogInterface.OnDismissListener? = null) {
         AlertDialog.Builder(this)
+                .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.okay), onClickListener)
                 .setOnDismissListener(onDismissListener)

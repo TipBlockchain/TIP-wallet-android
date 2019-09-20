@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.ui.mainapp.transactions
+package io.tipblockchain.kasakasa.ui.mainapp.wallet
 
 import android.arch.lifecycle.LifecycleOwner
 import io.tipblockchain.kasakasa.data.db.entity.Transaction
@@ -11,6 +11,7 @@ import java.math.BigDecimal
 interface WalletInterface {
 
     interface View: BaseView, LifecycleOwner {
+        fun onWalletsLoaded()
         fun onBalanceFetchError()
         fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal)
         fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>)

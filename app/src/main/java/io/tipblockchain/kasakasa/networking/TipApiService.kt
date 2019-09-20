@@ -2,7 +2,9 @@ package io.tipblockchain.kasakasa.networking
 
 import android.util.Log
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import io.reactivex.Observable
 import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.config.AppProperties
@@ -17,11 +19,13 @@ import io.tipblockchain.kasakasa.data.responses.*
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.math.BigInteger
+import java.util.*
 
 class TipApiService {
 
@@ -46,6 +50,8 @@ class TipApiService {
                 if (AuthorizationRepository.currentAuthorization != null) {
                     builder.addHeader("Authorization", "Bearer ${AuthorizationRepository.currentAuthorization!!.token}")
                 }
+                builder.addHeader("x-tip-platform", "android")
+                builder.addHeader("x-tip-api-key", AppProperties.get(AppConstants.CONFIG_API_KEY))
                 chain.proceed(builder.build())
             }
 
@@ -153,5 +159,9 @@ class TipApiService {
 
     fun fillTransactions(txList: List<Transaction>): Observable<TransactionListResponse?> {
         return tipApi.fillTransactions(txList)
+    }
+
+    fun getAppConfig(): Observable<JsonObject> {
+        return tipApi.getAppConfig()
     }
 }

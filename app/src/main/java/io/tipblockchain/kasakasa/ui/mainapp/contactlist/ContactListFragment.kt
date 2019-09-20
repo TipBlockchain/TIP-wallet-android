@@ -168,8 +168,8 @@ class ContactListFragment: Fragment(), ContactList.View {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.d(LOG_TAG, "Contact added intent")
-            if (intent?.action == AppConstants.ACTION_CONTACT_ADDED) {
-                val contact = intent?.getSerializableExtra(AppConstants.EXTRA_CONTACT_ADDED) as? User
+            if (intent != null && intent.action == AppConstants.ACTION_CONTACT_ADDED) {
+                val contact = intent.getSerializableExtra(AppConstants.EXTRA_CONTACT_ADDED) as? User
                 if (contact != null) {
                     Log.d(LOG_TAG, "Contact added : ${contact}")
                     onContactAdded(contact)

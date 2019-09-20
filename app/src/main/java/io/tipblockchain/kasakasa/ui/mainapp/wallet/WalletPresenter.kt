@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.ui.mainapp.transactions
+package io.tipblockchain.kasakasa.ui.mainapp.wallet
 
 import android.arch.lifecycle.Observer
 import android.util.Log
@@ -13,6 +13,7 @@ import io.tipblockchain.kasakasa.data.db.entity.Wallet
 import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.data.db.repository.TransactionRepository
 import io.tipblockchain.kasakasa.data.db.repository.WalletRepository
+import org.web3j.abi.datatypes.Bool
 import org.web3j.utils.Convert
 import java.math.BigInteger
 import java.util.*
@@ -30,6 +31,7 @@ class WalletPresenter: WalletInterface.Presenter {
     private var currentWallet: Wallet? = null
 
     private var txDisposable: Disposable? = null
+    var onWalletsLoadedCalled: Boolean = false
 
     private val LOG_TAG = javaClass.name
     init {
@@ -65,8 +67,8 @@ class WalletPresenter: WalletInterface.Presenter {
     }
 
     override fun fetchBalance(wallet: Wallet): Boolean {
+        var balanceChanged = false
         try {
-            var balanceChanged = false
             val balance = currentProcessor?.getBalance(wallet.address) ?: BigInteger.ZERO
             val balanceInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
             if (balance != null) {
@@ -88,7 +90,7 @@ class WalletPresenter: WalletInterface.Presenter {
             view?.onBalanceFetchError()
         }
 
-        return false
+        return balanceChanged
     }
 
     override fun fetchTransactions(wallet: Wallet) {
@@ -166,6 +168,9 @@ class WalletPresenter: WalletInterface.Presenter {
                     Log.d(LOG_TAG, "Updating ETH wallet on change")
                     view?.onBalanceFetched(wallet.address, Currency.valueOf(wallet.currency), Convert.fromWei(wallet.balance.toBigDecimal(), Convert.Unit.ETHER))
                 }
+                if (!onWalletsLoadedCalled) {
+                    this.onWalletsLoaded()
+                }
             })
         }
         if (tipWallet == null) {
@@ -178,8 +183,18 @@ class WalletPresenter: WalletInterface.Presenter {
                         tipProcessor = TipProcessor(wallet)
                     }
                 }
+                if (!onWalletsLoadedCalled) {
+                    this.onWalletsLoaded()
+                }
             })
         }
         startListening()
+    }
+
+    private fun onWalletsLoaded() {
+        if (ethWallet != null && tipWallet != null) {
+            onWalletsLoadedCalled = true
+            view?.onWalletsLoaded()
+        }
     }
 }

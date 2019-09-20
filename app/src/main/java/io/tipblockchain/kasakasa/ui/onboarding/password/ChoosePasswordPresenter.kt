@@ -29,7 +29,7 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
                 AndroidSchedulers.mainThread().scheduleDirect {
                     if (newWallet != null) {
                         if (existingUser != null) {
-                            if (existingUser!!.address != newWallet!!.wallet.address) {
+                            if (existingUser!!.address != newWallet.wallet.address) {
                                 walletRepository.delete(newWallet.wallet.address)
                                 view?.onWalletNotMatchingExistingError()
                             } else {

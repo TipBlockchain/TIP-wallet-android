@@ -90,26 +90,24 @@ class TransactionRepository {
             executor!!.execute {
                 var txReceipt: TransactionReceipt?
                 var future: Future<TransactionReceipt>?
-                if (credentials != null) {
-                    val gasPriceInWei = Convert.toWei(gasPriceInGwei.toBigDecimal(), Convert.Unit.GWEI).toBigInteger()
-                    try {
+                val gasPriceInWei = Convert.toWei(gasPriceInGwei.toBigDecimal(), Convert.Unit.GWEI).toBigInteger()
+                try {
 
-                        when (transaction.currency) {
-                            Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
-                            Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
-                        }
-                        if (future == null) {
-                            return@execute
-                        }
-                        while (!future.isDone) {
-                        }
-                        txReceipt = future.get()
-                        postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
-                        Log.d(LOG_TAG, "Transaction receipt: $txReceipt")
-                        completion?.invoke(txReceipt, null)
-                    } catch (e: Exception) {
-                        completion?.invoke(null, e)
+                    when (transaction.currency) {
+                        Currency.TIP -> future = web3Bridge.sendTipTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
+                        Currency.ETH -> future = web3Bridge.sendEthTransactionAsyncForFuture(to = transaction.to, value = transaction.value, gasPrice = gasPriceInWei, credentials = credentials)
                     }
+                    if (future == null) {
+                        return@execute
+                    }
+                    while (!future.isDone) {
+                    }
+                    txReceipt = future.get()
+                    postTransaction(pendingTransaction = transaction, txrReceipt = txReceipt)
+                    Log.d(LOG_TAG, "Transaction receipt: $txReceipt")
+                    completion?.invoke(txReceipt, null)
+                } catch (e: Exception) {
+                    completion?.invoke(null, e)
                 }
             }
 
@@ -165,7 +163,7 @@ class TransactionRepository {
                         var cleanedList = txlist.map { it.currency = Currency.ETH.name
                             it}
                         cleanedList = cleanedList.filter { it.value != BigInteger.ZERO }
-                        fillTransactions(cleanedList) { mergedList, err ->
+                        fillTransactions(cleanedList) { mergedList, _ ->
                             var resultList = mergedList
                             if (mergedList.isEmpty() && ! cleanedList.isEmpty()) {
                                 resultList = cleanedList
@@ -212,7 +210,7 @@ class TransactionRepository {
         mergeTxDisposable = tipApiService.fillTransactions(txList = txlist).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribe ({ response ->
             if (response != null) {
                 val updatedList = response.transactions
-                var listToReturn: MutableList<Transaction> = mutableListOf()
+//                var listToReturn: MutableList<Transaction> = mutableListOf()
 
 //                for (tx in txlist) {
 //                    val matchingTx = updatedList.find { it.hash == tx.hash }

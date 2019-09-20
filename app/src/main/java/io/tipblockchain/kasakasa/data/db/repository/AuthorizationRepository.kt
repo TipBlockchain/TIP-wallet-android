@@ -1,6 +1,5 @@
 package io.tipblockchain.kasakasa.data.db.repository
 
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -8,7 +7,7 @@ import io.tipblockchain.kasakasa.app.PreferenceHelper
 import io.tipblockchain.kasakasa.data.responses.Authorization
 import io.tipblockchain.kasakasa.data.responses.SecureMessage
 import io.tipblockchain.kasakasa.networking.TipApiService
-import kotlinx.serialization.json.JSON
+import kotlinx.serialization.json.Json
 
 class AuthorizationRepository {
 
@@ -53,7 +52,8 @@ class AuthorizationRepository {
                 synchronized(AuthorizationRepository::class.java) {
                     val authJson = PreferenceHelper.authorization
                     if (authJson != null) {
-                        auth = JSON.parse(authJson)
+//                        auth = JSON.parse(authJson)
+                        auth = Json.parse(Authorization.serializer(), authJson)
                     }
                 }
             }
@@ -61,7 +61,9 @@ class AuthorizationRepository {
         }
 
         private fun saveCurrentAuthorization(authorization: Authorization) {
-            val authString = JSON.stringify(authorization)
+//            val authString = JSON.stringify(authorization)
+
+            val authString = Json.stringify(Authorization.serializer(), authorization)
             PreferenceHelper.authorization = authString
         }
 

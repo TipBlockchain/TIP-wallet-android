@@ -6,14 +6,15 @@ import java.math.BigInteger
 
 @Serializer(forClass = BigInteger::class)
 object BigIntegerSerializer: KSerializer<BigInteger> {
-    override val serialClassDesc: KSerialClassDesc
+
+    override val descriptor: SerialDescriptor
         get() = SerialClassDescImpl("BigIntegerSerializer")
 
-    override fun load(input: KInput): BigInteger {
-        return BigInteger(input.readStringValue(), 10)
+    override fun serialize(encoder: Encoder, obj: BigInteger) {
+        encoder.encodeString(obj.toString(10))
     }
 
-    override fun save(output: KOutput, obj: BigInteger) {
-        output.write(obj.toString(10))
+    override fun deserialize(decoder: Decoder): BigInteger {
+        return BigInteger(decoder.decodeString(), 10)
     }
 }

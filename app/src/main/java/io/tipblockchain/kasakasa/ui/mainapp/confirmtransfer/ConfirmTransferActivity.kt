@@ -78,7 +78,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         transactionFeeTv.text = getString(R.string.plus_amount_and_currency, txFee, "ETH")
         if (pendingTransaction != null && pendingTransaction?.currency == Currency.ETH) {
             additionalTxFeeTv.visibility = View.GONE
-            var totalAmount = pendingTransaction!!.value?.plus(txFee)
+            var totalAmount = pendingTransaction!!.value.plus(txFee)
             val currentScale = totalAmount.scale()
             totalAmount = totalAmount.setScale(Math.min(currentScale, 6), RoundingMode.HALF_UP)
             totalAmountValueTv.text = getString(R.string.amount_and_currency, totalAmount, pendingTransaction?.currency?.name)
@@ -92,14 +92,14 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
     }
 
     override fun onInvalidTransactionError(error: Throwable) {
-        showOkDialog(getString(R.string.invalid_transaction, error.localizedMessage), DialogInterface.OnClickListener { dialog, which ->
+        showOkDialog(title = getString(R.string.sorry), message = getString(R.string.invalid_transaction, error.localizedMessage), onClickListener =  DialogInterface.OnClickListener { _, _ ->
             finish()
         })
 
     }
 
     override fun onInvalidPasswordError() {
-        showOkDialog(getString(R.string.could_not_unlock_wallet))
+        showOkDialog(message = getString(R.string.could_not_unlock_wallet))
     }
 
     override fun onTransactionSent() {
@@ -124,7 +124,7 @@ class ConfirmTransferActivity : BaseActivity(), ConfirmTransfer.View {
         confirmBtn.isEnabled = true
         // error might have been triggered after tx was sent, but during posting to server
         if (!transactionSent) {
-            showOkDialog(getString(R.string.error_sending_transaction, error.localizedMessage))
+            showOkDialog(message = getString(R.string.error_sending_transaction, error.localizedMessage))
         } else {
             navigateToTransactionConfirmed()
         }

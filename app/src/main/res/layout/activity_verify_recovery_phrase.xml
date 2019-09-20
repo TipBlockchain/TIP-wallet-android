@@ -11,9 +11,9 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,50 +39,53 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
+            android:padding="5dp"
             android:layout_weight="1"
             android:background="@drawable/shape_rounded_corners"
             android:text="@{viewModel.recoveryPhrase}"
             tools:text="@string/placeholder_seed_phrase_missing" />
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorVeryLightGray"
-            android:theme="@style/AppTheme.WhiteColorAccent">
+            android:orientation="vertical"
+            android:background="@drawable/shape_rounded_corners">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/missingWord1Tv"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_first_missing_word"
-                android:inputType="text"
-                android:maxLines="1"
-                android:nextFocusDown="@id/verifyPhoneBtn"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/colorWhite"
-                android:theme="@style/AppTheme.WhiteEditText" />
-        </android.support.design.widget.TextInputLayout>
+                android:theme="@style/AppTheme.DarkColorAccent">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/colorVeryLightGray"
-            android:theme="@style/AppTheme.WhiteColorAccent">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/missingWord1Tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_first_missing_word"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:nextFocusDown="@id/verifyPhoneBtn"
+                    android:singleLine="true"
+                    android:theme="@style/AppTheme.DarkEditText" />
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/missingWord2Tv"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_second_missing_word"
-                android:inputType="text"
-                android:maxLines="1"
-                android:nextFocusDown="@id/verifyPhoneBtn"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/colorWhite"
-                android:theme="@style/AppTheme.WhiteEditText" />
-        </android.support.design.widget.TextInputLayout>
+                android:theme="@style/AppTheme.DarkColorAccent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/missingWord2Tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_second_missing_word"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:nextFocusDown="@id/verifyPhoneBtn"
+                    android:singleLine="true"
+                    android:theme="@style/AppTheme.DarkEditText" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -91,10 +94,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -105,8 +106,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
             android:text="@string/verify_recovery_phrase"
             android:theme="@style/AppTheme.PrimaryButton"
             app:layout_constraintBottom_toBottomOf="parent"

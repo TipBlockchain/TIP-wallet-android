@@ -13,8 +13,8 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/displayImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:riv_border_color="@color/colorWhite"
         app:riv_border_width="2dp"
-        app:riv_corner_radius="40dp"
+        app:riv_corner_radius="60dp"
         tools:src="@drawable/user_profile_placeholder"
         tools:srcCompat="@tools:sample/avatars[0]" />
 

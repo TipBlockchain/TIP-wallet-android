@@ -2,7 +2,6 @@ package io.tipblockchain.kasakasa.ui.onboarding.profile
 
 import android.arch.lifecycle.Observer
 import android.util.Log
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Predicate

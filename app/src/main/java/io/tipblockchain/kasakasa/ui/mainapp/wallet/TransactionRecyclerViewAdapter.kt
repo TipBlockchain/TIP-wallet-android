@@ -1,4 +1,4 @@
-package io.tipblockchain.kasakasa.ui.mainapp.transactions
+package io.tipblockchain.kasakasa.ui.mainapp.wallet
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
@@ -15,7 +15,7 @@ import io.tipblockchain.kasakasa.data.db.entity.User
 import io.tipblockchain.kasakasa.data.db.repository.UserRepository
 
 
-import io.tipblockchain.kasakasa.ui.mainapp.transactions.WalletFragment.OnListFragmentInteractionListener
+import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletFragment.OnListFragmentInteractionListener
 
 import kotlinx.android.synthetic.main.row_transaction.view.*
 import org.web3j.utils.Convert

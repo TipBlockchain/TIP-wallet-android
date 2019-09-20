@@ -1,9 +1,7 @@
 package io.tipblockchain.kasakasa.data.db.repository
 
 import android.app.Application
-import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
 import android.os.AsyncTask
 import android.util.Log
 import io.reactivex.Observable
@@ -18,7 +16,7 @@ import io.tipblockchain.kasakasa.data.db.dao.UserDao
 import io.tipblockchain.kasakasa.data.responses.ContactListResponse
 import io.tipblockchain.kasakasa.data.responses.UserSearchResponse
 import io.tipblockchain.kasakasa.networking.TipApiService
-import kotlinx.serialization.json.JSON
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.lang.Exception
 
@@ -191,14 +189,14 @@ class UserRepository {
             get() {
                 val userjson = PreferenceHelper.demoAccountUser
                 if (userjson != null) {
-                    val user: User = JSON.parse(userjson)
+                    val user: User = Json.parse(User.serializer(), userjson)
                     return user
                 }
                 return null
             }
             set(value) {
                 if (value != null) {
-                    val userJson = JSON.stringify(value)
+                    val userJson = Json.stringify(User.serializer(), value)
                     PreferenceHelper.demoAccountUser = userJson
                 } else {
                     PreferenceHelper.demoAccountUser = null
@@ -211,7 +209,7 @@ class UserRepository {
                     val userJson = PreferenceHelper.currentUser
                     if (userJson != null) {
                         if (_currentUser == null) {
-                            _currentUser = JSON.parse(userJson)
+                            _currentUser = Json.parse(User.serializer(), userJson)
                             currentUser = _currentUser
                         }
                     }
@@ -222,7 +220,7 @@ class UserRepository {
 
         private fun saveCurrentUser() {
             if (_currentUser != null) {
-                val userJson = JSON.stringify(_currentUser!!)
+                val userJson = Json.stringify(User.serializer(), _currentUser!!)
                 PreferenceHelper.currentUser = userJson
             } else {
                 PreferenceHelper.currentUser = null

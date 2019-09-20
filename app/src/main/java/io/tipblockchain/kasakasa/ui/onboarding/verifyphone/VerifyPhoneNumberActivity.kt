@@ -16,6 +16,10 @@ import io.tipblockchain.kasakasa.ui.BaseActivity
 import io.tipblockchain.kasakasa.ui.onboarding.demoaccount.DemoAccountActivity
 import io.tipblockchain.kasakasa.ui.onboarding.recovery.RecoveryPhraseActivity
 import kotlinx.android.synthetic.main.activity_enter_phone_number.*
+import kotlinx.android.synthetic.main.activity_enter_phone_number.form
+import kotlinx.android.synthetic.main.activity_enter_phone_number.progressBar
+import kotlinx.android.synthetic.main.activity_enter_phone_number.verifyPhoneBtn
+import kotlinx.android.synthetic.main.activity_verify_phone_number.*
 
 class VerifyPhoneNumberActivity : BaseActivity(), VerifyPhoneNumber.View {
 

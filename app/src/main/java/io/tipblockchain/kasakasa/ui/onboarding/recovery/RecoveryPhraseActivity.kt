@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_recovery_phrase.*
 
 class RecoveryPhraseActivity : BaseActivity(), RecoveryPhrase.View {
 
-    private lateinit var viewModel: RecoveryPhraseViewModel
+    private var viewModel: RecoveryPhraseViewModel? = null
     private var presenter: RecoveryPhrase.Presenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,18 +58,18 @@ class RecoveryPhraseActivity : BaseActivity(), RecoveryPhrase.View {
 
     fun copyPhraseToClipboard() {
         val clipboard: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData: ClipData = ClipData.newPlainText("recovery phrase", viewModel.recoveryPhrase)
+        val clipData: ClipData = ClipData.newPlainText("recovery phrase", viewModel?.recoveryPhrase)
         clipboard.primaryClip = clipData
 
         this.showMessage(getString(R.string.recovery_phrase_copied))
     }
 
     fun checkTheBox(isChecked: Boolean) {
-        viewModel.isBackedUp = isChecked
+        viewModel?.isBackedUp = isChecked
     }
 
     fun verifyRecoveryPhraseTapped() {
-        if (viewModel.isBackedUp) {
+        if (viewModel?.isBackedUp == true) {
             this.navigateToVerifyRecovery()
         } else {
             showNotBackedUpError()
@@ -82,7 +82,7 @@ class RecoveryPhraseActivity : BaseActivity(), RecoveryPhrase.View {
 
     private fun navigateToVerifyRecovery() {
         val intent = Intent(this, VerifyRecoveryPhraseActivity::class.java)
-        intent.putExtra(AppConstants.EXTRA_RECOVERY_PHRASE, viewModel.recoveryPhrase)
+        intent.putExtra(AppConstants.EXTRA_RECOVERY_PHRASE, viewModel?.recoveryPhrase)
         startActivity(intent)
     }
 
