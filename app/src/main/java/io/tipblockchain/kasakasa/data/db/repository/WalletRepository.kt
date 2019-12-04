@@ -103,6 +103,7 @@ class WalletRepository {
     fun bip44WalletFileFromMnemonic(mnemonic: String, password: String): WalletFile {
         return WalletUtils.getBip44WalletFileFromMnemonic(mnemonic, password, FileUtils().walletsDir())
     }
+
     fun checkWalletMatchesExisting(mnemonic: String, password: String): Boolean {
         var walletFile = WalletUtils.getBip39WalletFileFromMnemonic(mnemonic, password, destinationDirectory = FileUtils().walletsDir())
         val walletList = dao.getAllWallets()
@@ -111,7 +112,7 @@ class WalletRepository {
         if (walletList != null) {
             for (wallet in walletList) {
                 Log.i(LOG_TAG, "wallet.address = ${wallet.address} <=> walletFile.address = ${walletFile.address}")
-                if (wallet.address == WalletUtils.add0xIfNotExists(walletFile.address)) {
+                if (wallet.address.toLowerCase() == WalletUtils.add0xIfNotExists(walletFile.address.toLowerCase())) {
                     walletMatch = true
                     break
                 }

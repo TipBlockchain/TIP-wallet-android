@@ -26,7 +26,7 @@ class SplashPresenter: SplashScreenContract.Presenter {
 
     override fun walletFetched(wallet: Wallet?) {
         Log.d(LOG_TAG, "CurrentUser=$currentUser, address=${currentUser?.address ?: "null"}, wallet = $wallet, ")
-        if (currentUser == null || wallet == null || currentUser?.address != wallet.address) {
+        if (currentUser == null || wallet == null || currentUser?.address?.toLowerCase() != wallet.address.toLowerCase()) {
             view?.gotoOnboarding()
         } else {
             view?.gotoMainApp()

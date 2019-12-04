@@ -28,6 +28,7 @@ import io.tipblockchain.kasakasa.ui.mainapp.sendtransfer.SendTransferActivity
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.NumberFormat
 
 /**
@@ -263,9 +264,12 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
     }
 
     override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
-            val balanceScale = balance.scale()
-            balanceTv.text = NumberFormat.getInstance().format( balance.setScale(Math.min(balanceScale, 4), RoundingMode.HALF_UP))
-            currencyTv.setText(currency.name)
+        val balanceScale = balance.scale()
+        val numberFormat = NumberFormat.getInstance()
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 4
+        balanceTv.text = numberFormat.format( balance.setScale(Math.min(balanceScale, 4), RoundingMode.HALF_UP))
+        currencyTv.setText(currency.name)
     }
 
     override fun onTransactionsFetched(address: String, currency: Currency, transactions: List<Transaction>) {

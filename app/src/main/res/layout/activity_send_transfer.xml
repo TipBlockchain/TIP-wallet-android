@@ -230,16 +230,13 @@
         android:id="@+id/nextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/next"
         android:textStyle="bold"
         android:theme="@style/AppTheme.PrimaryButton"
         app:layout_anchor="@+id/scrollView"
         app:layout_anchorGravity="bottom|center"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        tools:layout_editor_absoluteX="20dp" />
 
 </android.support.constraint.ConstraintLayout>

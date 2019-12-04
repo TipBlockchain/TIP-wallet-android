@@ -21,6 +21,7 @@ import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletFragment.OnListFragment
 import kotlinx.android.synthetic.main.row_transaction.view.*
 import org.web3j.utils.Convert
 import java.math.RoundingMode
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,7 +61,7 @@ class TransactionRecyclerViewAdapter(
         var addressToShow: String
 
         var otherUser: User? = null
-        if (wallet.address == fromAddress) {
+        if (wallet.address.toLowerCase() == fromAddress.toLowerCase()) {
             if (transaction.toUser != null) {
                 otherUser = transaction.toUser
                 addressToShow = transaction.toUser!!.username
@@ -89,7 +90,11 @@ class TransactionRecyclerViewAdapter(
         val valueInEth =  Convert.fromWei(transaction.value.toBigDecimal(), Convert.Unit.ETHER)
 
         val currentScale = valueInEth.scale()
-        holder.mAmountView.text = "${valueInEth.setScale(Math.min(currentScale, 4), RoundingMode.HALF_UP)} ${transaction.currency}"
+        val numberFormat = NumberFormat.getInstance()
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 4
+        val amountText = numberFormat.format( valueInEth.setScale(Math.min(currentScale, 4), RoundingMode.HALF_UP))
+        holder.mAmountView.text = "${amountText} ${transaction.currency}"
         val timestamp = transaction.time.toLong() * 1000
         holder.mTimeTv.text = SimpleDateFormat("MM/dd/yy hh':'mm").format(Date(timestamp))
 

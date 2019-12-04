@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_wallet_list_item.view.*
 import org.web3j.utils.Convert
 import java.math.BigInteger
 import java.math.RoundingMode
+import java.text.NumberFormat
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -86,9 +87,12 @@ class WalletListRecyclerViewAdapter(
 
         fun setBalanceText(balance: BigInteger, currency: String) {
             val valueInEth =  Convert.fromWei(balance.toBigDecimal(), Convert.Unit.ETHER)
-
             val currentScale = valueInEth.scale()
-            balanceTextView.text = "${valueInEth.setScale(Math.min(currentScale, 4), RoundingMode.HALF_UP)} ${currency}"
+            val numberFormat = NumberFormat.getInstance()
+            numberFormat.minimumFractionDigits = 2
+            numberFormat.maximumFractionDigits = 4
+            val amountText = numberFormat.format( valueInEth.setScale(Math.min(currentScale, 4), RoundingMode.HALF_UP))
+            balanceTextView.text = "${amountText} ${currency}"
         }
     }
 }

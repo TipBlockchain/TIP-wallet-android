@@ -95,8 +95,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="40dp"
+            android:layout_marginBottom="50dp"
             android:visibility="visible"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/inviteLinearLayout"
             tools:context=".ui.mainapp.ContactFragment"
             tools:listitem="@layout/row_contact">

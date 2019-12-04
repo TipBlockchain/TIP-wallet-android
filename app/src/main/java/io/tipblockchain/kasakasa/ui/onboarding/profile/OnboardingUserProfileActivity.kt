@@ -277,7 +277,8 @@ class OnboardingUserProfileActivity : BaseActivity(), OnboardingUserProfile.View
         })
     }
     override fun onGenericError(error: Throwable) {
-        showMessage(error.localizedMessage)
+        val errorMessage = error.localizedMessage ?: "An error occurred"
+        showMessage(errorMessage)
     }
 
     override fun onUsernameAvailable() {

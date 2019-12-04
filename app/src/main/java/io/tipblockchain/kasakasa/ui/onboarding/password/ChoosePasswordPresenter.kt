@@ -69,17 +69,19 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
                 var walletFile: WalletFile
                 var finalWalletFile: WalletFile? = null
                 var legacyWalletFile: WalletFile? = null
+                var createTwoWallets = false
 
                 if (existingUser != null) {
                     if (existingUser!!.isLegacy == true) {
                         legacyWalletFile = walletRepository.bip39WalletFileFromMnemonic(mnemonic, password)
-                        if (WalletUtils.add0xIfNotExists(legacyWalletFile.address) == existingUser!!.address) {
+                        if (WalletUtils.add0xIfNotExists(legacyWalletFile.address.toLowerCase()) == existingUser!!.address.toLowerCase()) {
                             finalWalletFile = legacyWalletFile
                             legacyWalletCreated = true
                         } else {
                             walletFile = walletRepository.bip44WalletFileFromMnemonic(mnemonic, password)
-                            if (WalletUtils.add0xIfNotExists(walletFile.address) == existingUser!!.address) {
+                            if (WalletUtils.add0xIfNotExists(walletFile.address.toLowerCase()) == existingUser!!.address.toLowerCase()) {
                                 finalWalletFile = walletFile
+                                createTwoWallets = true
                             } else {
                                 AndroidSchedulers.mainThread().scheduleDirect{
                                     view?.onWalletNotMatchingExistingError()
@@ -90,7 +92,7 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
                     } else {
                         walletFile = walletRepository.bip44WalletFileFromMnemonic(mnemonic, password)
                         Log.d(LOG_TAG, "walletFile.address= ${walletFile.address}, user.address = ${existingUser!!.address}")
-                        if (WalletUtils.add0xIfNotExists(walletFile.address) == existingUser!!.address) {
+                        if (WalletUtils.add0xIfNotExists(walletFile.address.toLowerCase()) == existingUser!!.address.toLowerCase()) {
                             finalWalletFile = walletFile
                         } else {
                             AndroidSchedulers.mainThread().scheduleDirect{
@@ -112,6 +114,9 @@ class ChoosePasswordPresenter: ChoosePassword.Presenter {
 //                        val secondWalletFile = walletRepository.bip44WalletFileFromMnemonic(mnemonic, password)
 //                        walletSuffix = if (legacyWalletCreated) "2" else null
 //                        walletRepository.saveWalletFile(secondWalletFile, isPrimary = true, walletSuffix = walletSuffix)
+                    }
+                    if (createTwoWallets && legacyWalletFile != null) {
+                        walletRepository.saveWalletFile(legacyWalletFile, isPrimary = false, walletSuffix = "2")
                     }
 
                     this.saveToKeystore(password = password, seedPhrase = mnemonic)

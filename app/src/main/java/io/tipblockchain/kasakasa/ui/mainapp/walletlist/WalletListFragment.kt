@@ -14,8 +14,10 @@ import android.view.ViewGroup
 import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.app.AppConstants
 import io.tipblockchain.kasakasa.data.db.entity.Wallet
+import io.tipblockchain.kasakasa.data.db.repository.Currency
 import io.tipblockchain.kasakasa.ui.mainapp.wallet.WalletActivity
 import kotlinx.android.synthetic.main.fragment_wallet_list.recyclerView
+import java.math.BigDecimal
 
 /**
  * A fragment representing a list of Items.
@@ -67,6 +69,14 @@ class WalletListFragment : Fragment(), WalletList.View {
 
     override fun showWallets(wallets: List<Wallet>) {
         recyclerViewAdapter?.setValues(wallets)
+    }
+
+    override fun onBalanceFetched(address: String, currency: Currency, balance: BigDecimal) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onBalanceFetchError(address: String, currency: Currency) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun setupRecyclerView() {

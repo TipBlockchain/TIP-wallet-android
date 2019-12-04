@@ -88,8 +88,8 @@ class ReceiveTransferActivity : BaseActivity(), ReceiveTransfer.View {
         this.address = address
         try {
             val barcodeEncoder = BarcodeEncoder()
-            val size = qrCodeImageView.height
-            val bitmap = barcodeEncoder.encodeBitmap(address, BarcodeFormat.QR_CODE, size, size)
+            val size = qrCodeImageView.height * 10
+            val bitmap = barcodeEncoder.encodeBitmap(address, BarcodeFormat.QR_CODE, 800, 800)
             qrCodeImageView.setImageBitmap(bitmap)
             addressTv.setText(address)
         } catch (e: Exception) {

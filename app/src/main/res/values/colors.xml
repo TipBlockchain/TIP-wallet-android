@@ -11,6 +11,7 @@
     <color name="colorTipGray">#888999</color>
     <color name="colorLightGray">#CCCCCC</color>
     <color name="colorVeryLightGray">#EEEEEE</color>
+    <color name="colorSeparatorGray">#E0E0E0</color>
     <color name="colorDarkGray">#333333</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="clear">#00FFFFFF</color>
