@@ -86,21 +86,21 @@ class WalletFragment : Fragment(), AdapterView.OnItemSelectedListener, WalletInt
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        Log.d(logTag, "Creating options menu")
-        inflater?.inflate(R.menu.menu_currency_options, menu)
-        val item: MenuItem = menu?.findItem(R.id.spinner) as MenuItem
-        val spinner: Spinner = item.actionView as Spinner
-        val currencyOptions = listOf("TIP", "ETH")
-        var menuAdapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
-        spinner.adapter = menuAdapter
-        spinner.dropDownVerticalOffset = getActionBarHeight()
-        spinner.backgroundTintList
-        spinner.dropDownHorizontalOffset = 0
-        val selectionIndex = if (lastCurrency == Currency.TIP)  0 else 1
-        spinner.setSelection(selectionIndex)
-        spinner.onItemSelectedListener = this
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+//        Log.d(logTag, "Creating options menu")
+//        inflater?.inflate(R.menu.menu_currency_options, menu)
+//        val item: MenuItem = menu?.findItem(R.id.spinner) as MenuItem
+//        val spinner: Spinner = item.actionView as Spinner
+//        val currencyOptions = listOf("TIP", "ETH")
+//        var menuAdapter: ArrayAdapter<String> = ArrayAdapter(context!!, android.R.layout.simple_list_item_1, currencyOptions)
+//        spinner.adapter = menuAdapter
+//        spinner.dropDownVerticalOffset = getActionBarHeight()
+//        spinner.backgroundTintList
+//        spinner.dropDownHorizontalOffset = 0
+//        val selectionIndex = if (lastCurrency == Currency.TIP)  0 else 1
+//        spinner.setSelection(selectionIndex)
+//        spinner.onItemSelectedListener = this
+//    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

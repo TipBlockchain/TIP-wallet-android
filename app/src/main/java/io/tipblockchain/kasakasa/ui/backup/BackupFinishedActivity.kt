@@ -7,6 +7,7 @@ import io.tipblockchain.kasakasa.R
 import io.tipblockchain.kasakasa.ui.mainapp.MainTabActivity
 
 import kotlinx.android.synthetic.main.activity_backup_finished.*
+import kotlinx.android.synthetic.main.fragment_my_account.*
 
 class BackupFinishedActivity : AppCompatActivity() {
 
